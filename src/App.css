@@ -2,3 +2,29 @@
   margin: 0 auto;
   text-align: center;
 }
+
+.hero-background {
+  background-image: url("assets/images/backgroundimage1.webp");
+  background-size: cover;
+  background-position: center;
+}
+.landingpagewhychooseus1 {
+  background-image: url("assets/images/whychooseustwo.png");
+  background-size: cover;
+  background-position: center;
+}
+.landingpagewhychooseus2 {
+  background-image: url("assets/images/whychooseustwo.png");
+  background-size: cover;
+  background-position: center;
+}
+.landingpagewhychooseus3 {
+  background-image: url("assets/images/whychooseustwo.png");
+  background-size: cover;
+  background-position: center;
+}
+.newsletter {
+  background-image: url("assets/images/newsletter.png");
+  background-size: cover;
+  background-position: center;
+}

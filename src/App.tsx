@@ -14,8 +14,8 @@ import VerifyIdentity from "./pages/onboarding/verify-identity";
 import LookingFor from "./pages/onboarding/looking-for";
 import TenantLayout from "./layouts/dashboard/tenant-layout";
 import Explore from "./pages/dashboard/tenant/explore";
-import LandingPage from "./pages/public/landing-page";
 import SignUp from "./pages/onboarding/sign-up";
+import LandingPage from "./pages/public/landing-page";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +26,7 @@ function App() {
       element: <LandingPage />,
     },
     {
+      //path: "/auth",
       element: <OnboardingLayout />,
       children: [
         {
