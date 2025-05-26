@@ -30,7 +30,7 @@ function App() {
       element: <OnboardingLayout />,
       children: [
         {
-          path: "/",
+          path: "/sign-up",
           element: <SignUp />,
         },
         {

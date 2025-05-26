@@ -326,7 +326,7 @@ const LandingPage = () => {
           </div>
         </section>
         {/* Newsletter Section */}
-        <section className="py-12 px-4 bg-green-600 text-white  rounded-lg mb-14 ">
+        <section className="py-12 px-4 bg-green-600 text-white  rounded-lg mb-14 newsletter">
           <div className="pr-[560px] py-[40px] pl-[40px] text-left">
             <h2 className="text-2xl font-bold mb-4">
               GET EXCLUSIVE PROPERTY INSIGHTS
