@@ -9,13 +9,14 @@ import {
   OnboardingLayoutLight,
 } from "./layouts/onboarding-layout";
 import MultiStepForm from "./layouts/multi-step-layout";
-import ProfileSetup from "./pages/onboarding/profile-setup";
-import VerifyIdentity from "./pages/onboarding/verify-identity";
-import LookingFor from "./pages/onboarding/looking-for";
+import ProfileSetup from "./pages/onboarding/tenant/profile-setup";
+import VerifyIdentity from "./pages/onboarding/tenant/verify-identity";
+import LookingFor from "./pages/onboarding/tenant/looking-for";
 import TenantLayout from "./layouts/dashboard/tenant-layout";
 import Explore from "./pages/dashboard/tenant/explore";
 import SignUp from "./pages/onboarding/sign-up";
 import LandingPage from "./pages/public/landing-page";
+import RoleSelection from "./pages/onboarding/role-selection";
 
 const queryClient = new QueryClient();
 
@@ -26,15 +27,15 @@ function App() {
       element: <LandingPage />,
     },
     {
-      //path: "/auth",
+      path: "/auth",
       element: <OnboardingLayout />,
       children: [
         {
-          path: "/sign-up",
+          path: "sign-up",
           element: <SignUp />,
         },
         {
-          path: "/verify-otp",
+          path: "verify-otp",
           element: <VerifyOtp />,
         },
       ],
@@ -43,21 +44,43 @@ function App() {
       element: <OnboardingLayoutLight />,
       children: [
         {
+          path: "/onboarding/role-selection",
+          element: <RoleSelection />,
+        },
+        {
           element: <MultiStepForm />,
           children: [
             {
-              path: "/onboarding/setup-profile",
+              path: "/onboarding/tenant/setup-profile",
               element: <ProfileSetup />,
             },
             {
-              path: "/onboarding/verify-identity",
+              path: "/onboarding/tenant/verify-identity",
               element: <VerifyIdentity />,
             },
             {
-              path: "/onboarding/looking-for",
+              path: "/onboarding/tenant/looking-for",
               element: <LookingFor />,
             },
           ],
+        },
+        {
+          path: "/onboarding/landlord/get-started",
+          element: <RoleSelection />,
+        },
+        {
+          path: "/onboarding/landlord/select-property",
+          element: <RoleSelection />,
+        },
+        {
+          path: "/onboarding/landlord/select-property",
+          element: <RoleSelection />,
+        },
+        {
+          path: "/onboarding/*",
+          element: (
+            <div>Something went wrong while onboarding, please try again</div>
+          ),
         },
       ],
     },
