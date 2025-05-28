@@ -34,9 +34,9 @@ export default function RoleSelection() {
     }
 
     if (selectedRole === "tenant") {
-      navigate("/onboarding/tenant");
+      navigate("/onboarding/tenant/setup-profile");
     } else if (selectedRole === "landlord") {
-      navigate("/onboarding/landlord");
+      navigate("/onboarding/landlord/get-started");
     }
   };
 

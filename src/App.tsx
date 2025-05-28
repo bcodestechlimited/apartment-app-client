@@ -17,6 +17,20 @@ import Explore from "./pages/dashboard/tenant/explore";
 import SignUp from "./pages/onboarding/sign-up";
 import LandingPage from "./pages/public/landing-page";
 import RoleSelection from "./pages/onboarding/role-selection";
+import GetStarted from "./pages/onboarding/landlord/get-started";
+import SelectProperty from "./pages/onboarding/landlord/select-property";
+import {
+  PropertyOnboarding,
+  PropertyOnboardingWorkSpace,
+} from "./pages/onboarding/landlord/property-onboarding";
+import OnboardingError from "./pages/onboarding/onboarding-error";
+import LandlordLayout from "./layouts/dashboard/landlord-layout";
+import Listings from "./pages/dashboard/landlord/listings";
+import Bookings from "./pages/dashboard/landlord/bookings";
+import Tenants from "./pages/dashboard/landlord/tenants";
+import Payments from "./pages/dashboard/landlord/payments";
+import Analytics from "./pages/dashboard/landlord/analytics";
+import Messages from "./pages/dashboard/landlord/messages";
 
 const queryClient = new QueryClient();
 
@@ -66,21 +80,23 @@ function App() {
         },
         {
           path: "/onboarding/landlord/get-started",
-          element: <RoleSelection />,
+          element: <GetStarted />,
         },
         {
           path: "/onboarding/landlord/select-property",
-          element: <RoleSelection />,
+          element: <SelectProperty />,
         },
         {
-          path: "/onboarding/landlord/select-property",
-          element: <RoleSelection />,
+          path: "/onboarding/landlord/property-onboarding",
+          element: <PropertyOnboarding />,
+        },
+        {
+          path: "/onboarding/landlord/property-onboarding/workspace",
+          element: <PropertyOnboardingWorkSpace />,
         },
         {
           path: "/onboarding/*",
-          element: (
-            <div>Something went wrong while onboarding, please try again</div>
-          ),
+          element: <OnboardingError />,
         },
       ],
     },
@@ -112,11 +128,41 @@ function App() {
             },
           ],
         },
+        {
+          path: "landlord",
+          element: <LandlordLayout />,
+          children: [
+            {
+              path: "",
+              element: <Listings />,
+            },
+            {
+              path: "bookings",
+              element: <Bookings />,
+            },
+            {
+              path: "tenants",
+              element: <Tenants />,
+            },
+            {
+              path: "payments",
+              element: <Payments />,
+            },
+            {
+              path: "analytics",
+              element: <Analytics />,
+            },
+            {
+              path: "messages",
+              element: <Messages />,
+            },
+            {
+              path: "*",
+              element: <div>Page not found</div>,
+            },
+          ],
+        },
       ],
-    },
-    {
-      path: "*",
-      element: <div>Page not found</div>,
     },
     {
       path: "*",
