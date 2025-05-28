@@ -9,13 +9,28 @@ import {
   OnboardingLayoutLight,
 } from "./layouts/onboarding-layout";
 import MultiStepForm from "./layouts/multi-step-layout";
-import ProfileSetup from "./pages/onboarding/profile-setup";
-import VerifyIdentity from "./pages/onboarding/verify-identity";
-import LookingFor from "./pages/onboarding/looking-for";
+import ProfileSetup from "./pages/onboarding/tenant/profile-setup";
+import VerifyIdentity from "./pages/onboarding/tenant/verify-identity";
+import LookingFor from "./pages/onboarding/tenant/looking-for";
 import TenantLayout from "./layouts/dashboard/tenant-layout";
 import Explore from "./pages/dashboard/tenant/explore";
 import SignUp from "./pages/onboarding/sign-up";
 import LandingPage from "./pages/public/landing-page";
+import RoleSelection from "./pages/onboarding/role-selection";
+import GetStarted from "./pages/onboarding/landlord/get-started";
+import SelectProperty from "./pages/onboarding/landlord/select-property";
+import {
+  PropertyOnboarding,
+  PropertyOnboardingWorkSpace,
+} from "./pages/onboarding/landlord/property-onboarding";
+import OnboardingError from "./pages/onboarding/onboarding-error";
+import LandlordLayout from "./layouts/dashboard/landlord-layout";
+import Listings from "./pages/dashboard/landlord/listings";
+import Bookings from "./pages/dashboard/landlord/bookings";
+import Tenants from "./pages/dashboard/landlord/tenants";
+import Payments from "./pages/dashboard/landlord/payments";
+import Analytics from "./pages/dashboard/landlord/analytics";
+import Messages from "./pages/dashboard/landlord/messages";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +45,7 @@ function App() {
       element: <OnboardingLayout />,
       children: [
         {
-          path: "signup",
+          path: "sign-up",
           element: <SignUp />,
         },
         {
@@ -43,21 +58,45 @@ function App() {
       element: <OnboardingLayoutLight />,
       children: [
         {
+          path: "/onboarding/role-selection",
+          element: <RoleSelection />,
+        },
+        {
           element: <MultiStepForm />,
           children: [
             {
-              path: "/onboarding/setup-profile",
+              path: "/onboarding/tenant/setup-profile",
               element: <ProfileSetup />,
             },
             {
-              path: "/onboarding/verify-identity",
+              path: "/onboarding/tenant/verify-identity",
               element: <VerifyIdentity />,
             },
             {
-              path: "/onboarding/looking-for",
+              path: "/onboarding/tenant/looking-for",
               element: <LookingFor />,
             },
           ],
+        },
+        {
+          path: "/onboarding/landlord/get-started",
+          element: <GetStarted />,
+        },
+        {
+          path: "/onboarding/landlord/select-property",
+          element: <SelectProperty />,
+        },
+        {
+          path: "/onboarding/landlord/property-onboarding",
+          element: <PropertyOnboarding />,
+        },
+        {
+          path: "/onboarding/landlord/property-onboarding/workspace",
+          element: <PropertyOnboardingWorkSpace />,
+        },
+        {
+          path: "/onboarding/*",
+          element: <OnboardingError />,
         },
       ],
     },
@@ -89,11 +128,41 @@ function App() {
             },
           ],
         },
+        {
+          path: "landlord",
+          element: <LandlordLayout />,
+          children: [
+            {
+              path: "",
+              element: <Listings />,
+            },
+            {
+              path: "bookings",
+              element: <Bookings />,
+            },
+            {
+              path: "tenants",
+              element: <Tenants />,
+            },
+            {
+              path: "payments",
+              element: <Payments />,
+            },
+            {
+              path: "analytics",
+              element: <Analytics />,
+            },
+            {
+              path: "messages",
+              element: <Messages />,
+            },
+            {
+              path: "*",
+              element: <div>Page not found</div>,
+            },
+          ],
+        },
       ],
-    },
-    {
-      path: "*",
-      element: <div>Page not found</div>,
     },
     {
       path: "*",

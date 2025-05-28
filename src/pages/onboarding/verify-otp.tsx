@@ -19,7 +19,7 @@ export default function VerifyOtp() {
           className="mb-3 bg-white/10 border-white/30 text-white placeholder-white/70"
         />
 
-        <Link to="/onboarding/setup-profile" className="w-full">
+        <Link to="/onboarding/role-selection" className="w-full">
           <Button className="w-full mb-3 bg-white text-custom-primary cursor-pointer">
             Verify OTP
           </Button>

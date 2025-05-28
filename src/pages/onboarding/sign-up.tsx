@@ -30,7 +30,7 @@ export default function SignUp() {
           className="mb-3 bg-white/10 border-white/30 text-white placeholder-white/70 w-full"
         />
 
-        <Link to="/verify-otp">
+        <Link to="/auth/verify-otp">
           <Button className="w-full bg-white text-custom-primary cursor-pointer">
             Continue
           </Button>
