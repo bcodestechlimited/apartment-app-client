@@ -26,15 +26,15 @@ function App() {
       element: <LandingPage />,
     },
     {
-      //path: "/auth",
+      path: "/auth",
       element: <OnboardingLayout />,
       children: [
         {
-          path: "/sign-up",
+          path: "signup",
           element: <SignUp />,
         },
         {
-          path: "/verify-otp",
+          path: "verify-otp",
           element: <VerifyOtp />,
         },
       ],
