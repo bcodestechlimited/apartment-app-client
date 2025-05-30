@@ -28,3 +28,32 @@
   background-size: cover;
   background-position: center;
 }
+.div1,
+.div2 {
+  background-color: red;
+
+  margin: 10px;
+}
+
+.main {
+  width: 500px;
+  height: 500px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "vertical firsthorizon"
+    "vertical horizon";
+}
+
+.sub1 {
+  grid-area: firsthorizon;
+}
+
+.sub2 {
+  grid-area: horizon;
+}
+
+.first {
+  grid-area: vertical;
+}
