@@ -1,11 +1,39 @@
 import { Outlet } from "react-router";
-import { Users, ChevronDown, LayoutDashboardIcon } from "lucide-react";
+import {
+  Users,
+  ChevronDown,
+  CreditCard,
+  Bell,
+  Search,
+  House,
+  BookOpen,
+  FileChartColumnIncreasing,
+  Mail,
+  PenLine,
+  LogOut,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
 import { useState, type JSX } from "react";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
 import cityLightsLogo from "@/assets/images/citylights-logo-main-light.png";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface Submenu {
   name: string;
@@ -22,15 +50,34 @@ interface Route {
 
 const routes: Route[] = [
   {
-    name: "Dashboard",
-    path: "/dashboard/admin",
-    icon: <LayoutDashboardIcon className="w-5 h-5" />,
+    name: "My Listings",
+    path: "/dashboard/landlord/listings",
+    icon: <House className="w-5 h-5" />,
+  },
+  {
+    name: "Bookings",
+    path: "/dashboard/landlord/bookings",
+    icon: <BookOpen className="w-5 h-5" />,
   },
   {
     name: "Tenants",
-    path: "/dashboard/admin/tenants",
+    path: "/dashboard/landlord/tenants",
     icon: <Users className="w-5 h-5" />,
-    // submenu: [],
+  },
+  {
+    name: "Payments",
+    path: "/dashboard/landlord/payments",
+    icon: <CreditCard className="w-5 h-5" />,
+  },
+  {
+    name: "Analytics",
+    path: "/dashboard/landlord/analytics",
+    icon: <FileChartColumnIncreasing className="w-5 h-5" />,
+  },
+  {
+    name: "Messages",
+    path: "/dashboard/landlord/messages",
+    icon: <Mail className="w-5 h-5" />,
   },
 ];
 
@@ -133,12 +180,60 @@ function LandlordSideBar() {
   );
 }
 
+// function TopBar() {
+//   return (
+//     <div className="flex items-center justify-between p-4">
+//       <div className="flex items-center space-x-4">
+//         <div className="flex items-center space-x-2 ">
+//           <Input className="" />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 function TopBar() {
   return (
-    <div className="flex items-center justify-between p-4">
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
-          <Input />
+    <div className="flex justify-between p-4 bg-white  mb-4">
+      <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
+        <Search className="w-5 h-5 text-gray-600 ml-3" />
+        <Input
+          placeholder="Search"
+          className="border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none "
+        />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Bell className="w-6 h-6 text-gray-300 mr-3" />
+        <div className="flex items-center cursor-pointer  px-3 py-2   gap-5 transition-colors">
+          <div className="leading-12 w-10 h-10 bg-[#004542] rounded-full flex items-center justify-center text-white font-bold text-3xl">
+            A
+          </div>
+          <div className="text-left">
+            <p className="text-sm  text-[#000000] text-[14px] font-[600] ">
+              Alicia Larsen
+            </p>
+            <p className="text-xs text-[#93A3AB]">Landlord</p>
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <ChevronDown className="w-4 h-4 text-gray-600 ml-2" />
+            </PopoverTrigger>
+            <PopoverContent className="w-50 mr-10 mt-8">
+              <div className="  text-sm">
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-start gap-2">
+                    <PenLine size={16} />
+                    <p className="">Edit profile</p>
+                  </div>
+                  <div className="flex gap-2 justify-start items-center">
+                    <LogOut size={16} className="text-red-700" />
+                    <p className="text-red-700">Log out</p>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
@@ -149,7 +244,7 @@ export default function LandlordLayout() {
   return (
     <div className="flex h-screen">
       <LandlordSideBar />
-      <div className="flex-1 bg-gray-100 p-4">
+      <div className="flex-1 bg-white p-4">
         <TopBar />
         <div className="w-full max-w-[1440px]">
           <Breadcrumb />
