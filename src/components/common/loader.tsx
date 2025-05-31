@@ -41,4 +41,14 @@ const AuthLoader: React.FC<LoaderProps> = ({
   );
 };
 
-export { Loader, AuthLoader };
+const Spinner: React.FC<LoaderProps> = ({ isLoading = true }) => {
+  if (!isLoading) return null;
+
+  return (
+    <div
+      className={`mr-2 w-4 h-4 border-2  border-t-transparent border-b-transparent border-custom-primary animate-spin rounded-full inline-block`}
+    ></div>
+  );
+};
+
+export { Loader, AuthLoader, Spinner };
