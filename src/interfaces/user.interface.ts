@@ -7,4 +7,5 @@ export interface User {
   surname: string;
   gender: string;
   email: string;
+  roles: string[];
 }

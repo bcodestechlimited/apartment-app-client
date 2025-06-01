@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -17,16 +17,27 @@ export default function SelectProperty() {
   const [selectedProperty, setSelectedProperty] = useState<string>("");
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNext = () => {
     if (!selectedProperty) {
       return toast.error("Please select a property type");
     }
     if (selectedProperty === "Co-working space") {
-      return navigate("/onboarding/landlord/property-onboarding/workspace");
+      return navigate(`/onboarding/landlord/property-onboarding/workspace`, {
+        state: {
+          ...location.state,
+          propertyType: selectedProperty.toLowerCase(),
+        },
+      });
     }
 
-    navigate("/onboarding/landlord/property-onboarding");
+    navigate(`/onboarding/landlord/property-onboarding`, {
+      state: {
+        ...location.state,
+        propertyType: selectedProperty,
+      },
+    });
   };
 
   return (

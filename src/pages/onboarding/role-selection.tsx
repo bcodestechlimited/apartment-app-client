@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { authService } from "@/api/auth.api";
 
 export default function RoleSelection() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -28,16 +30,30 @@ export default function RoleSelection() {
     // },
   ];
 
+  const roleMutation = useMutation({
+    mutationFn: authService.updateUser,
+    onSuccess: () => {
+      toast.success("Role selected successfully");
+      if (selectedRole === "tenant") {
+        navigate("/onboarding/tenant/setup-profile");
+      } else if (selectedRole === "landlord") {
+        navigate("/onboarding/landlord/get-started");
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to select role");
+      console.error(error);
+    },
+  });
+
   const handleNext = () => {
     if (!selectedRole) {
       return toast.error("Please select a role");
     }
 
-    if (selectedRole === "tenant") {
-      navigate("/onboarding/tenant/setup-profile");
-    } else if (selectedRole === "landlord") {
-      navigate("/onboarding/landlord/get-started");
-    }
+    roleMutation.mutateAsync({
+      roles: [selectedRole],
+    });
   };
 
   return (
@@ -78,7 +94,7 @@ export default function RoleSelection() {
         disabled={!selectedRole}
         className="mt-6 cursor-pointer btn-primary"
       >
-        Continue
+        {roleMutation.isPending ? "Loading..." : `Continue`}
       </Button>
     </div>
   );

@@ -1,4 +1,4 @@
-import { FileInput } from "@/components/file-input";
+import { FileInput } from "@/components/custom/file-input";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -46,18 +46,12 @@ export default function VerifyIdentity() {
             files.forEach((file) => dataTransfer.items.add(file));
             // setValue("documents", dataTransfer.files);
           }}
-          errorMessage={
-            errors?.documents &&
-            (errors.documents?.message as string | undefined)
-          }
         />
-
-        {/* <Input
-          {...register("documents", {
-            required: "Documents are required",
-          })}
-          type="file"
-        /> */}
+        {errors?.documents && (
+          <p className="text-destructive text-sm mt-1 text-end">
+            {errors.documents.message as string}
+          </p>
+        )}
 
         <Button className="w-full bg-custom-primary text-white hover:opacity-90 cursor-pointer">
           Continue

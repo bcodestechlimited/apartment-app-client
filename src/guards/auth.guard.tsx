@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Navigate, Outlet, useLocation } from "react-router";
-import { AuthLoader } from "@/components/common/loader";
+import { AuthLoader } from "@/components/custom/loader";
 import { authService } from "@/api/auth.api";
 
 export default function AuthGuard() {

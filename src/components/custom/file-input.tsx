@@ -1,13 +1,12 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 
 interface FileInputProps {
   className?: string;
   multiple?: boolean;
   maxSize?: number; // in bytes
   onFilesChange?: (files: File[]) => void;
-  errorMessage: undefined | string;
   accept?: string;
   value?: File[];
 }
@@ -15,7 +14,6 @@ interface FileInputProps {
 const FileInput = ({
   className,
   maxSize = 10 * 1024 * 1024,
-  errorMessage,
   onFilesChange,
   value,
   ...props
@@ -49,7 +47,7 @@ const FileInput = ({
     e.preventDefault();
     console.log({ files: e.target.files });
 
-    if (e.target.files && e.target.files.length > 0) {
+    if (e.target.files && e.target.files.length > 2) {
       handleFiles(e.target.files);
     }
   };
@@ -63,13 +61,20 @@ const FileInput = ({
       }
     }
 
-    setFiles((prev) => {
-      const updatedFiles = props.multiple
-        ? [...prev, ...validFiles]
-        : validFiles.slice(0, 1);
+    setFiles((prevFiles) => {
+      const updatedFiles = [...prevFiles, ...validFiles];
+      // const updatedFiles = [...validFiles];
       if (onFilesChange) onFilesChange(updatedFiles);
       return updatedFiles;
     });
+
+    // setFiles((prev) => {
+    //   const updatedFiles = props.multiple
+    //     ? [...prev, ...validFiles]
+    //     : validFiles.slice(0, 1);
+    //   if (onFilesChange) onFilesChange(updatedFiles);
+    //   return updatedFiles;
+    // });
   };
 
   // const triggerFileInput = () => {
@@ -120,15 +125,13 @@ const FileInput = ({
           type="file"
           onChange={handleChange}
           className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          multiple
         />
       </div>
       {files.length > 0 && (
         <p className="text-sm text-muted-foreground">
           {files.length} file(s) selected
         </p>
-      )}
-      {errorMessage && (
-        <p className="text-sm text-red-500 font-semibold">{errorMessage}</p>
       )}
     </div>
   );

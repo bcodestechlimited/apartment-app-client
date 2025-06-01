@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Link } from "react-router";
 
 const newListings = [
   {
@@ -121,9 +122,12 @@ const LandingPage = () => {
             </a>
           </div>
           <div className="flex space-x-4">
-            <button className="text-gray-600 hover:text-gray-900">
+            <Link
+              to={"/auth/sign-up"}
+              className="text-gray-600 hover:text-gray-900"
+            >
               Register
-            </button>
+            </Link>
             <button className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700">
               Login
             </button>

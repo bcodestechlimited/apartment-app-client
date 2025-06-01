@@ -7,7 +7,8 @@ import { authService } from "@/api/auth.api";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Spinner } from "@/components/common/loader";
+import { Spinner } from "@/components/custom/loader";
+import { useAuthActions } from "@/store/useAuthStore";
 
 interface SignUpFormInputs {
   email: string;
@@ -17,7 +18,7 @@ interface SignUpFormInputs {
 
 export default function SignUp() {
   const navigate = useNavigate();
-  // const { state } = useLocation();
+  const { setAuthCredentials } = useAuthActions();
 
   const {
     register,
@@ -26,14 +27,9 @@ export default function SignUp() {
     formState: { errors },
   } = useForm<SignUpFormInputs>();
 
-  // const from = state?.from?.pathname || "/onboarding/role-selection";
-  // const from = state?.from?.pathname || "/onboarding/role-selection";
-
   const mutation = useMutation({
     mutationFn: authService.register,
-    onSuccess: (data) => {
-      console.log({ data });
-      localStorage.setItem("email", data.user.email);
+    onSuccess: () => {
       toast.success("Registration successful");
       navigate("/auth/verify-otp");
     },
@@ -45,6 +41,11 @@ export default function SignUp() {
 
   const onSubmit = (data: SignUpFormInputs) => {
     data.confirmPassword = undefined;
+    setAuthCredentials({
+      email: data.email,
+      password: data.password,
+    });
+
     mutation.mutateAsync(data);
   };
 

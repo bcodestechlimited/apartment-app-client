@@ -59,8 +59,8 @@ export default function MultiStepForm() {
   ];
 
   const currentStep = useMemo(() => {
-    const currStep = steps.find((s) => s.path === pathname)?.index || 0;
-    return currStep - 1 || 0;
+    const currStep = steps.find((s) => s.path === pathname)?.index  || 0;
+    return currStep || 0;
     // return steps.find((s) => s.path === pathname)?.index || 0;
   }, [pathname]);
 
