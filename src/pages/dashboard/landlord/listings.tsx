@@ -1,11 +1,16 @@
-import React from "react";
-
 export default function Listings() {
   return (
-    <div className="main">
-      <div className="div1 first">1</div>
-      <div className="div1 sub1">2</div>
-      <div className="div2 sub2">3</div>
+    <div className="">
+      <div>
+        <ul>
+          <li>All</li>
+          <li>Shared</li>
+          <li>Serviced</li>
+          <li>Standard</li>
+          <li>Short let</li>
+        </ul>
+      </div>
+      <div></div>
     </div>
   );
 }
