@@ -128,9 +128,12 @@ const LandingPage = () => {
             >
               Register
             </Link>
-            <button className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700">
+            <Link
+              to={"/auth/sign-in"}
+              className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
+            >
               Login
-            </button>
+            </Link>
           </div>
         </nav>
         {/* hero */}

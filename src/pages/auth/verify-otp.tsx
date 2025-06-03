@@ -103,6 +103,10 @@ export default function VerifyOtp() {
       toast.error("Please enter the 4-digit OTP");
       return;
     }
+
+    if (!email || email.trim() === "" || email === "null") {
+      return navigate("/auth/sign-in");
+    }
     verifyMutation.mutateAsync({ email, otp });
   };
 

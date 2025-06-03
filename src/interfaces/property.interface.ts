@@ -17,17 +17,17 @@ export interface IProperty {
 }
 
 export interface IAddProperty {
-  type:
-    | "serviced-apartment"
-    | "shared-apartment"
-    | "standard-rental"
-    | "short-lets"
-    | "co-working-space"
-    | "other";
+  // type:
+  //   | "serviced-apartment"
+  //   | "shared-apartment"
+  //   | "standard-rental"
+  //   | "short-lets"
+  //   | "co-working-space"
+  //   | "other";
+  type: string;
   description: string;
   numberOfRooms: number;
   amenities: string[];
-  availability: string[];
   pictures: File[];
 }
 export interface IAddPropertyCoWorkingSpace {

@@ -14,7 +14,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -23,7 +22,7 @@ import { MultiSelect } from "@/components/custom/multi-select";
 import { FileInput } from "@/components/custom/file-input";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 export function PropertyOnboarding() {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -39,11 +38,17 @@ export function PropertyOnboarding() {
   } = useForm<IAddProperty>();
 
   const location = useLocation();
-  const propertyType = location.state?.propertyType as string;
+  const propertyType = location.state?.propertyType.replace(" ", "-") as string;
+
+  const navigate = useNavigate();
 
   const propertyMutation = useMutation({
     mutationFn: propertyService.addProperty,
-    onSuccess: async () => {},
+    onSuccess: async (data) => {
+      console.log({ data });
+      toast.success("Property added successfully!");
+      navigate("/dashboard/landlord");
+    },
     onError: (error) => {
       toast.error(error.message || "Invalid OTP");
       console.error(error);
@@ -80,13 +85,17 @@ export function PropertyOnboarding() {
       return;
     }
 
-    const formData = {
-      ...data,
-      amenities: selectedAmenities,
-    };
+    const formData = new FormData();
+    formData.append("description", data.description);
+    formData.append("amenities", JSON.stringify(selectedAmenities));
+    formData.append("type", propertyType.toLowerCase());
+    formData.append("numberOfRooms", String(selectedRooms));
+    for (let i = 0; i < data.pictures.length; i++) {
+      formData.append("pictures", data.pictures[i]);
+    }
 
     console.log("Final Form Submission:", formData);
-    // propertyMutation.mutateAsync(formData);
+    propertyMutation.mutateAsync(formData);
   };
 
   return (

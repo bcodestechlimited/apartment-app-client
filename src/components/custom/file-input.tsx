@@ -1,6 +1,6 @@
-import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
+import { useEffect, useRef, useState } from "react";
 
 interface FileInputProps {
   className?: string;
@@ -18,9 +18,9 @@ const FileInput = ({
   value,
   ...props
 }: FileInputProps) => {
-  const [isDragActive, setIsDragActive] = React.useState(false);
-  const [files, setFiles] = React.useState<File[]>(value || []);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [isDragActive, setIsDragActive] = useState(false);
+  const [files, setFiles] = useState<File[]>(value || []);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -61,10 +61,11 @@ const FileInput = ({
       }
     }
 
+    if (onFilesChange) onFilesChange([...files, ...validFiles]);
+
     setFiles((prevFiles) => {
       const updatedFiles = [...prevFiles, ...validFiles];
       // const updatedFiles = [...validFiles];
-      if (onFilesChange) onFilesChange(updatedFiles);
       return updatedFiles;
     });
 

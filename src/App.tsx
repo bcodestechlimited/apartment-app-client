@@ -3,7 +3,7 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import VerifyOtp from "./pages/onboarding/verify-otp";
+import VerifyOtp from "./pages/auth/verify-otp";
 import {
   OnboardingLayout,
   OnboardingLayoutLight,
@@ -14,7 +14,7 @@ import VerifyIdentity from "./pages/onboarding/tenant/verify-identity";
 import LookingFor from "./pages/onboarding/tenant/looking-for";
 import TenantLayout from "./layouts/dashboard/tenant-layout";
 import Explore from "./pages/dashboard/tenant/explore";
-import SignUp from "./pages/onboarding/sign-up";
+import SignUp from "./pages/auth/sign-up";
 import LandingPage from "./pages/public/landing-page";
 import RoleSelection from "./pages/onboarding/role-selection";
 import GetStarted from "./pages/onboarding/landlord/get-started";
@@ -31,6 +31,7 @@ import Tenants from "./pages/dashboard/landlord/tenants";
 import Payments from "./pages/dashboard/landlord/payments";
 import Analytics from "./pages/dashboard/landlord/analytics";
 import Messages from "./pages/dashboard/landlord/messages";
+import SignIn from "./pages/auth/sign-in";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,10 @@ function App() {
         {
           path: "sign-up",
           element: <SignUp />,
+        },
+        {
+          path: "sign-in",
+          element: <SignIn />,
         },
         {
           path: "verify-otp",
