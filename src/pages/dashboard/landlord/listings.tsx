@@ -1,16 +1,72 @@
+import { propertyService } from "@/api/property.api";
+import PropertyCard from "@/components/shared/propertyCard";
+import { Button } from "@/components/ui/button";
+import type { IProperty } from "@/interfaces/property.interface";
+import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useSearchParams } from "react-router";
+import AddPropertyModal from "./_components/add-property-modal";
+
 export default function Listings() {
+  const [selected, setSelected] = useState("All");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const categories = ["All", "Shared", "Serviced", "Standard", "Short let"];
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["landlord-properties", { page, limit }],
+    queryFn: () =>
+      propertyService.getLandLordProperties({
+        page: 1,
+        limit: 10,
+      }),
+  });
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="">
-      <div>
-        <ul>
-          <li>All</li>
-          <li>Shared</li>
-          <li>Serviced</li>
-          <li>Standard</li>
-          <li>Short let</li>
-        </ul>
+      <div className="flex items-center justify-between mb-4">
+        <div className="bg-custom-primary/10 w-fit rounded-full mb-4">
+          <ul className="flex gap-8 items-center font-semibold text-xl">
+            {categories.map((category) => (
+              <li
+                key={category}
+                className={cn("cursor-pointer", {
+                  "bg-custom-primary px-12 rounded-full py-2":
+                    selected === category,
+                })}
+                onClick={() => setSelected(category)}
+              >
+                {category}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Button onClick={openModal} className="text-lg p-6 cursor-pointer">
+          + Add new property
+        </Button>
+        <AddPropertyModal
+          // propertyType="co-working space" // example value
+          isOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+        />
       </div>
-      <div></div>
+      <div>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          data?.properties.map((property: IProperty) => {
+            return <PropertyCard property={property} key={property._id} />;
+          })
+        )}
+      </div>
     </div>
   );
 }

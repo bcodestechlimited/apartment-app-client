@@ -1,3 +1,4 @@
+import type { IParams } from "@/interfaces/query.interface";
 import axiosInstance from "@/lib/axios.config";
 import { handleAxiosError } from "@/lib/utils";
 
@@ -17,6 +18,36 @@ class PropertyService {
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to add property");
+    }
+  };
+  getProperties = async (params: IParams) => {
+    console.log({ params });
+
+    try {
+      const response = await axiosInstance.get(`/property`, {
+        params,
+      });
+
+      console.log({ response });
+
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to get properties");
+    }
+  };
+  getLandLordProperties = async (params: IParams) => {
+    console.log({ params });
+
+    try {
+      const response = await axiosInstance.get(`/property`, {
+        params,
+      });
+
+      console.log({ response });
+
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to get properties");
     }
   };
 }

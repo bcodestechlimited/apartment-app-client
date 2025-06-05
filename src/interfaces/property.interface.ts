@@ -13,7 +13,7 @@ export interface IProperty {
   numberOfRooms: number;
   seatingCapacity?: number;
   amenities: string[];
-  pictures: File[];
+  pictures: string[];
 }
 
 export interface IAddProperty {

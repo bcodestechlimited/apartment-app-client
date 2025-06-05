@@ -32,6 +32,7 @@ import Payments from "./pages/dashboard/landlord/payments";
 import Analytics from "./pages/dashboard/landlord/analytics";
 import Messages from "./pages/dashboard/landlord/messages";
 import SignIn from "./pages/auth/sign-in";
+import LandlordProfile from "./pages/dashboard/landlord/profile";
 
 const queryClient = new QueryClient();
 
@@ -160,6 +161,10 @@ function App() {
             {
               path: "messages",
               element: <Messages />,
+            },
+            {
+              path: "profile",
+              element: <LandlordProfile />,
             },
             {
               path: "*",

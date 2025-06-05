@@ -19,20 +19,10 @@ import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
 import cityLightsLogo from "@/assets/images/citylights-logo-main-light.png";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 interface Submenu {
@@ -224,11 +214,15 @@ function TopBar() {
                 <div className="grid gap-2">
                   <div className="flex items-center justify-start gap-2">
                     <PenLine size={16} />
-                    <p className="">Edit profile</p>
+                    <Link to="/dashboard/landlord/profile" className="w-full">
+                      Edit profile
+                    </Link>
                   </div>
                   <div className="flex gap-2 justify-start items-center">
                     <LogOut size={16} className="text-red-700" />
-                    <p className="text-red-700">Log out</p>
+                    <Button className="text-red-700 border-0 bg-white shadow-none hover:bg-white cursor-pointer m-0 p-0 text-left justify-start w-fit">
+                      Log out
+                    </Button>
                   </div>
                 </div>
               </div>
