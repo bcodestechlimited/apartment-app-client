@@ -10,6 +10,12 @@ export const handleAxiosError = (
   error: any,
   alternateMessage?: string
 ): string => {
+  console.log({ error: error.response?.data?.errors });
+
+  if (!error) {
+    throw new Error("An unknown error occurred");
+  }
+
   if (error instanceof AxiosError && error.response?.status === 422) {
     throw new Error(
       error.response?.data?.errors[0].message || alternateMessage
@@ -20,4 +26,22 @@ export const handleAxiosError = (
     throw new Error(error.response?.data?.message || alternateMessage);
   }
   throw error;
+};
+
+export const formatDate = (date: string | Date): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  return new Date(date).toLocaleDateString("en-US", options);
+};
+
+export const formatCurrency = (amount: number | string): string => {
+  const parsedAmount = typeof amount === "string" ? parseFloat(amount) : amount;
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+  }).format(parsedAmount);
+  // return `N${num.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 };

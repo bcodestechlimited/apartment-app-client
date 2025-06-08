@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import {
   Users,
   ChevronDown,
@@ -24,6 +24,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { authService } from "@/api/auth.api";
+import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Submenu {
   name: string;
@@ -87,7 +91,7 @@ function LandlordSideBar() {
   return (
     <aside
       className={cn(
-        "w-54 h-screen bg-white border-r shadow-md flex flex-col justify-between"
+        "min-w-42 max-w-44 h-screen bg-white border-r shadow-md flex flex-col justify-between"
       )}
     >
       {/* Logo Section */}
@@ -100,7 +104,7 @@ function LandlordSideBar() {
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-4 min-w-42 max-w-44">
         <ul className="space-y-2">
           {routes.map((route, index) => (
             <li key={index}>
@@ -118,7 +122,7 @@ function LandlordSideBar() {
                   >
                     <div className="flex items-center space-x-3">
                       {route.icon}
-                      <span>{route.name}</span>
+                      <span className="text-sm">{route.name}</span>
                     </div>
                     <ChevronDown
                       className={cn(
@@ -159,7 +163,7 @@ function LandlordSideBar() {
                   )}
                 >
                   {route.icon}
-                  <span>{route.name}</span>
+                  <span className="text-sm">{route.name}</span>
                 </Link>
               )}
             </li>
@@ -170,19 +174,20 @@ function LandlordSideBar() {
   );
 }
 
-// function TopBar() {
-//   return (
-//     <div className="flex items-center justify-between p-4">
-//       <div className="flex items-center space-x-4">
-//         <div className="flex items-center space-x-2 ">
-//           <Input className="" />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 function TopBar() {
+  const navigate = useNavigate();
+
+  const logoutMutation = useMutation({
+    mutationFn: authService.logOut,
+    onSuccess: (response) => {
+      toast.success(response.message);
+      navigate("/auth/sign-in", { replace: true });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to log out");
+    },
+  });
+
   return (
     <div className="flex justify-between p-4 bg-white  mb-4">
       <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
@@ -196,21 +201,24 @@ function TopBar() {
       <div className="flex items-center gap-2">
         <Bell className="w-6 h-6 text-gray-300 mr-3" />
         <div className="flex items-center cursor-pointer  px-3 py-2   gap-5 transition-colors">
-          <div className="leading-12 w-10 h-10 bg-[#004542] rounded-full flex items-center justify-center text-white font-bold text-3xl">
-            A
-          </div>
-          <div className="text-left">
-            <p className="text-sm  text-[#000000] text-[14px] font-[600] ">
-              Alicia Larsen
-            </p>
-            <p className="text-xs text-[#93A3AB]">Landlord</p>
-          </div>
           <Popover>
             <PopoverTrigger asChild>
-              <ChevronDown className="w-4 h-4 text-gray-600 ml-2" />
+              <div className="flex items-center gap-2 border px-4 py-2 rounded-full bg-white shadow-sm hover:bg-gray-100 transition-colors">
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <div className="text-left">
+                  <p className="text-sm  text-[#000000] text-[14px] font-[600] ">
+                    Alicia Larsen
+                  </p>
+                  <p className="text-xs text-[#93A3AB]">Landlord</p>
+                </div>
+                <ChevronDown className="w-4 h-4 text-gray-600 ml-2" />
+              </div>
             </PopoverTrigger>
-            <PopoverContent className="w-50 mr-10 mt-8">
-              <div className="  text-sm">
+            <PopoverContent className="w-50 mr-4">
+              <div className="text-sm">
                 <div className="grid gap-2">
                   <div className="flex items-center justify-start gap-2">
                     <PenLine size={16} />
@@ -218,12 +226,14 @@ function TopBar() {
                       Edit profile
                     </Link>
                   </div>
-                  <div className="flex gap-2 justify-start items-center">
-                    <LogOut size={16} className="text-red-700" />
-                    <Button className="text-red-700 border-0 bg-white shadow-none hover:bg-white cursor-pointer m-0 p-0 text-left justify-start w-fit">
-                      Log out
-                    </Button>
-                  </div>
+                  <Button
+                    disabled={logoutMutation.isPending}
+                    onClick={() => logoutMutation.mutateAsync()}
+                    className="text-red-700 flex justify-start border-0 ring-0 focus-visible:ring-0 focus:ring-0 bg-white shadow-none hover:bg-white cursor-pointer m-0 p-0 text-left w-full"
+                  >
+                    <LogOut size={16} className="text-red-700 p-0" />
+                    Log out
+                  </Button>
                 </div>
               </div>
             </PopoverContent>

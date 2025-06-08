@@ -73,7 +73,7 @@ export default function LandlordProfile() {
       {/* Preferences */}
       <Card>
         <CardContent className="space-y-6 pt-6">
-          <h2 className="text-lg font-semibold">Preferences</h2>
+          <h2 className="text-lg font-semibold text-start">Preferences</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="agent">Enable agent management</Label>

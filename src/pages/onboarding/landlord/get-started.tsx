@@ -7,9 +7,9 @@ export default function GetStarted() {
     <div className=" flex items-center">
       {/* Left Content */}
       <div className="w-1/2 p-10 text-start">
-        <h1 className="text-2xl font-bold mb-6">
+        <h2 className="text-2xl font-bold mb-6">
           Get Started with CitiLights Realty
-        </h1>
+        </h2>
 
         <ol className="space-y-6">
           <div>

@@ -2,6 +2,10 @@ import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import { authService } from "@/api/auth.api";
+import { toast } from "sonner";
 
 const OPTIONS = [
   "Standard rental",
@@ -21,7 +25,6 @@ const OPTIONS = [
 export default function LookingFor() {
   const {
     register,
-    setValue,
     setError,
     clearErrors,
     handleSubmit,
@@ -30,12 +33,21 @@ export default function LookingFor() {
 
   const [preferences, setPreferences] = useState<string[]>([]);
 
-  // const selectedValues = getValues("preferences") || [];
+  const updateProfileMutation = useMutation({
+    mutationFn: (data: any) => authService.updateUser(data),
+    mutationKey: ["updateUser"],
+    onSuccess: () => {
+      toast.success("You're all set!");
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
+  const navigate = useNavigate();
   const toggleSelection = (value: string) => {
-    console.log({ preferences, value });
     clearErrors("preferences");
-
     if (!preferences.includes(value)) {
       setPreferences((prev) => [...prev, value]);
     } else {
@@ -44,17 +56,27 @@ export default function LookingFor() {
   };
 
   const onSubmit = (data: any) => {
-    console.log("Submitted");
-
     if (preferences.length < 1) {
       return setError("preferences", {
         message: "Please select at least one option",
       });
     }
-    
-    setValue("preferences", preferences);
-    // console.log("Selected:", data.preferences);
-    // handle logic or navigation
+
+    const finalFormData = new FormData();
+    finalFormData.append("firstName", data.firstName);
+    finalFormData.append("lastName", data.lastName);
+    finalFormData.append("phoneNumber", data.phoneNumber);
+    finalFormData.append("document", data.document[0]);
+    for (const preference of preferences) {
+      finalFormData.append("preferences", preference);
+    }
+
+    // console.log("Form data:", {
+    //   ...data,
+    //   preferences,
+    //   document: data.document[0],
+    // });
+    updateProfileMutation.mutateAsync(finalFormData);
   };
 
   return (
@@ -104,7 +126,11 @@ export default function LookingFor() {
         <p className="text-red-500">{errors?.preferences?.message as string}</p>
       )}
 
-      <Button type="submit" className="w-full max-w-sm cursor-pointer">
+      <Button
+        disabled={updateProfileMutation.isPending}
+        type="submit"
+        className="w-full max-w-sm cursor-pointer"
+      >
         Continue
       </Button>
     </form>

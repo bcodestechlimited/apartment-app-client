@@ -1,19 +1,18 @@
 export interface IProperty {
   _id: string;
-  type:
-    | "serviced-apartment"
-    | "shared-apartment"
-    | "standard-rental"
-    | "short-lets"
-    | "co-working-space"
-    | "other";
+  title: string;
+  address: string;
+  price: number;
+  type: string;
   description: string;
-  availability: string[];
+  availability?: string[];
   pricingModel?: "hourly" | "daily" | "weekly" | "monthly";
-  numberOfRooms: number;
-  seatingCapacity?: number;
+  numberOfBedRooms?: string;
+  numberOfBathrooms?: string;
+  seatingCapacity?: string;
   amenities: string[];
   pictures: string[];
+  isVerified: boolean;
 }
 
 export interface IAddProperty {
@@ -25,6 +24,7 @@ export interface IAddProperty {
   //   | "co-working-space"
   //   | "other";
   type: string;
+  price?: number;
   description: string;
   numberOfRooms: number;
   amenities: string[];

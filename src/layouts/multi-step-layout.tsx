@@ -2,21 +2,6 @@ import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Outlet, useLocation, useNavigate } from "react-router";
 
-const OPTIONS = [
-  "Standard rental",
-  "Short let",
-  "Serviced apartment",
-  "Shared apartment",
-  "Lekki",
-  "Yaba",
-  "Ikoyi",
-  "Oniru",
-  "Short term",
-  "Long term",
-  "Monthly",
-  "Daily",
-];
-
 export default function MultiStepForm() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -25,13 +10,12 @@ export default function MultiStepForm() {
     mode: "onBlur",
     defaultValues: {
       // Add all the fields needed across all steps
-      firstname: "",
-      lastname: "",
+      firstName: "",
+      lastName: "",
       phoneNumber: "",
-      email: "",
       step: 1,
       document: null,
-      preferences: OPTIONS,
+      preferences: [],
       // ...
     },
   });
@@ -39,19 +23,19 @@ export default function MultiStepForm() {
   const steps = [
     {
       index: 1,
-      path: "/onboarding/setup-profile",
+      path: "/onboarding/tenant/setup-profile",
       header: "Set up your profile",
       paragraph: null,
     },
     {
       index: 2,
-      path: "/onboarding/verify-identity",
+      path: "/onboarding/tenant/verify-identity",
       header: "Verify your identity",
       paragraph: null,
     },
     {
       index: 3,
-      path: "/onboarding/looking-for",
+      path: "/onboarding/tenant/looking-for",
       header: "What are youlooking for and where?",
       paragraph:
         "This will help us tailor and curate recommendations that fit your preferences.",
@@ -59,12 +43,14 @@ export default function MultiStepForm() {
   ];
 
   const currentStep = useMemo(() => {
-    const currStep = steps.find((s) => s.path === pathname)?.index  || 0;
-    return currStep || 0;
-    // return steps.find((s) => s.path === pathname)?.index || 0;
-  }, [pathname]);
+    const currStep = steps.find((s) => s.path === pathname)?.index || 0;
+    console.log({ currStep, pathname });
+    if (!currStep) {
+      return 0;
+    }
 
-  console.log({ currentStep });
+    return currStep === 0 ? currStep : currStep - 1;
+  }, [pathname]);
 
   return (
     <div className="w-full">
@@ -83,15 +69,8 @@ export default function MultiStepForm() {
           {steps.map((step) => (
             <div
               onClick={() => {
-                console.log("ff");
-                console.log({ step });
-
                 const stepIndex = step.index - 1;
-                console.log(currentStep !== stepIndex);
-
                 if (currentStep !== stepIndex) {
-                  console.log("heree");
-
                   methods.reset({ ...methods.getValues(), step: stepIndex });
                   navigate(step.path);
                 }

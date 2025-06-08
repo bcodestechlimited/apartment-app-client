@@ -1,5 +1,5 @@
 import { propertyService } from "@/api/property.api";
-import PropertyCard from "@/components/shared/propertyCard";
+import { PropertyCard } from "@/components/shared/propertyCard";
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
 import { cn } from "@/lib/utils";
@@ -55,16 +55,18 @@ export default function Listings() {
         <AddPropertyModal
           // propertyType="co-working space" // example value
           isOpen={isModalOpen}
-          closeModal={() => setIsModalOpen(false)}
+          closeModal={closeModal}
         />
       </div>
       <div>
         {isLoading ? (
           <p>Loading...</p>
         ) : (
-          data?.properties.map((property: IProperty) => {
-            return <PropertyCard property={property} key={property._id} />;
-          })
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {data?.properties.map((property: IProperty) => {
+              return <PropertyCard property={property} key={property._id} />;
+            })}
+          </div>
         )}
       </div>
     </div>

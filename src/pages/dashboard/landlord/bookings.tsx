@@ -60,6 +60,7 @@ export default function Bookings() {
 
   return (
     <div>
+      <h2 className="text-2xl font-semibold text-start mb-4">My Bookings</h2>
       <DataTable columns={columns} data={bookings} />
     </div>
   );

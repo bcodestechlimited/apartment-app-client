@@ -1,7 +1,3 @@
-// src/components/Header.tsx
-// src/App.tsx
-
-import PropertyCard from "@/components/landingpage/property-card";
 import image1 from "../../assets/images/image1.webp";
 // import citylightslogo from "../../assets/images/citylights-logo-main.png";
 import citylightslogo from "@/assets/images/citylights-logo-main-light.png";
@@ -19,35 +15,57 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Link } from "react-router";
+import { PropertyCard } from "@/components/shared/propertyCard";
+import { Button } from "@/components/ui/button";
 
 const newListings = [
   {
+    _id: "1",
     title: "1004 Estate",
-    price: "₦3.5 million",
+    price: 3500000,
+    address: "Lekki Phase 1, Lagos",
     type: "2 Bedroom",
-    img: image1,
-    details: "2 🛏 | 2 🛁 | 1179 sqft",
+    pictures: [image1],
+    description: "2 | 2 | 1179 sqft",
+    amenities: ["Wi-Fi", "Air-Conditioner", "Power-Backup", "Coffee"],
+    numberOfBedRooms: 2,
+    numberOfBathrooms: 2,
+    isVerified: true,
   },
   {
+    _id: "2",
     title: "Jurong East",
-    price: "₦3.5 million",
+    price: 3500000,
+    address: "Lekki Phase 1, Lagos",
     type: "Mini Flat",
-    img: image1,
-    details: "1 🛏 | 2 🛁 | 1400 sqft",
+    pictures: [image1],
+    description: "1 | 2 | 1400 sqft",
+    amenities: ["Wi-Fi", "Air-Conditioner", "Power-Backup", "Coffee"],
+    numberOfBedRooms: 1,
+    numberOfBathrooms: 2,
+    isVerified: false,
   },
   {
+    _id: "3",
     title: "1004 Estate",
-    price: "₦3.5 million",
+    price: 3500000,
+    address: "Lekki Phase 1, Lagos",
     type: "2 Bedroom",
-    img: image1,
-    details: "2 🛏 | 2 🛁 | 1179 sqft",
+    pictures: [image1],
+    description: "2 | 2 | 1179 sqft",
+    amenities: ["Wi-Fi", "Air-Conditioner", "Power-Backup", "Coffee"],
+    isVerified: true,
   },
   {
+    _id: "4",
     title: "Jurong East",
-    price: "₦3.5 million",
+    price: 3500000,
+    address: "Lekki Phase 1, Lagos",
     type: "Mini Flat",
-    img: image1,
-    details: "1 🛏 | 2 🛁 | 1400 sqft",
+    pictures: [image1],
+    description: "1 | 2 | 1400 sqft",
+    amenities: ["Wi-Fi", "Air-Conditioner", "Power-Backup", "Coffee"],
+    isVerified: true,
   },
 ];
 
@@ -99,48 +117,57 @@ const projects = [
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <main className="px-14">
-        {/* header */}
-
         <nav className="flex items-center justify-between p-4 bg-white ">
           <div className="text-2xl font-bold text-gray-800">
-            <img src={citylightslogo} alt="" />
+            <img src={citylightslogo} alt="" className="w-14 min-w-12" />
           </div>
           <div className="flex space-x-6">
-            <a href="#" className="text-gray-600 hover:text-gray-900">
+            <a
+              href="#"
+              className="text-gray-600 hover:text-gray-900 font-medium"
+            >
               Discover
             </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">
+            <a
+              href="#"
+              className="text-gray-600 hover:text-gray-900 font-medium"
+            >
               List Property
             </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">
+            <a
+              href="#"
+              className="text-gray-600 hover:text-gray-900 font-medium"
+            >
               How It Works
             </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">
+            <a
+              href="#"
+              className="text-gray-600 hover:text-gray-900 font-medium"
+            >
               Support
             </a>
           </div>
           <div className="flex space-x-4">
             <Link
               to={"/auth/sign-up"}
-              className="text-gray-600 hover:text-gray-900"
+              className="text-gray-600 hover:text-gray-900 font-medium"
             >
               Register
             </Link>
             <Link
               to={"/auth/sign-in"}
-              className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
+              className="px-4 py-1 text-white bg-green-600 rounded hover:bg-green-700"
             >
               Login
             </Link>
           </div>
         </nav>
-        {/* hero */}
 
-        <section className="relative bg-gray-200 h-[500px] flex items-center justify-center hero-background  rounded-lg">
-          <div className="relative z-10 text-center text-white px-4">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4">
+        <section className="bg-gray-200 flex items-center justify-center hero-background  rounded-lg">
+          <div className=" flex flex-col gap-6 text-center text-white py-12 px-6">
+            <h1 className="text-3xl md:text-5xl font-medium mb-4">
               FIND, BOOK, LIVE. THE SMARTER WAY TO RENT APARTMENTS & CO-WORKING
               SPACES
             </h1>
@@ -149,62 +176,68 @@ const LandingPage = () => {
               co-working spaces or short lets with flexible payment plans and
               verified listings
             </p>
-            <div className="flex flex-wrap justify-center space-x-4 bg-white p-4 rounded-lg shadow-md text-[#2C3A61]">
-              <section>
-                <h3>Locations</h3>
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select finally" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
-                  </SelectContent>
-                </Select>
-              </section>
-              <section>
-                <h3>Property Type</h3>
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select finally" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
-                  </SelectContent>
-                </Select>
-              </section>
-              <section>
-                <h3>Rent Range</h3>
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select finally" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
-                  </SelectContent>
-                </Select>
-              </section>
-              <section>
-                <h3>Duration</h3>
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select finally" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
-                  </SelectContent>
-                </Select>
-              </section>
-              <button className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
-                Search
-              </button>
+            <div className="flex flex-wrap items-center justify-center space-x-4 bg-white p-4 rounded-lg shadow-md text-[#2C3A61]/70 w-full">
+              <div className="grid grid-cols-5 items-center gap-4 text-sm w-full">
+                <div className="flex flex-col gap-2 items-center border-r-2 border-gray-300 pr-4">
+                  <h3 className="font-bold">Locations</h3>
+                  <Select>
+                    <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0">
+                      <SelectValue placeholder="Select your city" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">Light</SelectItem>
+                      <SelectItem value="dark">Dark</SelectItem>
+                      <SelectItem value="system">System</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* <Separator orientation="vertical" className="h-full" /> */}
+                <div className="flex flex-col gap-2 items-center border-r-2 border-gray-300 pr-4">
+                  <h3 className="font-bold">Property Type</h3>
+                  <Select>
+                    <SelectTrigger className="border-0 shadow-none w-full">
+                      <SelectValue placeholder="Select property type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">Light</SelectItem>
+                      <SelectItem value="dark">Dark</SelectItem>
+                      <SelectItem value="system">System</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* <Separator orientation="vertical" /> */}
+                <div className="flex flex-col gap-2 items-center border-r-2 border-gray-300 pr-4">
+                  <h3 className="font-bold">Rent Range</h3>
+                  <Select>
+                    <SelectTrigger className="border-0 shadow-none w-full">
+                      <SelectValue placeholder="Select rent range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">Light</SelectItem>
+                      <SelectItem value="dark">Dark</SelectItem>
+                      <SelectItem value="system">System</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* <Separator orientation="vertical" /> */}
+                <div className="flex flex-col gap-2 items-center">
+                  <h3 className="font-bold">Duration</h3>
+                  <Select>
+                    <SelectTrigger className="border-0 shadow-none w-full">
+                      <SelectValue placeholder="Select duration" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">Light</SelectItem>
+                      <SelectItem value="dark">Dark</SelectItem>
+                      <SelectItem value="system">System</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button className="w-fit px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 justify-self-center cursor-pointer">
+                  Search
+                </Button>
+              </div>
             </div>
           </div>
         </section>
@@ -216,9 +249,9 @@ const LandingPage = () => {
               View more →
             </a>
           </div>
-          <div className="flex gap-6 ">
-            {newListings.map((listing, idx) => (
-              <PropertyCard key={idx} {...listing} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {newListings.map((listing) => (
+              <PropertyCard property={listing} />
             ))}
           </div>
         </section>

@@ -25,20 +25,22 @@ class AuthService {
       handleAxiosError(error, "Failed to sign in");
     }
   };
+  logOut = async () => {
+    try {
+      const response = await axiosInstance.get(`/auth/logout`);
+      console.log({ response });
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to logout");
+    }
+  };
   getUser = async () => {
     try {
       const response = await axiosInstance.get(`/auth`);
-      // set user
       useAuthStore.getState().actions.setUser(response.data?.data);
-      return response.data?.data;
+      return response.data?.data?.user;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error?.response?.data);
-        throw new Error(
-          error.response?.data?.message || "Failed to authenticate user"
-        );
-      }
-      throw error;
+      handleAxiosError(error, "Failed to get user");
     }
   };
   updateUser = async (payload: Partial<User>) => {

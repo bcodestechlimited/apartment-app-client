@@ -1,6 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@100..900&display=swap");
+
 #root {
   margin: 0 auto;
   text-align: center;
+  /* max-width: 1200px; */
+}
+
+h1 {
+  font-family: "Bebas Neue", sans-serif;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+button {
+  font-family: "Outfit", sans-serif;
 }
 
 .hero-background {
@@ -33,27 +51,4 @@
   background-color: red;
 
   margin: 10px;
-}
-
-.main {
-  width: 500px;
-  height: 500px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas:
-    "vertical firsthorizon"
-    "vertical horizon";
-}
-
-.sub1 {
-  grid-area: firsthorizon;
-}
-
-.sub2 {
-  grid-area: horizon;
-}
-
-.first {
-  grid-area: vertical;
 }

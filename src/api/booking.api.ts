@@ -2,25 +2,19 @@ import type { IParams } from "@/interfaces/query.interface";
 import axiosInstance from "@/lib/axios.config";
 import { handleAxiosError } from "@/lib/utils";
 
-class PropertyService {
-  addProperty = async (payload: any) => {
+class BookingService {
+  createBooking = async (payload: any) => {
     console.log({ payload });
 
     try {
-      const response = await axiosInstance.post(`/property`, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
+      const response = await axiosInstance.post(`/booking`, payload);
       console.log({ response });
-
       return response.data?.data;
     } catch (error) {
-      handleAxiosError(error, "Unable to add property");
+      handleAxiosError(error, "Unable to book property");
     }
   };
-  getProperty = async (propertyId: string) => {
+  getBooking = async (propertyId: string) => {
     try {
       const response = await axiosInstance.get(`/property/${propertyId}`);
 
@@ -31,23 +25,7 @@ class PropertyService {
       handleAxiosError(error, "Unable to get property");
     }
   };
-
-  getProperties = async (params: IParams) => {
-    console.log({ params });
-
-    try {
-      const response = await axiosInstance.get(`/property`, {
-        params,
-      });
-
-      console.log({ response });
-
-      return response.data?.data;
-    } catch (error) {
-      handleAxiosError(error, "Unable to get properties");
-    }
-  };
-  getLandLordProperties = async (params: IParams) => {
+  getBookings = async (params: IParams) => {
     console.log({ params });
 
     try {
@@ -64,4 +42,4 @@ class PropertyService {
   };
 }
 
-export const propertyService = new PropertyService();
+export const bookingService = new BookingService();

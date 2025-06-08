@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import {
   ChevronDown,
   Compass,
@@ -6,6 +6,10 @@ import {
   HandCoins,
   FileText,
   Mail,
+  Search,
+  Bell,
+  PenLine,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
@@ -13,6 +17,16 @@ import { useState, type JSX } from "react";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import cityLightsLogo from "@/assets/images/citylights-logo-main-light.png";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { authService } from "@/api/auth.api";
+import { toast } from "sonner";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 interface Submenu {
   name: string;
@@ -171,11 +185,69 @@ function TenantSideBar() {
 }
 
 function TopBar() {
+  const navigate = useNavigate();
+
+  const logoutMutation = useMutation({
+    mutationFn: authService.logOut,
+    onSuccess: (response) => {
+      toast.success(response.message);
+      navigate("/auth/sign-in", { replace: true });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to log out");
+    },
+  });
+
   return (
-    <div className="flex items-center justify-between p-4">
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
-          <Input />
+    <div className="flex justify-between p-4 bg-white  mb-4">
+      <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
+        <Search className="w-5 h-5 text-gray-600 ml-3" />
+        <Input
+          placeholder="Search"
+          className="border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none "
+        />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Bell className="w-6 h-6 text-gray-300 mr-3" />
+        <div className="flex items-center cursor-pointer  px-3 py-2   gap-5 transition-colors">
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="flex items-center gap-2 border px-4 py-2 rounded-full bg-white shadow-sm hover:bg-gray-100 transition-colors">
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <div className="text-left">
+                  <p className="text-sm  text-[#000000] text-[14px] font-[600] ">
+                    Alicia Larsen
+                  </p>
+                  <p className="text-xs text-[#93A3AB]">Landlord</p>
+                </div>
+                <ChevronDown className="w-4 h-4 text-gray-600 ml-2" />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-50 mr-4">
+              <div className="text-sm">
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-start gap-2">
+                    <PenLine size={16} />
+                    <Link to="/dashboard/landlord/profile" className="w-full">
+                      Edit profile
+                    </Link>
+                  </div>
+                  <Button
+                    disabled={logoutMutation.isPending}
+                    onClick={() => logoutMutation.mutateAsync()}
+                    className="text-red-700 flex justify-start border-0 ring-0 focus-visible:ring-0 focus:ring-0 bg-white shadow-none hover:bg-white cursor-pointer m-0 p-0 text-left w-full"
+                  >
+                    <LogOut size={16} className="text-red-700 p-0" />
+                    Log out
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>

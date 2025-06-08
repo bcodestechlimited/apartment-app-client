@@ -33,6 +33,9 @@ import Analytics from "./pages/dashboard/landlord/analytics";
 import Messages from "./pages/dashboard/landlord/messages";
 import SignIn from "./pages/auth/sign-in";
 import LandlordProfile from "./pages/dashboard/landlord/profile";
+import { LandlordAuthGuard } from "./guards/auth.guard";
+import PropertyDetails from "./pages/dashboard/tenant/property-details";
+import PaymentSummary from "./pages/dashboard/tenant/payment-summary";
 
 const queryClient = new QueryClient();
 
@@ -121,13 +124,21 @@ function App() {
               element: <Explore />,
             },
             {
-              path: "onboarding/verify-identity",
-              element: <VerifyIdentity />,
+              path: "property/:propertyId",
+              element: <PropertyDetails />,
             },
             {
-              path: "onboarding/looking-for",
-              element: <LookingFor />,
+              path: "property/:propertyId/pay",
+              element: <PaymentSummary />,
             },
+            // {
+            //   path: "onboarding/verify-identity",
+            //   element: <VerifyIdentity />,
+            // },
+            // {
+            //   path: "onboarding/looking-for",
+            //   element: <LookingFor />,
+            // },
             {
               path: "*",
               element: <div>Page not found</div>,
@@ -136,39 +147,48 @@ function App() {
         },
         {
           path: "landlord",
-          element: <LandlordLayout />,
+          element: <LandlordAuthGuard />,
           children: [
             {
-              path: "",
-              element: <Listings />,
-            },
-            {
-              path: "bookings",
-              element: <Bookings />,
-            },
-            {
-              path: "tenants",
-              element: <Tenants />,
-            },
-            {
-              path: "payments",
-              element: <Payments />,
-            },
-            {
-              path: "analytics",
-              element: <Analytics />,
-            },
-            {
-              path: "messages",
-              element: <Messages />,
-            },
-            {
-              path: "profile",
-              element: <LandlordProfile />,
-            },
-            {
-              path: "*",
-              element: <div>Page not found</div>,
+              element: <LandlordLayout />,
+              children: [
+                {
+                  path: "",
+                  element: <Listings />,
+                },
+                {
+                  path: "listings",
+                  element: <Listings />,
+                },
+                {
+                  path: "bookings",
+                  element: <Bookings />,
+                },
+                {
+                  path: "tenants",
+                  element: <Tenants />,
+                },
+                {
+                  path: "payments",
+                  element: <Payments />,
+                },
+                {
+                  path: "analytics",
+                  element: <Analytics />,
+                },
+                {
+                  path: "messages",
+                  element: <Messages />,
+                },
+                {
+                  path: "profile",
+                  element: <LandlordProfile />,
+                },
+                {
+                  path: "*",
+                  element: <div>Page not found</div>,
+                },
+              ],
             },
           ],
         },

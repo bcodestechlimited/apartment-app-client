@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MultiSelect } from "@/components/custom/multi-select";
 import { FileInput } from "@/components/custom/file-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useLocation, useNavigate } from "react-router";
 
@@ -34,13 +34,26 @@ export function PropertyOnboarding() {
     setError,
     clearErrors,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<IAddProperty>();
 
   const location = useLocation();
   const propertyType = location.state?.propertyType.replace(" ", "-") as string;
-
   const navigate = useNavigate();
+
+  const pictures = watch("pictures") || [];
+
+  useEffect(() => {
+    if (pictures.length > 2) {
+      clearErrors("pictures");
+      return;
+    }
+
+    register("pictures", {
+      required: "Please upload pictures of your property",
+    });
+  }, [register]);
 
   const propertyMutation = useMutation({
     mutationFn: propertyService.addProperty,
@@ -70,13 +83,13 @@ export function PropertyOnboarding() {
       });
       return;
     }
-    if (!data.pictures || data.pictures.length <= 2) {
-      setError("pictures", {
-        type: "manual",
-        message: "Please upload at least 3 pictures",
-      });
-      return;
-    }
+    // if (!data.pictures || data.pictures.length <= 2) {
+    //   setError("pictures", {
+    //     type: "manual",
+    //     message: "Please upload at least 3 pictures",
+    //   });
+    //   return;
+    // }
     if (!selectedRooms) {
       setError("numberOfRooms", {
         type: "manual",
@@ -89,11 +102,11 @@ export function PropertyOnboarding() {
     formData.append("description", data.description);
     formData.append("amenities", JSON.stringify(selectedAmenities));
     formData.append("type", propertyType.toLowerCase());
-    formData.append("numberOfRooms", String(selectedRooms));
+    formData.append("numberOfBedRooms", String(selectedRooms));
     for (let i = 0; i < data.pictures.length; i++) {
       formData.append("pictures", data.pictures[i]);
     }
-
+    formData.append("price", String(data.price));
     console.log("Final Form Submission:", formData);
     propertyMutation.mutateAsync(formData);
   };
@@ -191,25 +204,44 @@ export function PropertyOnboarding() {
           </div>
 
           <div className=" flex flex-col gap-4">
+            <Label className="text-start font-bold" htmlFor="noOfRooms">
+              Price
+            </Label>
+
+            <Input
+              type="number"
+              placeholder="Enter price"
+              {...register("price", {
+                required: "Description is required",
+                valueAsNumber: true,
+              })}
+            />
+          </div>
+          <div className=" flex flex-col gap-4">
             <p className=" text-start font-semibold">
               Upload Images of your property
             </p>
             <FileInput
-              accept=".jpg,.jpeg,.png,.pdf"
+              accept=".jpg,.jpeg,.png"
+              value={pictures}
+              multiple
+              customMessage="min of 3 images (exterior view, interior view, key features)"
+              numberOfFiles={2}
               onFilesChange={(updatedFiles) => {
                 console.log({ updatedFiles });
 
-                if (updatedFiles.length > 2) {
+                if (updatedFiles.length > 1) {
                   clearErrors("pictures");
+                  setValue("pictures", updatedFiles);
+                } else {
+                  setError("pictures", {
+                    type: "manual",
+                    message: "Please upload at least 3 pictures",
+                  });
                 }
-                setValue("pictures", updatedFiles);
               }}
+              errorMessage={errors.pictures?.message}
             />
-            {errors?.pictures && (
-              <p className="text-destructive text-sm mt-1 text-end">
-                {errors.pictures.message}
-              </p>
-            )}
           </div>
         </form>
       </div>
@@ -223,7 +255,7 @@ export function PropertyOnboarding() {
           onClick={handleSubmit(onSubmit)}
           disabled={propertyMutation.isPending}
         >
-          {propertyMutation.isPending ? "Loading..." : "Publish listing"}
+          {propertyMutation.isPending ? "Publishing..." : "Publish listing"}
         </Button>
       </div>
     </div>

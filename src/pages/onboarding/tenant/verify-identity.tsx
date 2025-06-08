@@ -1,5 +1,6 @@
 import { FileInput } from "@/components/custom/file-input";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router";
 
@@ -7,25 +8,31 @@ export default function VerifyIdentity() {
   const {
     register,
     handleSubmit,
-    // setValue,
+    setValue,
     watch,
+    trigger,
     formState: { errors },
   } = useFormContext();
 
-  const files = watch("document");
-
+  const files = watch("document") || [];
   const navigate = useNavigate();
+
+  useEffect(() => {
+    register("document", {
+      required: "Please upload a document",
+    });
+  }, [register]);
 
   const onSubmit = (data: any) => {
     console.log({ data });
 
-    const filesArray = data.documents ? Array.from(data.documents) : [];
+    const filesArray = data.document ? Array.from(data.document) : [];
     console.log({ filesArray });
     // Handle file upload
-    navigate("/onboarding/looking-for");
+    navigate("/onboarding/tenant/looking-for");
   };
 
-  // console.log({ errors });
+  console.log({ errors });
 
   return (
     <div className=" bg-white flex flex-col gap-12 justify-center items-center px-4 w-full max-w-sm mx-auto">
@@ -33,25 +40,22 @@ export default function VerifyIdentity() {
         <p>Upload Government ID (Dirver's License, National ID, Passport)</p>
 
         <FileInput
-          {...register("document", {
-            required: "Documents are required",
-          })}
-          multiple
           accept=".jpg,.jpeg,.png,.pdf"
           value={files}
+          numberOfFiles={1}
           onFilesChange={(files) => {
             console.log({ files });
 
             const dataTransfer = new DataTransfer();
             files.forEach((file) => dataTransfer.items.add(file));
-            // setValue("documents", dataTransfer.files);
+            setValue("document", dataTransfer.files, {
+              shouldValidate: true, // ✅ triggers internal validation
+            });
+
+            trigger("document");
           }}
+          errorMessage={errors?.document?.message as string | undefined}
         />
-        {errors?.documents && (
-          <p className="text-destructive text-sm mt-1 text-end">
-            {errors.documents.message as string}
-          </p>
-        )}
 
         <Button className="w-full bg-custom-primary text-white hover:opacity-90 cursor-pointer">
           Continue
