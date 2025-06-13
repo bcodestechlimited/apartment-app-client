@@ -198,10 +198,7 @@ const FileInput = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    console.log({ files: e.target.files });
-
     if (e.target.files) {
-      console.log("Handling...");
       handleFiles(e.target.files);
     }
   };
@@ -225,8 +222,6 @@ const FileInput = ({
       return updatedFiles;
     });
   };
-
-  console.log({ multiple: props.multiple });
 
   return (
     <div className="space-y-1">

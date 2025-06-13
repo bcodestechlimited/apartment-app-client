@@ -1,3 +1,7 @@
+export const amenities = ["Air Conditioner", "Kitchen", "Wi-Fi", "TV"];
+export const facilities = ["Parking", "Gym", "Swimming Pool", "Security"];
+export const pricingModels = ["Hourly", "Daily", "Weekly", "Monthly", "Yearly"];
+
 export interface IProperty {
   _id: string;
   title: string;
@@ -25,23 +29,24 @@ export interface IAddProperty {
   //   | "other";
   type: string;
   price?: number;
+  location: string;
   description: string;
-  numberOfRooms: number;
+  numberOfBedRooms: string;
+  numberOfBathrooms: string;
+  pricingModel: string;
   amenities: string[];
+  facilities: string[];
   pictures: File[];
 }
 export interface IAddPropertyCoWorkingSpace {
-  type:
-    | "serviced-apartment"
-    | "shared-apartment"
-    | "standard-rental"
-    | "short-lets"
-    | "co-working-space"
-    | "other";
+  type: string;
+  price?: number;
+  location: string;
   description: string;
+  numberOfBedRooms: string;
+  numberOfBathrooms: string;
+  pricingModel: string;
   amenities: string[];
-  availability: string[];
+  facilities: string[];
   pictures: File[];
-  pricingModel?: "hourly" | "daily" | "weekly" | "monthly";
-  seatingCapacity: number;
 }

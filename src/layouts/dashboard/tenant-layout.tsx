@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface Submenu {
   name: string;
@@ -186,6 +187,7 @@ function TenantSideBar() {
 
 function TopBar() {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
 
   const logoutMutation = useMutation({
     mutationFn: authService.logOut,
@@ -215,14 +217,20 @@ function TopBar() {
             <PopoverTrigger asChild>
               <div className="flex items-center gap-2 border px-4 py-2 rounded-full bg-white shadow-sm hover:bg-gray-100 transition-colors">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage
+                    src={user?.avatar || "https://github.com/shadcn.png"}
+                  />
+                  <AvatarFallback>
+                    {`${user?.firstName?.charAt(0) || "A"}${
+                      user?.lastName?.charAt(0) || "A"
+                    }`}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="text-left">
                   <p className="text-sm  text-[#000000] text-[14px] font-[600] ">
-                    Alicia Larsen
+                    {`${user?.firstName || "A"}${user?.lastName || "A"}`}
                   </p>
-                  <p className="text-xs text-[#93A3AB]">Landlord</p>
+                  <p className="text-xs text-[#93A3AB]">Tenant</p>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-600 ml-2" />
               </div>

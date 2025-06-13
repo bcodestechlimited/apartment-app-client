@@ -33,14 +33,14 @@ class PropertyService {
   };
 
   getProperties = async (params: IParams) => {
-    console.log({ params });
+    // console.log({ params });
 
     try {
       const response = await axiosInstance.get(`/property`, {
         params,
       });
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -48,14 +48,14 @@ class PropertyService {
     }
   };
   getLandLordProperties = async (params: IParams) => {
-    console.log({ params });
+    // console.log({ params });
 
     try {
       const response = await axiosInstance.get(`/property`, {
         params,
       });
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {

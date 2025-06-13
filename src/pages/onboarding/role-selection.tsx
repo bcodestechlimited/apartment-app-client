@@ -33,7 +33,7 @@ export default function RoleSelection() {
   const roleMutation = useMutation({
     mutationFn: authService.updateUser,
     onSuccess: () => {
-      toast.success("Role selected successfully");
+      // toast.success("Role selected successfully");
       if (selectedRole === "tenant") {
         navigate("/onboarding/tenant/setup-profile");
       } else if (selectedRole === "landlord") {
