@@ -635,8 +635,8 @@ export function PropertyOnboardingWorkSpace() {
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
     formData.append("facilities", JSON.stringify(selectedFacilities));
-    formData.append("type", propertyType.toLowerCase());
-    // formData.append("type", "serviced-apartment"); // hardcoded for now
+    // formData.append("type", propertyType.toLowerCase());
+    formData.append("type", "co-working-space"); // hardcoded for now
     formData.append("numberOfBedRooms", String(selectedRooms));
     formData.append("numberOfBathrooms", String(selectedBathrooms));
     for (let i = 0; i < data.pictures.length; i++) {

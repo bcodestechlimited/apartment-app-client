@@ -1,5 +1,8 @@
 import { propertyService } from "@/api/property.api";
-import { PropertyCard } from "@/components/shared/propertyCard";
+import {
+  PropertyCard,
+  PublicPropertyCard,
+} from "@/components/shared/propertyCard";
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
 import { cn } from "@/lib/utils";
@@ -98,9 +101,19 @@ export default function Listings() {
           <Loader />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {data?.properties.map((property: IProperty) => {
-              return <PropertyCard property={property} key={property._id} />;
-            })}
+            {data?.properties < 1 ? (
+              <div className="col-span-4 py-6">
+                <p className="text-center">No properties found</p>
+              </div>
+            ) : (
+              data?.properties.map((property: IProperty) => {
+                console.log({ property });
+
+                return (
+                  <PublicPropertyCard property={property} key={property._id} />
+                );
+              })
+            )}
           </div>
         )}
       </div>

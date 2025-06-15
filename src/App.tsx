@@ -34,8 +34,13 @@ import Messages from "./pages/dashboard/landlord/messages";
 import SignIn from "./pages/auth/sign-in";
 import LandlordProfile from "./pages/dashboard/landlord/profile";
 import { LandlordAuthGuard } from "./guards/auth.guard";
-import PropertyDetails from "./pages/dashboard/tenant/property-details";
 import PaymentSummary from "./pages/dashboard/tenant/payment-summary";
+import PropertyDetailLayout from "./layouts/property-detail-layout";
+import PropertyOverview from "./pages/dashboard/shared/property-overview";
+import PropertyDescription from "./pages/dashboard/shared/property-description";
+import PropertyDetails from "./pages/dashboard/shared/property-details";
+import PropertyAmenities from "./pages/dashboard/shared/property-amenities";
+import PropertyLocation from "./pages/dashboard/shared/property-location";
 
 const queryClient = new QueryClient();
 
@@ -125,7 +130,29 @@ function App() {
             },
             {
               path: "property/:propertyId",
-              element: <PropertyDetails />,
+              element: <PropertyDetailLayout />,
+              children: [
+                {
+                  path: "",
+                  element: <PropertyOverview />,
+                },
+                {
+                  path: "description",
+                  element: <PropertyDescription />,
+                },
+                {
+                  path: "details",
+                  element: <PropertyDetails />,
+                },
+                {
+                  path: "amenities",
+                  element: <PropertyAmenities />,
+                },
+                {
+                  path: "location",
+                  element: <PropertyLocation />,
+                },
+              ],
             },
             {
               path: "property/:propertyId/pay",

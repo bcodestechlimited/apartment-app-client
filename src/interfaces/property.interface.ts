@@ -15,6 +15,7 @@ export interface IProperty {
   numberOfBathrooms?: string;
   seatingCapacity?: string;
   amenities: string[];
+  facilities: string[];
   pictures: string[];
   isVerified: boolean;
 }

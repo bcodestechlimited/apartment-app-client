@@ -180,8 +180,6 @@ function TopBar() {
 
   const { user } = useAuthStore();
 
-  console.log({ user });
-
   const logoutMutation = useMutation({
     mutationFn: authService.logOut,
     onSuccess: (response) => {

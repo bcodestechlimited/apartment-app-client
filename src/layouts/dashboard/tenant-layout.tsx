@@ -266,7 +266,7 @@ export default function TenantLayout() {
   return (
     <div className="flex h-screen">
       <TenantSideBar />
-      <div className="flex-1 bg-gray-100 p-4">
+      <div className="flex-1 bg-white p-4">
         <TopBar />
         <div className="w-full max-w-[1440px]">
           <Breadcrumb />

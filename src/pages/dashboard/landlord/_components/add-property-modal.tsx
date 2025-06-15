@@ -180,7 +180,6 @@ export default function AddPropertyModal({
 
   const onSubmit = async (data: IAddProperty) => {
     console.log("Form submitted");
-
     console.log({ data });
 
     const hasErrors = runCustomValidation(data);
