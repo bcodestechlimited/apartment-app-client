@@ -1,11 +1,8 @@
 import { propertyService } from "@/api/property.api";
-import {
-  PropertyCard,
-  PublicPropertyCard,
-} from "@/components/shared/propertyCard";
+import { PublicPropertyCard } from "@/components/shared/propertyCard";
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
-import { cn } from "@/lib/utils";
+import { cn, getActualTypeFromParam } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router";
@@ -25,7 +22,7 @@ export default function Listings() {
   const type = searchParams.get("type") || "All";
 
   const { data, isLoading } = useQuery({
-    queryKey: ["landlord-properties", { page, limit }],
+    queryKey: ["landlord-properties", { page, limit, type }],
     queryFn: () =>
       propertyService.getLandLordProperties({
         page: 1,
@@ -37,8 +34,10 @@ export default function Listings() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  console.log({ data, type });
+
   return (
-    <div className="">
+    <div className="w-full">
       <div className="flex items-center justify-between mb-4">
         <div className="bg-custom-primary/10 w-fit rounded-full p-2">
           <ul className="relative flex items-center font-semibold text-xl gap-2">
@@ -101,16 +100,29 @@ export default function Listings() {
           <Loader />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {data?.properties < 1 ? (
+            {data?.properties < 1 && type === "All" ? (
               <div className="col-span-4 py-6">
                 <p className="text-center">No properties found</p>
+              </div>
+            ) : data?.properties.length < 1 && type !== "All" ? (
+              <div className="col-span-4 py-6">
+                <p className="text-center">
+                  No properties found for{" "}
+                  <span className="capitalize font-semibold">
+                    {getActualTypeFromParam(type)}
+                  </span>
+                </p>
               </div>
             ) : (
               data?.properties.map((property: IProperty) => {
                 console.log({ property });
 
                 return (
-                  <PublicPropertyCard property={property} key={property._id} />
+                  <PublicPropertyCard
+                    property={property}
+                    key={property._id}
+                    link={`/dashboard/landlord/property/${property._id}`}
+                  />
                 );
               })
             )}

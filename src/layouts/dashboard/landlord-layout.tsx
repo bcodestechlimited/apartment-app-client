@@ -259,7 +259,8 @@ export default function LandlordLayout() {
       <LandlordSideBar />
       <div className="flex-1 bg-white p-4">
         <TopBar />
-        <div className="w-full max-w-[1440px]">
+        {/* <div className="w-full max-w-[1440px]"> */}
+        <div className="w-full">
           <Breadcrumb />
           <Outlet />
         </div>

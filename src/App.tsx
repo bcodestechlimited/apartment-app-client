@@ -212,12 +212,64 @@ function App() {
                   element: <LandlordProfile />,
                 },
                 {
+                  path: "property/:propertyId",
+                  element: <PropertyDetailLayout />,
+                  children: [
+                    {
+                      path: "",
+                      element: <PropertyOverview />,
+                    },
+                    {
+                      path: "description",
+                      element: <PropertyDescription />,
+                    },
+                    {
+                      path: "details",
+                      element: <PropertyDetails />,
+                    },
+                    {
+                      path: "amenities",
+                      element: <PropertyAmenities />,
+                    },
+                    {
+                      path: "location",
+                      element: <PropertyLocation />,
+                    },
+                  ],
+                },
+                {
                   path: "*",
                   element: <div>Page not found</div>,
                 },
               ],
             },
           ],
+        },
+      ],
+    },
+    {
+      path: "property/:propertyId",
+      element: <PropertyDetailLayout />,
+      children: [
+        {
+          path: "",
+          element: <PropertyOverview />,
+        },
+        {
+          path: "description",
+          element: <PropertyDescription />,
+        },
+        {
+          path: "details",
+          element: <PropertyDetails />,
+        },
+        {
+          path: "amenities",
+          element: <PropertyAmenities />,
+        },
+        {
+          path: "location",
+          element: <PropertyLocation />,
         },
       ],
     },

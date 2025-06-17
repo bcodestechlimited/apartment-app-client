@@ -1,6 +1,5 @@
 import { propertyService } from "@/api/property.api";
 import { Loader } from "@/components/custom/loader";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, Heart } from "lucide-react";
 import { Link, Outlet, useParams } from "react-router";
@@ -41,17 +40,25 @@ function PropertyDetailLayout() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-2 auto-rows-[200px]">
-        {data?.pictures.map((picture: string, index: number) => (
+      <div className="flex gap-2 h-[400px]">
+        <div className="w-1/2">
           <img
-            key={index}
-            className={cn("w-full h-full object-cover", {
-              "row-span-2": index === 0,
-            })}
-            src={picture}
-            alt={`Image ${index + 1}`}
+            src={data?.pictures[0]}
+            alt=""
+            className="h-full w-full object-cover rounded"
           />
-        ))}
+        </div>
+
+        <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
+          {data?.pictures.slice(1, 5).map((picture: string, index: number) => (
+            <img
+              key={index}
+              className="w-full h-full object-cover rounded"
+              src={picture}
+              alt={`Image ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="flex justify-between py-4">

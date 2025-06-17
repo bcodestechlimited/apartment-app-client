@@ -32,6 +32,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  NIGERIAN_STATE_CITIES,
+  NIGERIAN_STATES,
+} from "@/constants/nigerian-states";
 
 export function PropertyOnboarding() {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -56,6 +60,7 @@ export function PropertyOnboarding() {
   const navigate = useNavigate();
 
   const pictures = watch("pictures") || [];
+  const selectedState = watch("state") || "Lagos";
 
   const propertyMutation = useMutation({
     mutationFn: propertyService.addProperty,
@@ -89,12 +94,34 @@ export function PropertyOnboarding() {
       hasError = true;
     }
 
-    if (data.location === "" || !data.location) {
-      console.log("ehree");
-
-      setError("location", {
+    if (data.address === "" || !data.address) {
+      setError("address", {
         type: "manual",
-        message: "Please enter a location",
+        message: "Please enter an address",
+      });
+      hasError = true;
+    }
+
+    if (data.state === "" || !data.state) {
+      setError("state", {
+        type: "manual",
+        message: "Please select a state",
+      });
+      hasError = true;
+    }
+
+    if (data.lga === "" || !data.lga) {
+      setError("lga", {
+        type: "manual",
+        message: "Please select a local government",
+      });
+      hasError = true;
+    }
+
+    if (data.availabilityDate === "" || !data.availabilityDate) {
+      setError("availabilityDate", {
+        type: "manual",
+        message: "Please select an availability date",
       });
       hasError = true;
     }
@@ -174,7 +201,10 @@ export function PropertyOnboarding() {
 
     const formData = new FormData();
     formData.append("description", data.description);
-    formData.append("location", data.location);
+    formData.append("address", data.address);
+    formData.append("state", data.state);
+    formData.append("lga", data.lga);
+    formData.append("availabilityDate", data.availabilityDate);
     formData.append("price", String(data.price));
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
@@ -223,26 +253,28 @@ export function PropertyOnboarding() {
               </p>
             )}
           </div>
-          {/* Location  */}
           <div className="grid grid-cols-2 gap-6">
+            {/* Address  */}
             <div className=" flex flex-col gap-2">
-              <Label className="text-start font-bold" htmlFor="location">
-                Location
+              <Label className="text-start font-bold" htmlFor="address">
+                Address
               </Label>
 
               <Input
-                id="location"
+                id="address"
                 type="text"
                 placeholder="Enter price"
-                {...register("location")}
+                {...register("address")}
               />
 
-              {errors?.location && (
+              {errors?.address && (
                 <p className="text-destructive text-sm text-end">
-                  {errors.location.message}
+                  {errors.address.message}
                 </p>
               )}
             </div>
+
+            {/* Price  */}
             <div className=" flex flex-col gap-2">
               <Label className="text-start font-bold" htmlFor="price">
                 Price
@@ -260,6 +292,116 @@ export function PropertyOnboarding() {
                 </p>
               )}
             </div>
+
+            {/* State */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="state">
+                State
+              </Label>
+              <Input type="text" {...register("state")} className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("state", value);
+                  clearErrors(["state"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  <SelectGroup>
+                    {NIGERIAN_STATES.map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.state && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.state.message}
+                </p>
+              )}
+            </div>
+            {/* Local Government Area */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="lga">
+                LGA
+              </Label>
+              <Input type="text" {...register("lga")} className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("lga", value);
+                  clearErrors(["lga"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {NIGERIAN_STATE_CITIES[selectedState].map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.lga && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.lga.message}
+                </p>
+              )}
+            </div>
+
+            {/* Availability Date  */}
+            <div className=" flex flex-col gap-2">
+              <Label
+                className="text-start font-bold"
+                htmlFor="availabilityDate"
+              >
+                Avalability Date
+              </Label>
+              <Input
+                type="text"
+                {...register("availabilityDate")}
+                className="hidden"
+              />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("availabilityDate", value);
+                  clearErrors(["availabilityDate"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {pricingModels.map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.availabilityDate && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.availabilityDate.message}
+                </p>
+              )}
+            </div>
+
+            {/* Pricing Model  */}
             <div className=" flex flex-col gap-2">
               <Label className="text-start font-bold" htmlFor="pricingModel">
                 Pricing Model
@@ -492,10 +634,6 @@ export function PropertyOnboarding() {
 export function PropertyOnboardingWorkSpace() {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [selectedRooms, setSelectedRooms] = useState<string | null>(null);
-  const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
-  const [selectedBathrooms, setSelectedBathrooms] = useState<string | null>(
-    null
-  );
 
   const {
     register,
@@ -507,11 +645,12 @@ export function PropertyOnboardingWorkSpace() {
     formState: { errors },
   } = useForm<IAddPropertyCoWorkingSpace>();
 
-  const location = useLocation();
-  const propertyType = location.state?.propertyType.replace(" ", "-") as string;
+  // const location = useLocation();
+  // const propertyType = location.state?.propertyType.replace(" ", "-") as string;
   const navigate = useNavigate();
 
   const pictures = watch("pictures") || [];
+  const selectedState = watch("state") || "Lagos";
 
   const propertyMutation = useMutation({
     mutationFn: propertyService.addProperty,
@@ -545,12 +684,34 @@ export function PropertyOnboardingWorkSpace() {
       hasError = true;
     }
 
-    if (data.location === "" || !data.location) {
-      console.log("ehree");
-
-      setError("location", {
+    if (data.address === "" || !data.address) {
+      setError("address", {
         type: "manual",
-        message: "Please enter a location",
+        message: "Please enter an address",
+      });
+      hasError = true;
+    }
+
+    if (data.state === "" || !data.state) {
+      setError("state", {
+        type: "manual",
+        message: "Please select a state",
+      });
+      hasError = true;
+    }
+
+    if (data.lga === "" || !data.lga) {
+      setError("lga", {
+        type: "manual",
+        message: "Please select a local government",
+      });
+      hasError = true;
+    }
+
+    if (data.availabilityDate === "" || !data.availabilityDate) {
+      setError("availabilityDate", {
+        type: "manual",
+        message: "Please select an availability date",
       });
       hasError = true;
     }
@@ -587,26 +748,10 @@ export function PropertyOnboardingWorkSpace() {
       hasError = true;
     }
 
-    if (selectedFacilities.length === 0) {
-      setError("facilities", {
-        type: "manual",
-        message: "Please select at least one facility",
-      });
-      hasError = true;
-    }
-
     if (!selectedRooms) {
       setError("numberOfBedRooms", {
         type: "manual",
         message: "Please select number of rooms",
-      });
-      hasError = true;
-    }
-
-    if (!selectedBathrooms) {
-      setError("numberOfBathrooms", {
-        type: "manual",
-        message: "Please select number of bathrooms",
       });
       hasError = true;
     }
@@ -622,7 +767,7 @@ export function PropertyOnboardingWorkSpace() {
     return hasError;
   };
 
-  const onSubmit = async (data: IAddProperty) => {
+  const onSubmit = async (data: IAddPropertyCoWorkingSpace) => {
     console.log("Form submitted");
 
     const hasErrors = runCustomValidation(data);
@@ -630,15 +775,16 @@ export function PropertyOnboardingWorkSpace() {
 
     const formData = new FormData();
     formData.append("description", data.description);
-    formData.append("location", data.location);
+    formData.append("address", data.address);
+    formData.append("state", data.state);
+    formData.append("lga", data.lga);
+    formData.append("availabilityDate", data.availabilityDate);
     formData.append("price", String(data.price));
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
-    formData.append("facilities", JSON.stringify(selectedFacilities));
     // formData.append("type", propertyType.toLowerCase());
     formData.append("type", "co-working-space"); // hardcoded for now
     formData.append("numberOfBedRooms", String(selectedRooms));
-    formData.append("numberOfBathrooms", String(selectedBathrooms));
     for (let i = 0; i < data.pictures.length; i++) {
       formData.append("pictures", data.pictures[i]);
     }
@@ -679,26 +825,29 @@ export function PropertyOnboardingWorkSpace() {
               </p>
             )}
           </div>
-          {/* Location  */}
+
           <div className="grid grid-cols-2 gap-6">
+            {/* Address  */}
             <div className=" flex flex-col gap-2">
-              <Label className="text-start font-bold" htmlFor="location">
-                Location
+              <Label className="text-start font-bold" htmlFor="address">
+                Address
               </Label>
 
               <Input
-                id="location"
+                id="address"
                 type="text"
                 placeholder="Enter price"
-                {...register("location")}
+                {...register("address")}
               />
 
-              {errors?.location && (
+              {errors?.address && (
                 <p className="text-destructive text-sm text-end">
-                  {errors.location.message}
+                  {errors.address.message}
                 </p>
               )}
             </div>
+
+            {/* Price  */}
             <div className=" flex flex-col gap-2">
               <Label className="text-start font-bold" htmlFor="price">
                 Price
@@ -716,6 +865,116 @@ export function PropertyOnboardingWorkSpace() {
                 </p>
               )}
             </div>
+
+            {/* State */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="state">
+                State
+              </Label>
+              <Input type="text" {...register("state")} className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("state", value);
+                  clearErrors(["state"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  <SelectGroup>
+                    {NIGERIAN_STATES.map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.state && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.state.message}
+                </p>
+              )}
+            </div>
+
+            {/* Local Government Area */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="lga">
+                LGA
+              </Label>
+              <Input type="text" {...register("lga")} className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("lga", value);
+                  clearErrors(["lga"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {NIGERIAN_STATE_CITIES[selectedState].map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.lga && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.lga.message}
+                </p>
+              )}
+            </div>
+
+            {/* Availability Date  */}
+            <div className=" flex flex-col gap-2">
+              <Label
+                className="text-start font-bold"
+                htmlFor="availabilityDate"
+              >
+                Avalability Date
+              </Label>
+              <Input
+                type="text"
+                {...register("availabilityDate")}
+                className="hidden"
+              />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("availabilityDate", value);
+                  clearErrors(["availabilityDate"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {pricingModels.map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.availabilityDate && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.availabilityDate.message}
+                </p>
+              )}
+            </div>
+
             <div className=" flex flex-col gap-2">
               <Label className="text-start font-bold" htmlFor="pricingModel">
                 Pricing Model
@@ -757,80 +1016,6 @@ export function PropertyOnboardingWorkSpace() {
             </div>
           </div>
 
-          {/* Key Features */}
-          {/* <div className="text-start">
-            <p className="font-semibold tracking-wide my-2">Key Features</p>
-            <div className="flex flex-col sm:flex-row gap-6 mt-2">
-              <div className="flex flex-col gap-2 w-full sm:w-1/2">
-                <Label>No of bedrooms</Label>
-                <Input
-                  type="string"
-                  {...register("numberOfBedRooms")}
-                  className="hidden"
-                />
-                <Select
-                  onValueChange={(value) => {
-                    setSelectedRooms(value);
-                    setValue("numberOfBedRooms", value);
-                    clearErrors(["numberOfBedRooms"]);
-                  }}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="-select-" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {[1, 2, 3, 4, 5].map((num) => (
-                        <SelectItem key={num} value={String(num)}>
-                          {num}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                {errors?.numberOfBedRooms && (
-                  <p className="text-destructive text-sm text-end">
-                    {errors.numberOfBedRooms.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-2 w-full sm:w-1/2">
-                <Label>No of bathrooms</Label>
-                <Input
-                  type="string"
-                  {...register("numberOfBathrooms")}
-                  className="hidden"
-                />
-                <Select
-                  onValueChange={(value) => {
-                    setSelectedBathrooms(value);
-                    setValue("numberOfBathrooms", value);
-                    clearErrors(["numberOfBathrooms"]);
-                  }}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="-select-" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {[1, 2, 3, 4, 5].map((num) => (
-                        <SelectItem key={num} value={String(num)}>
-                          {num}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                {errors?.numberOfBathrooms && (
-                  <p className="text-destructive text-sm text-end">
-                    {errors.numberOfBathrooms.message}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div> */}
-
           {/* Amenities and Facilities */}
           <div className="text-start">
             <p className="font-semibold tracking-wide">Amenities</p>
@@ -867,37 +1052,6 @@ export function PropertyOnboardingWorkSpace() {
                   </p>
                 )}
               </div>
-              {/* <div className="flex flex-col gap-2 mt-2">
-                <span className="font-semibold text-sm flex gap-2 items-center">
-                  Add facilities
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span>
-                        <CircleAlert className=" cursor-pointer" size={14} />
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        This includes only facilities available outside the unit
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </span>
-                <CustomMultiSelect
-                  options={facilities}
-                  selected={selectedFacilities}
-                  onSelect={(value) => {
-                    setSelectedFacilities(value);
-                    setValue("facilities", value);
-                    clearErrors(["facilities"]);
-                  }}
-                />
-                {errors?.facilities && (
-                  <p className="text-destructive text-sm text-end">
-                    {errors.facilities.message}
-                  </p>
-                )}
-              </div> */}
             </div>
           </div>
 

@@ -6,10 +6,12 @@ export interface IProperty {
   _id: string;
   title: string;
   address: string;
+  state: string;
+  lga: string;
   price: number;
   type: string;
   description: string;
-  availability?: string[];
+  availabilityDate?: string;
   pricingModel?: "hourly" | "daily" | "weekly" | "monthly";
   numberOfBedRooms?: string;
   numberOfBathrooms?: string;
@@ -29,8 +31,11 @@ export interface IAddProperty {
   //   | "co-working-space"
   //   | "other";
   type: string;
-  price?: number;
-  location: string;
+  price: number;
+  availabilityDate: string;
+  address: string;
+  state: string;
+  lga: string;
   description: string;
   numberOfBedRooms: string;
   numberOfBathrooms: string;
@@ -41,8 +46,12 @@ export interface IAddProperty {
 }
 export interface IAddPropertyCoWorkingSpace {
   type: string;
-  price?: number;
-  location: string;
+  price: number;
+  address: string;
+  state: string;
+  city: string;
+  lga: string;
+  availabilityDate: string;
   description: string;
   numberOfBedRooms: string;
   numberOfBathrooms: string;

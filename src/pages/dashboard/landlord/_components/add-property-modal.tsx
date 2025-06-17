@@ -36,6 +36,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CircleAlert } from "lucide-react";
+import {
+  NIGERIAN_STATE_CITIES,
+  NIGERIAN_STATES,
+} from "@/constants/nigerian-states";
 
 interface AddPropertyModalProps {
   //   propertyType: string; // <-- added back this comment
@@ -68,6 +72,7 @@ export default function AddPropertyModal({
   } = useForm<IAddProperty>();
 
   const pictures = watch("pictures") || [];
+  const selectedState = watch("state") || "Lagos";
 
   const propertyMutation = useMutation({
     mutationFn: propertyService.addProperty,
@@ -101,12 +106,34 @@ export default function AddPropertyModal({
       hasError = true;
     }
 
-    if (data.location === "" || !data.location) {
-      console.log("ehree");
-
-      setError("location", {
+    if (data.address === "" || !data.address) {
+      setError("address", {
         type: "manual",
-        message: "Please enter a location",
+        message: "Please enter an address",
+      });
+      hasError = true;
+    }
+
+    if (data.state === "" || !data.state) {
+      setError("state", {
+        type: "manual",
+        message: "Please select a state",
+      });
+      hasError = true;
+    }
+
+    if (data.lga === "" || !data.lga) {
+      setError("lga", {
+        type: "manual",
+        message: "Please select a local government",
+      });
+      hasError = true;
+    }
+
+    if (data.availabilityDate === "" || !data.availabilityDate) {
+      setError("availabilityDate", {
+        type: "manual",
+        message: "Please select an availability date",
       });
       hasError = true;
     }
@@ -187,7 +214,10 @@ export default function AddPropertyModal({
 
     const formData = new FormData();
     formData.append("description", data.description);
-    formData.append("location", data.location);
+    formData.append("address", data.address);
+    formData.append("state", data.state);
+    formData.append("lga", data.lga);
+    formData.append("availabilityDate", data.availabilityDate);
     formData.append("price", String(data.price));
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
@@ -234,24 +264,27 @@ export default function AddPropertyModal({
           </div>
 
           <div className="grid grid-cols-2 gap-6">
+            {/* Address  */}
             <div className=" flex flex-col gap-2">
-              <Label className="text-start font-bold" htmlFor="location">
-                Location
+              <Label className="text-start font-bold" htmlFor="address">
+                Address
               </Label>
 
               <Input
-                id="location"
+                id="address"
                 type="text"
                 placeholder="Enter price"
-                {...register("location")}
+                {...register("address")}
               />
 
-              {errors?.location && (
+              {errors?.address && (
                 <p className="text-destructive text-sm text-end">
-                  {errors.location.message}
+                  {errors.address.message}
                 </p>
               )}
             </div>
+
+            {/* Price  */}
             <div className=" flex flex-col gap-2">
               <Label className="text-start font-bold" htmlFor="price">
                 Price
@@ -269,6 +302,117 @@ export default function AddPropertyModal({
                 </p>
               )}
             </div>
+
+            {/* State */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="state">
+                State
+              </Label>
+              <Input type="text" {...register("state")} className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("state", value);
+                  clearErrors(["state"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  <SelectGroup>
+                    {NIGERIAN_STATES.map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.state && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.state.message}
+                </p>
+              )}
+            </div>
+
+            {/* Local Government Area */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="lga">
+                LGA
+              </Label>
+              <Input type="text" {...register("lga")} className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("lga", value);
+                  clearErrors(["lga"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {NIGERIAN_STATE_CITIES[selectedState].map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.lga && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.lga.message}
+                </p>
+              )}
+            </div>
+
+            {/* Availability Date  */}
+            <div className=" flex flex-col gap-2">
+              <Label
+                className="text-start font-bold"
+                htmlFor="availabilityDate"
+              >
+                Avalability Date
+              </Label>
+              <Input
+                type="text"
+                {...register("availabilityDate")}
+                className="hidden"
+              />
+
+              <Select
+                onValueChange={(value) => {
+                  setSelectedRooms(value);
+                  setValue("availabilityDate", value);
+                  clearErrors(["availabilityDate"]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {pricingModels.map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors?.availabilityDate && (
+                <p className="text-destructive text-sm text-end">
+                  {errors.availabilityDate.message}
+                </p>
+              )}
+            </div>
+
+            {/* Pricing Model  */}
             <div className=" flex flex-col gap-2">
               <Label className="text-start font-bold" htmlFor="pricingModel">
                 Pricing Model

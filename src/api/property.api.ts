@@ -48,10 +48,8 @@ class PropertyService {
     }
   };
   getLandLordProperties = async (params: IParams) => {
-    // console.log({ params });
-
     try {
-      const response = await axiosInstance.get(`/property`, {
+      const response = await axiosInstance.get(`/property/landlord`, {
         params,
       });
 

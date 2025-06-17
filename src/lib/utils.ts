@@ -45,3 +45,19 @@ export const formatCurrency = (amount: number | string): string => {
   }).format(parsedAmount);
   // return `N${num.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 };
+
+export const getActualTypeFromParam = (type: string): string | undefined => {
+  if (!type || type.toLowerCase() === "all") {
+    return type;
+  }
+
+  const propertyTypes: Record<string, string> = {
+    serviced: "serviced-apartment",
+    shared: "shared-apartment",
+    standard: "standard-rental",
+    "short-let": "short-lets",
+    "co-working-space": "co-working-space",
+  };
+
+  return propertyTypes[type.toLowerCase()].replace("-", " ");
+};

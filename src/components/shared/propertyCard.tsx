@@ -5,6 +5,7 @@ import { Link } from "react-router";
 
 interface PropertyCardProps {
   property: IProperty;
+  link?: string;
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
@@ -70,7 +71,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   );
 };
 
-export const PublicPropertyCard = ({ property }: PropertyCardProps) => {
+export const PublicPropertyCard = ({ property, link }: PropertyCardProps) => {
   const {
     title,
     description,
@@ -83,8 +84,12 @@ export const PublicPropertyCard = ({ property }: PropertyCardProps) => {
 
   console.log({ property });
 
+  if (!property) return null;
+
+  const href = link || `/property/${property._id}`;
+
   return (
-    <Link to={`/dashboard/property/${property._id}`}>
+    <Link to={href}>
       <div className="relative bg-white rounded-lg overflow-hidden w-full border border-gray-200">
         <img src={pictures[0]} alt="" className="w-full h-48 object-cover" />
         <span className="bg-custom-primary text-white text-xs px-2 py-1 absolute top-4 left-0 capitalize rounded-r z-10">

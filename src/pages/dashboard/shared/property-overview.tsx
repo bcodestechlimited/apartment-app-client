@@ -76,8 +76,8 @@ export default function PropertyOverview() {
           <h2 className="text-2xl font-medium">Reviews & Ratings</h2>
           <div className="flex gap-2 text-lg">
             <div className="flex gap-1">
-              {[1, 2, 3, 4, 5].map(() => (
-                <div className="flex items-center gap-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <div key={star} className="flex items-center gap-2">
                   <Sparkle size={18} />
                 </div>
               ))}
