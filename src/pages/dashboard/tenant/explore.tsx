@@ -5,9 +5,14 @@ import type { IProperty } from "@/interfaces/property.interface";
 import { useQuery } from "@tanstack/react-query";
 import { SearchIcon } from "lucide-react";
 import { useSearchParams } from "react-router";
+import AddFilterModal from "./_components/add-filter-modal";
+import { useState } from "react";
 
 export default function Explore() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 10;
 
@@ -23,9 +28,14 @@ export default function Explore() {
   return (
     <div>
       <div className="flex justify-end">
-        <Button className="px-6">
+        <Button onClick={openModal} className="px-6">
           <SearchIcon /> Filter
         </Button>
+        <AddFilterModal
+          // propertyType="co-working space" // example value
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+        />
       </div>
 
       <div>
