@@ -1,5 +1,5 @@
 import { propertyService } from "@/api/property.api";
-import { PublicPropertyCard } from "@/components/shared/propertyCard";
+import { LandLordPropertyCard } from "@/components/shared/propertyCard";
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
 import { cn, getActualTypeFromParam } from "@/lib/utils";
@@ -96,39 +96,63 @@ export default function Listings() {
         />
       </div>
       <div>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {data?.properties < 1 && type === "All" ? (
-              <div className="col-span-4 py-6">
-                <p className="text-center">No properties found</p>
-              </div>
-            ) : data?.properties.length < 1 && type !== "All" ? (
-              <div className="col-span-4 py-6">
-                <p className="text-center">
-                  No properties found for{" "}
-                  <span className="capitalize font-semibold">
-                    {getActualTypeFromParam(type)}
-                  </span>
-                </p>
-              </div>
-            ) : (
-              data?.properties.map((property: IProperty) => {
-                console.log({ property });
-
-                return (
-                  <PublicPropertyCard
-                    property={property}
-                    key={property._id}
-                    link={`/dashboard/landlord/property/${property._id}`}
-                  />
-                );
-              })
-            )}
-          </div>
-        )}
+        <PropertiesGrid
+          isLoading={isLoading}
+          properties={data?.properties || []}
+          type={type || "all"}
+        />
       </div>
+    </div>
+  );
+}
+
+interface PropertiesGridProps {
+  properties: IProperty[];
+  isLoading: boolean;
+  type: string;
+}
+
+export function PropertiesGrid({
+  properties,
+  isLoading,
+  type,
+}: PropertiesGridProps) {
+  if (isLoading) return <Loader />;
+
+  if (properties.length < 1 && type?.toLowerCase() === "all") {
+    return (
+      <div className="col-span-4 py-6">
+        <p className="text-center">No properties found</p>
+      </div>
+    );
+  }
+
+  if (properties.length < 1 && type?.toLowerCase() !== "all") {
+    return (
+      <div className="col-span-4 py-6">
+        <p className="text-center">
+          No properties found for{" "}
+          <span className="capitalize font-semibold">
+            {getActualTypeFromParam(type)}
+          </span>
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {properties.map((property: IProperty) => {
+        console.log({ property });
+
+        return (
+          <LandLordPropertyCard
+            property={property}
+            key={property._id}
+            link={`/dashboard/landlord/property/${property._id}`}
+          />
+        );
+      })}
     </div>
   );
 }

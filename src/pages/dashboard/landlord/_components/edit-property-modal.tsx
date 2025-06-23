@@ -2,9 +2,18 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { propertyService } from "@/api/property.api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -13,54 +22,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { FileInput } from "@/components/custom/file-input";
 import {
   amenities,
   facilities,
   pricingModels,
-  type IAddProperty,
+  type IEditProperty,
+  type IProperty,
 } from "@/interfaces/property.interface";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
 import CustomMultiSelect from "@/components/custom/custom-multi-select";
+import { CalendarIcon, CircleAlert } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CalendarIcon, CircleAlert } from "lucide-react";
 import {
-  NIGERIAN_STATE_CITIES,
   NIGERIAN_STATES,
+  NIGERIAN_STATE_CITIES,
 } from "@/constants/nigerian-states";
+import { FileUpdateInput } from "@/components/custom/file-update-input";
 
-interface AddPropertyModalProps {
-  //   propertyType: string; // <-- added back this comment
+interface EditPropertyModalProps {
   isOpen: boolean;
   closeModal: () => void;
+  property: IProperty;
 }
 
-export default function AddPropertyModal({
-  //   propertyType, // <-- added back this comment
+export default function EditPropertyModal({
   isOpen,
   closeModal,
-}: AddPropertyModalProps) {
+  property,
+}: EditPropertyModalProps) {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [selectedRooms, setSelectedRooms] = useState<string | null>(null);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
+  const [selectedRooms, setSelectedRooms] = useState<string | null>(null);
   const [selectedBathrooms, setSelectedBathrooms] = useState<string | null>(
     null
   );
@@ -74,41 +75,60 @@ export default function AddPropertyModal({
   const {
     register,
     handleSubmit,
+    setValue,
     setError,
     clearErrors,
-    setValue,
     watch,
     formState: { errors },
-  } = useForm<IAddProperty>();
+  } = useForm<IEditProperty>({
+    defaultValues: {
+      description: property.description,
+      address: property.address,
+      state: property.state,
+      lga: property.lga,
+      availabilityDate: property.availabilityDate,
+      price: property.price,
+      pricingModel: property.pricingModel,
+      existingPictures: property.pictures,
+      numberOfBedRooms: String(property.numberOfBedRooms),
+      numberOfBathrooms: String(property.numberOfBathrooms),
+    },
+  });
 
-  const pictures = watch("pictures") || [];
-  const selectedState = watch("state") || "Lagos";
+  // const newPictures = watch("newPictures") || [];
+  const selectedState = watch("state") || property.state || "Lagos";
 
-  const propertyMutation = useMutation({
-    mutationFn: propertyService.addProperty,
-    onSuccess: async () => {
-      toast.success("Property added successfully!");
+  useEffect(() => {
+    setSelectedAmenities(property.amenities || []);
+    setSelectedFacilities(property.facilities || []);
+    setSelectedRooms(String(property.numberOfBedRooms));
+    setSelectedBathrooms(String(property.numberOfBathrooms));
+    setAvailabilityDate(
+      property.availabilityDate
+        ? new Date(property.availabilityDate)
+        : undefined
+    );
+    setValue("existingPictures", property.pictures); // You might keep this empty or preload if handling existing images
+  }, [property, setValue]);
+
+  const updateMutation = useMutation({
+    mutationFn: (formData: FormData) =>
+      propertyService.updateProperty(property._id, formData),
+    onSuccess: () => {
+      toast.success("Property updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-properties"] });
       closeModal();
     },
     onError: (error) => {
-      toast.error(error.message || "Something went wrong");
+      toast.error("Failed to update property");
       console.error(error);
     },
   });
 
-  const runCustomValidation = (data: any) => {
+  const runCustomValidation = (data: IEditProperty) => {
     let hasError = false;
 
-    if (data.description === "") {
-      setError("description", {
-        type: "manual",
-        message: "Please enter a description",
-      });
-      hasError = true;
-    }
-
-    if (data.description.length < 10) {
+    if (!data.description || data.description.length < 10) {
       setError("description", {
         type: "manual",
         message: "Description must be at least 10 characters",
@@ -116,7 +136,7 @@ export default function AddPropertyModal({
       hasError = true;
     }
 
-    if (data.address === "" || !data.address) {
+    if (!data.address) {
       setError("address", {
         type: "manual",
         message: "Please enter an address",
@@ -124,7 +144,7 @@ export default function AddPropertyModal({
       hasError = true;
     }
 
-    if (data.state === "" || !data.state) {
+    if (!data.state) {
       setError("state", {
         type: "manual",
         message: "Please select a state",
@@ -132,7 +152,7 @@ export default function AddPropertyModal({
       hasError = true;
     }
 
-    if (data.lga === "" || !data.lga) {
+    if (!data.lga) {
       setError("lga", {
         type: "manual",
         message: "Please select a local government",
@@ -140,7 +160,7 @@ export default function AddPropertyModal({
       hasError = true;
     }
 
-    if (data.availabilityDate === "" || !data.availabilityDate) {
+    if (!data.availabilityDate) {
       setError("availabilityDate", {
         type: "manual",
         message: "Please select an availability date",
@@ -148,7 +168,7 @@ export default function AddPropertyModal({
       hasError = true;
     }
 
-    if (data.price === null || !data.price) {
+    if (!data.price) {
       setError("price", {
         type: "manual",
         message: "Please enter a price",
@@ -156,18 +176,10 @@ export default function AddPropertyModal({
       hasError = true;
     }
 
-    if (data.pricingModel === "") {
+    if (!data.pricingModel) {
       setError("pricingModel", {
         type: "manual",
         message: "Please select a pricing model",
-      });
-      hasError = true;
-    }
-
-    if (data.description === "") {
-      setError("description", {
-        type: "manual",
-        message: "Please enter a description",
       });
       hasError = true;
     }
@@ -191,7 +203,7 @@ export default function AddPropertyModal({
     if (!selectedRooms) {
       setError("numberOfBedRooms", {
         type: "manual",
-        message: "Please select number of rooms",
+        message: "Please select number of bedrooms",
       });
       hasError = true;
     }
@@ -204,180 +216,149 @@ export default function AddPropertyModal({
       hasError = true;
     }
 
-    if (!watch("pictures") || watch("pictures").length < 2) {
-      setError("pictures", {
-        type: "manual",
-        message: "Please upload at least 3 pictures",
-      });
-      hasError = true;
-    }
-
     return hasError;
   };
 
-  const onSubmit = async (data: IAddProperty) => {
-    console.log("Form submitted");
-    console.log({ data });
-
-    const hasErrors = runCustomValidation(data);
-    if (hasErrors) return;
+  const onSubmit = (data: IEditProperty) => {
+    const hasError = runCustomValidation(data);
+    if (hasError) return;
 
     const formData = new FormData();
     formData.append("description", data.description);
     formData.append("address", data.address);
     formData.append("state", data.state);
     formData.append("lga", data.lga);
-    formData.append("availabilityDate", data.availabilityDate);
-    formData.append("price", String(data.price));
+    formData.append(
+      "availabilityDate",
+      data.availabilityDate ? data.availabilityDate.toLocaleString() : ""
+    );
+    formData.append(
+      "price",
+      data.price !== undefined ? String(data.price) : ""
+    );
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
     formData.append("facilities", JSON.stringify(selectedFacilities));
-    // formData.append("type", propertyType.toLowerCase());
-    formData.append("type", "serviced-apartment"); // hardcoded for now
     formData.append("numberOfBedRooms", String(selectedRooms));
     formData.append("numberOfBathrooms", String(selectedBathrooms));
-    for (let i = 0; i < data.pictures.length; i++) {
-      formData.append("pictures", data.pictures[i]);
+    formData.append("type", property.type); // keep original type
+    for (let i = 0; i < data.newPictures?.length; i++) {
+      formData.append("newPictures", data.newPictures[i]);
     }
+    formData.append("existingPictures", JSON.stringify(data.existingPictures));
 
-    propertyMutation.mutateAsync(formData);
+    console.log({ data });
+
+    updateMutation.mutateAsync(formData);
   };
+
+  console.log({ property });
+
+  if (!isOpen) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="mb-2">Add Property</DialogTitle>
+          <DialogTitle>Edit Property</DialogTitle>
           <DialogDescription>
-            Tell us about the property and its features to get matched with the
-            right tenant
+            Update your property details below
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        {/* You can now reuse the same layout/components as AddPropertyModal here */}
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           {/* Description */}
           <div className="flex flex-col gap-2">
-            <div className="flex justify-between">
-              <p className="font-semibold">Description</p>
-              <small>200 words</small>
-            </div>
-            <Textarea
-              placeholder="Write a short overview of your property"
-              className="min-h-28"
-              {...register("description")}
-            />
-            {errors?.description && (
-              <p className="text-destructive text-sm text-end">
+            <Label>Description</Label>
+            <Textarea {...register("description")} className="min-h-24" />
+            {errors.description && (
+              <p className="text-destructive text-sm">
                 {errors.description.message}
               </p>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            {/* Address  */}
-            <div className=" flex flex-col gap-2">
-              <Label className="text-start font-bold" htmlFor="address">
-                Address
-              </Label>
-
-              <Input
-                id="address"
-                type="text"
-                placeholder="Enter price"
-                {...register("address")}
-              />
-
-              {errors?.address && (
-                <p className="text-destructive text-sm text-end">
+          <div className="grid grid-cols-2 gap-4">
+            {/* Address */}
+            <div className="flex flex-col gap-2">
+              <Label>Address</Label>
+              <Input {...register("address")} />
+              {errors.address && (
+                <p className="text-destructive text-sm">
                   {errors.address.message}
                 </p>
               )}
             </div>
 
-            {/* Price  */}
-            <div className=" flex flex-col gap-2">
-              <Label className="text-start font-bold" htmlFor="price">
-                Price
-              </Label>
-
-              <Input
-                id="price"
-                type="number"
-                placeholder="Enter price"
-                {...register("price")}
-              />
-              {errors?.price && (
-                <p className="text-destructive text-sm text-end">
+            {/* Price */}
+            <div className="flex flex-col gap-2">
+              <Label>Price</Label>
+              <Input type="number" {...register("price")} />
+              {errors.price && (
+                <p className="text-destructive text-sm">
                   {errors.price.message}
                 </p>
               )}
             </div>
 
             {/* State */}
-            <div className=" flex flex-col gap-2">
-              <Label className="text-start font-bold" htmlFor="state">
-                State
-              </Label>
+            <div className="flex flex-col gap-2">
+              <Label>State</Label>
               <Input type="text" {...register("state")} className="hidden" />
-
               <Select
                 onValueChange={(value) => {
-                  setSelectedRooms(value);
                   setValue("state", value);
-                  clearErrors(["state"]);
+                  clearErrors("state");
                 }}
+                defaultValue={property.state}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="-select-" />
+                  <SelectValue placeholder="Select a state" />
                 </SelectTrigger>
-                <SelectContent className="max-h-60">
+                <SelectContent>
                   <SelectGroup>
                     {NIGERIAN_STATES.map((state) => (
-                      <SelectItem key={state} value={String(state)}>
+                      <SelectItem key={state} value={state}>
                         {state}
                       </SelectItem>
                     ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              {errors?.state && (
-                <p className="text-destructive text-sm text-end">
+              {errors.state && (
+                <p className="text-destructive text-sm">
                   {errors.state.message}
                 </p>
               )}
             </div>
 
-            {/* Local Government Area */}
-            <div className=" flex flex-col gap-2">
-              <Label className="text-start font-bold" htmlFor="lga">
-                LGA
-              </Label>
+            {/* LGA */}
+            <div className="flex flex-col gap-2">
+              <Label>LGA</Label>
               <Input type="text" {...register("lga")} className="hidden" />
-
               <Select
                 onValueChange={(value) => {
-                  setSelectedRooms(value);
                   setValue("lga", value);
-                  clearErrors(["lga"]);
+                  clearErrors("lga");
                 }}
+                defaultValue={property.lga}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="-select-" />
+                  <SelectValue placeholder="Select an LGA" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {NIGERIAN_STATE_CITIES[selectedState].map((lga) => (
-                      <SelectItem key={lga} value={String(lga)}>
+                    {NIGERIAN_STATE_CITIES[selectedState]?.map((lga) => (
+                      <SelectItem key={lga} value={lga}>
                         {lga}
                       </SelectItem>
                     ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              {errors?.lga && (
-                <p className="text-destructive text-sm text-end">
-                  {errors.lga.message}
-                </p>
+              {errors.lga && (
+                <p className="text-destructive text-sm">{errors.lga.message}</p>
               )}
             </div>
 
@@ -394,7 +375,6 @@ export default function AddPropertyModal({
                 {...register("availabilityDate")}
                 className="hidden"
               />
-
               <Popover modal={true}>
                 <PopoverTrigger asChild>
                   <Button
@@ -453,6 +433,7 @@ export default function AddPropertyModal({
               />
 
               <Select
+                defaultValue={property.pricingModel}
                 onValueChange={(value) => {
                   setSelectedRooms(value);
                   setValue("pricingModel", value);
@@ -464,9 +445,12 @@ export default function AddPropertyModal({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {pricingModels.map((num) => (
-                      <SelectItem key={num} value={String(num)}>
-                        {num}
+                    {pricingModels.map((pricingModel) => (
+                      <SelectItem
+                        key={pricingModel}
+                        value={String(pricingModel.toLowerCase())}
+                      >
+                        {pricingModel}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -497,6 +481,7 @@ export default function AddPropertyModal({
                     setValue("numberOfBedRooms", value);
                     clearErrors(["numberOfBedRooms"]);
                   }}
+                  defaultValue={property.numberOfBedRooms?.toString()}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="-select-" />
@@ -531,6 +516,7 @@ export default function AddPropertyModal({
                     setValue("numberOfBathrooms", value);
                     clearErrors(["numberOfBathrooms"]);
                   }}
+                  defaultValue={property.numberOfBathrooms?.toString()}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="-select-" />
@@ -626,46 +612,28 @@ export default function AddPropertyModal({
           {/* File Upload */}
           <div className="flex flex-col gap-2 mt-2">
             <Label>Upload Images of your property</Label>
-            <FileInput
-              accept=".jpg,.jpeg,.png"
-              value={pictures}
-              multiple
-              customMessage="min of 3 images (exterior view, interior view, key features)"
-              numberOfFiles={2}
-              onFilesChange={(updatedFiles) => {
-                console.log({ updatedFiles });
-
-                if (updatedFiles.length > 1) {
-                  clearErrors("pictures");
-                  setValue("pictures", updatedFiles);
-                } else {
-                  setError("pictures", {
-                    type: "manual",
-                    message: "Please upload at least 3 pictures",
-                  });
-                }
+            <FileUpdateInput
+              existingImages={property.pictures}
+              onChange={(existing, newFiles) => {
+                setValue("existingPictures", existing); // new hidden field you'll add
+                setValue("newPictures", newFiles); // form field
               }}
-              errorMessage={errors.pictures?.message}
             />
           </div>
 
-          {/* Actions */}
-          <div className="flex justify-end gap-4 mt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={closeModal}
-              className="cursor-pointer"
-            >
+          {/* Pricing Model, Availability, Rooms/Baths, Amenities, Facilities, FileInput */}
+          {/* Reuse the same layout from AddPropertyModal or call a shared FormContent component if refactored */}
+
+          <div className="flex justify-end gap-4">
+            <Button type="button" variant="outline" onClick={closeModal}>
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={propertyMutation.isPending}
-              // className="cursor-pointer bg-custom-primary hover:bg-custom-primary/90"
+              disabled={updateMutation.isPending}
               className="btn-primary"
             >
-              {propertyMutation.isPending ? "Publishing..." : "Publish Listing"}
+              {updateMutation.isPending ? "Updating..." : "Update Property"}
             </Button>
           </div>
         </form>

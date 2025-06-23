@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatPrettyDate } from "@/lib/utils";
 import { Bath, Bed, Calendar1, Sparkle } from "lucide-react";
+import { useState } from "react";
 import { useOutletContext } from "react-router";
+import BookingModal from "./_components/booking-modal";
 
 type PropertyDetailProps = {
   property: IProperty;
@@ -10,8 +12,12 @@ type PropertyDetailProps = {
 
 export default function PropertyOverview() {
   const { property }: PropertyDetailProps = useOutletContext();
+  const [isOpen, setIsOpen] = useState(false);
 
   console.log({ property });
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   return (
     <div className="p-4">
@@ -19,7 +25,7 @@ export default function PropertyOverview() {
         {/* <h1>{property?.title}</h1> */}
         <p className="text-xl font-semibold">{property?.description}</p>
         <p>Address: {property?.address}</p>
-        <Button className="w-fit capitalize">
+        <Button className="w-fit capitalize my-2">
           {property?.type.replace("-", " ")}
         </Button>
         <div className="bg-gray-50 border p-4 rounded w-fit flex gap-34 items-center justify-between">
@@ -43,7 +49,8 @@ export default function PropertyOverview() {
           <h2 className="text-2xl font-medium">Availability & Booking</h2>
           <div className="my-2">
             <span className="flex items-center gap-1">
-              <Calendar1 size={18} /> Available from {property?.availability}
+              <Calendar1 size={18} /> Available from:{" "}
+              {formatPrettyDate(property?.availabilityDate ?? "")}
             </span>
           </div>
           {/* <div className="my-2">
@@ -66,7 +73,7 @@ export default function PropertyOverview() {
           </div>
 
           <div>
-            <Button className="w-fit px-6 bg-custom-primary hover:bg-custom-primary hover:text-white">
+            <Button onClick={openModal} className="w-fit px-6 btn-primary">
               Request to book
             </Button>
           </div>
@@ -113,6 +120,12 @@ export default function PropertyOverview() {
           </Button>
         </div>
       </div>
+      <BookingModal
+        isOpen={isOpen}
+        closeModal={closeModal}
+        setOpen={setIsOpen}
+        property={property}
+      />
     </div>
   );
 }

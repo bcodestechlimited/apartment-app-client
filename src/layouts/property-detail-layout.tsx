@@ -22,10 +22,10 @@ function PropertyDetailLayout() {
       name: "Description",
       href: `description`,
     },
-    {
-      name: "Details",
-      href: `details`,
-    },
+    // {
+    //   name: "Details",
+    //   href: `details`,
+    // },
     {
       name: "Amenities",
       href: `amenities`,

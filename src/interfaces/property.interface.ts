@@ -2,6 +2,13 @@ export const amenities = ["Air Conditioner", "Kitchen", "Wi-Fi", "TV"];
 export const facilities = ["Parking", "Gym", "Swimming Pool", "Security"];
 export const pricingModels = ["Hourly", "Daily", "Weekly", "Monthly", "Yearly"];
 
+export const propertyTypes = [
+  "shared-apartment",
+  "serviced-apartment",
+  "standard-rental",
+  "short-let",
+];
+
 export interface IProperty {
   _id: string;
   title: string;
@@ -12,7 +19,8 @@ export interface IProperty {
   type: string;
   description: string;
   availabilityDate?: string;
-  pricingModel?: "hourly" | "daily" | "weekly" | "monthly";
+  // pricingModel?: "hourly" | "daily" | "weekly" | "monthly" | "yearly" ;
+  pricingModel?: string;
   numberOfBedRooms?: string;
   numberOfBathrooms?: string;
   seatingCapacity?: string;
@@ -20,6 +28,7 @@ export interface IProperty {
   facilities: string[];
   pictures: string[];
   isVerified: boolean;
+  isAvailable: boolean;
 }
 
 export interface IAddProperty {
@@ -43,6 +52,30 @@ export interface IAddProperty {
   amenities: string[];
   facilities: string[];
   pictures: File[];
+}
+export interface IEditProperty {
+  // type:
+  //   | "serviced-apartment"
+  //   | "shared-apartment"
+  //   | "standard-rental"
+  //   | "short-lets"
+  //   | "co-working-space"
+  //   | "other";
+  type: string;
+  price: number;
+  availabilityDate: Date | string | undefined;
+  address: string;
+  state: string;
+  lga: string;
+  description: string;
+  numberOfBedRooms: string;
+  numberOfBathrooms: string;
+  pricingModel: string;
+  amenities: string[];
+  facilities: string[];
+  // pictures: File[];
+  existingPictures: string[];
+  newPictures: File[];
 }
 export interface IAddPropertyCoWorkingSpace {
   type: string;

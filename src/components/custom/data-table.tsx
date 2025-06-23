@@ -38,8 +38,8 @@ export default function DataTable<T>({
   return (
     <div className="overflow-x-auto">
       <Table>
-        <TableHeader>
-          <TableRow>
+        <TableHeader className="[&_tr]:border-b-0">
+          <TableRow className="border-b-0">
             {columns.map((column, index) => (
               <TableHead key={index}>{column.header}</TableHead>
             ))}
@@ -47,10 +47,7 @@ export default function DataTable<T>({
         </TableHeader>
         <TableBody>
           {data.map((row, rowIndex) => (
-            <TableRow
-              key={rowIndex}
-              className="hover:bg-gray-50 border border-gray-300 rounded-xl"
-            >
+            <TableRow key={rowIndex} className="border-b-0 border rounded-2xl">
               {columns.map((column, colIndex) => {
                 return (
                   <TableCell key={colIndex} className="text-start">

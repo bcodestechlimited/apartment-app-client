@@ -31,6 +31,22 @@ class PropertyService {
       handleAxiosError(error, "Unable to get property");
     }
   };
+  updateProperty = async (propertyId: string, payload: any) => {
+    console.log({ payload });
+
+    try {
+      const response = await axiosInstance.patch(
+        `/property/${propertyId}`,
+        payload
+      );
+
+      console.log({ response });
+
+      return response.data?.data?.property;
+    } catch (error) {
+      handleAxiosError(error, "Unable to update property");
+    }
+  };
 
   getProperties = async (params: IParams) => {
     // console.log({ params });

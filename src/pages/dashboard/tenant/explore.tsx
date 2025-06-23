@@ -1,4 +1,5 @@
 import { propertyService } from "@/api/property.api";
+import { Loader } from "@/components/custom/loader";
 import { PublicPropertyCard } from "@/components/shared/propertyCard";
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
@@ -28,19 +29,38 @@ export default function Explore() {
         </Button>
       </div>
 
-      <div>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {data?.properties.map((property: IProperty) => {
-              return (
-                <PublicPropertyCard property={property} key={property._id} />
-              );
-            })}
-          </div>
-        )}
+      <PropertiesGrid
+        isLoading={isLoading}
+        properties={data?.properties || []}
+      />
+    </div>
+  );
+}
+
+interface PropertiesGridProps {
+  properties: IProperty[];
+  isLoading: boolean;
+}
+
+export function PropertiesGrid({ properties, isLoading }: PropertiesGridProps) {
+  if (isLoading) return <Loader />;
+
+  if (!properties.length)
+    return (
+      <div className="flex justify-center">
+        <p>No properties found.</p>
       </div>
+    );
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {properties.map((property: IProperty) => (
+        <PublicPropertyCard
+          property={property}
+          key={property._id}
+          link={`/dashboard/property/${property._id}`}
+        />
+      ))}
     </div>
   );
 }

@@ -7,6 +7,8 @@ import Twitter from "@/assets/images/Twitter - Original.png";
 import LinkedIn from "@/assets/images/LinkedIn - Original.png";
 // import newsLetter from "@/assets/images/newsletter.jpg";
 
+import whyChooseUs1 from "@/assets/images/whychooseus1.png";
+
 import {
   Select,
   SelectContent,
@@ -14,9 +16,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Link } from "react-router";
-import { PropertyCard } from "@/components/shared/propertyCard";
+import { PublicPropertyCard } from "@/components/shared/propertyCard";
 import { Button } from "@/components/ui/button";
+import {
+  NIGERIAN_STATES,
+  NIGERIAN_STATE_CITIES,
+} from "@/constants/nigerian-states";
+import { useState } from "react";
+import { pricingModels, propertyTypes } from "@/interfaces/property.interface";
+import { Link } from "react-router";
+import { cn } from "@/lib/utils";
 
 const newListings = [
   {
@@ -24,48 +33,76 @@ const newListings = [
     title: "1004 Estate",
     price: 3500000,
     address: "Lekki Phase 1, Lagos",
+    state: "Lagos",
+    lga: "Lekki",
     type: "2 Bedroom",
     pictures: [image1],
     description: "2 | 2 | 1179 sqft",
     amenities: ["Wi-Fi", "Air-Conditioner", "Power-Backup", "Coffee"],
-    numberOfBedRooms: 2,
-    numberOfBathrooms: 2,
+    facilities: ["Parking", "Gym", "Swimming Pool", "Security"],
+    numberOfBedRooms: "2",
+    numberOfBathrooms: "2",
     isVerified: true,
+    isAvailable: true,
+    pricingModel: "hourly",
+    availabilityDate: "2023-01-01",
   },
   {
     _id: "2",
     title: "Jurong East",
     price: 3500000,
     address: "Lekki Phase 1, Lagos",
+    state: "Lagos",
+    lga: "Lekki",
     type: "Mini Flat",
     pictures: [image1],
     description: "1 | 2 | 1400 sqft",
     amenities: ["Wi-Fi", "Air-Conditioner", "Power-Backup", "Coffee"],
-    numberOfBedRooms: 1,
-    numberOfBathrooms: 2,
+    facilities: ["Parking", "Gym", "Swimming Pool", "Security"],
+    numberOfBedRooms: "1",
+    numberOfBathrooms: "2",
     isVerified: false,
+    isAvailable: true,
+    pricingModel: "hourly",
+    availabilityDate: "2023-01-01",
   },
   {
     _id: "3",
     title: "1004 Estate",
     price: 3500000,
     address: "Lekki Phase 1, Lagos",
+    state: "Lagos",
+    lga: "Lekki",
     type: "2 Bedroom",
     pictures: [image1],
     description: "2 | 2 | 1179 sqft",
     amenities: ["Wi-Fi", "Air-Conditioner", "Power-Backup", "Coffee"],
+    facilities: ["Parking", "Gym", "Swimming Pool", "Security"],
+    numberOfBedRooms: "1",
+    numberOfBathrooms: "2",
     isVerified: true,
+    isAvailable: true,
+    pricingModel: "hourly",
+    availabilityDate: "2023-01-01",
   },
   {
     _id: "4",
     title: "Jurong East",
     price: 3500000,
     address: "Lekki Phase 1, Lagos",
+    state: "Lagos",
+    lga: "Lekki",
     type: "Mini Flat",
     pictures: [image1],
     description: "1 | 2 | 1400 sqft",
     amenities: ["Wi-Fi", "Air-Conditioner", "Power-Backup", "Coffee"],
+    facilities: ["Parking", "Gym", "Swimming Pool", "Security"],
+    numberOfBedRooms: "1",
+    numberOfBathrooms: "2",
     isVerified: true,
+    isAvailable: true,
+    pricingModel: "hourly",
+    availabilityDate: "2023-01-01",
   },
 ];
 
@@ -116,6 +153,9 @@ const projects = [
 ];
 
 const LandingPage = () => {
+  const [selectedState, setSelectedState] =
+    useState<(typeof NIGERIAN_STATES)[number]>("");
+
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="px-14">
@@ -177,17 +217,38 @@ const LandingPage = () => {
               verified listings
             </p>
             <div className="flex flex-wrap items-center justify-center space-x-4 bg-white p-4 rounded-lg shadow-md text-[#2C3A61]/70 w-full">
-              <div className="grid grid-cols-5 items-center gap-4 text-sm w-full">
+              <div className="grid grid-cols-6 items-center gap-4 text-sm w-full">
                 <div className="flex flex-col gap-2 items-center border-r-2 border-gray-300 pr-4">
-                  <h3 className="font-bold">Locations</h3>
+                  <h3 className="font-bold">State</h3>
+                  <Select
+                    onValueChange={(value) => {
+                      setSelectedState(value);
+                    }}
+                  >
+                    <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0">
+                      <SelectValue placeholder="Select your city" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {NIGERIAN_STATES.map((state) => (
+                        <SelectItem key={state} value={String(state)}>
+                          {state}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-2 items-center border-r-2 border-gray-300 pr-4">
+                  <h3 className="font-bold">City</h3>
                   <Select>
                     <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0">
                       <SelectValue placeholder="Select your city" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
+                    <SelectContent className="max-h-60">
+                      {NIGERIAN_STATE_CITIES[selectedState]?.map((lga) => (
+                        <SelectItem key={lga} value={String(lga)}>
+                          {lga}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -199,9 +260,15 @@ const LandingPage = () => {
                       <SelectValue placeholder="Select property type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
+                      {propertyTypes.map((propertyType) => (
+                        <SelectItem
+                          key={propertyType}
+                          value={String(propertyType)}
+                          className="capitalize"
+                        >
+                          {propertyType.replace("-", " ")}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -213,9 +280,15 @@ const LandingPage = () => {
                       <SelectValue placeholder="Select rent range" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
+                      {pricingModels.map((propertyType) => (
+                        <SelectItem
+                          key={propertyType}
+                          value={String(propertyType)}
+                          className="capitalize"
+                        >
+                          {propertyType.replace("-", " ")}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -241,6 +314,7 @@ const LandingPage = () => {
             </div>
           </div>
         </section>
+
         {/* New Listings Section */}
         <section className="py-10">
           <div className="flex justify-between items-center mb-4">
@@ -251,7 +325,7 @@ const LandingPage = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {newListings.map((listing) => (
-              <PropertyCard property={listing} />
+              <PublicPropertyCard property={listing} />
             ))}
           </div>
         </section>
@@ -260,8 +334,14 @@ const LandingPage = () => {
         <section className="py-10 px-4 text-left">
           <h2 className="text-2xl font-bold mb-6">Why Choose CityLights</h2>
           <div className="flex gap-6 text-white">
-            <div className=" p-6 rounded-lg shadow-md landingpagewhychooseus1">
-              <section className="relative top-50 ">
+            <div
+              className={cn(
+                `p-6 rounded-lg shadow-md  flex items-end bg-cover bg-center`
+              )}
+              style={{ backgroundImage: `url('${whyChooseUs1}')` }}
+            >
+              {/* <img src={whyChooseUs1} alt="" className="w-100 absolute" /> */}
+              <section className=" relative z-20">
                 <h3 className="text-xl font-semibold mb-2  ">
                   Flexible payment plans,
                 </h3>
@@ -269,29 +349,27 @@ const LandingPage = () => {
                   Choose from shared apartments, short lets, or fully serviced
                   homes seamless renting on your terms.
                 </p>
-                <a href="#" className="text-orange-500 hover:underline button">
+                <Button className="bg-orange-500 hover:underline button">
                   Find out more
-                </a>
+                </Button>
               </section>
             </div>
 
             <section className="flex flex-col  gap-6 ">
-              <div className="bg-gray-800 text-white p-6 rounded-lg landingpagewhychooseus2 ">
-                <main className=" ">
-                  <h3 className="text-xl font-semibold mb-2 ">
-                    Find Your Ideal Co-Living Space
-                  </h3>
-                  <p className="mb-4">
-                    Choose from shared apartments, short lets, or fully serviced
-                    homes seamless renting on your terms
-                  </p>
-                  <a href="#" className="text-orange-500 hover:underline">
-                    Find out more →
-                  </a>
-                </main>
+              <div className="bg-gray-800 text-white p-6 rounded-lg landingpagewhychooseus2 pt-32 ">
+                <h3 className="text-xl font-semibold mb-2 ">
+                  Find Your Ideal Co-Living Space
+                </h3>
+                <p className="mb-4">
+                  Choose from shared apartments, short lets, or fully serviced
+                  homes seamless renting on your terms
+                </p>
+                <Button className="bg-orange-500 hover:underline button">
+                  Find out more
+                </Button>
               </div>
 
-              <div className="bg-gray-800 text-white p-6 rounded-lg landingpagewhychooseus3">
+              <div className="bg-gray-800 text-white p-6 rounded-lg landingpagewhychooseus3 pt-32">
                 <h3 className="text-xl font-semibold mb-2">
                   Find Your Ideal Co-Living Space
                 </h3>
@@ -299,9 +377,9 @@ const LandingPage = () => {
                   Choose from shared apartments, short lets, or fully serviced
                   homes seamless renting on your terms
                 </p>
-                <a href="#" className="text-orange-500 hover:underline">
-                  Find out more →
-                </a>
+                <Button className="bg-orange-500 hover:underline button">
+                  Find out more
+                </Button>
               </div>
             </section>
           </div>

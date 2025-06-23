@@ -122,9 +122,6 @@
   }
 }
 
-@layer components {
-  .btn-primary {
-    @apply w-full bg-[color:var(--color-custom-primary)] cursor-pointer hover:bg-[color:var(--color-custom-primary)]/90;
-    /* @apply w-full bg-custom-primary cursor-pointer hover:bg-custom-primary/90; */
-  }
+.btn-primary {
+  @apply bg-custom-primary cursor-pointer hover:bg-custom-primary/90;
 }
