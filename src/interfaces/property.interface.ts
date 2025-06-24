@@ -17,13 +17,6 @@ export const propertyTypes = [
 export const pricingModels = ["Hourly", "Daily", "Weekly", "Monthly", "Yearly"];
 export const duration = ["Short Term", "Long Term"];
 
-export const propertyTypes = [
-  "shared-apartment",
-  "serviced-apartment",
-  "standard-rental",
-  "short-let",
-];
-
 export interface IProperty {
   _id: string;
   title: string;
