@@ -14,8 +14,15 @@ import {
   ScanEye,
   Star,
 } from "lucide-react";
+import { useState } from "react";
+import TenantProfile from "../tenant/_components/tenant-profile";
+import TenantRating from "../tenant/_components/tenant-rating";
+import ReportTenant from "../tenant/_components/report-tenant";
 
 export default function Tenants() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   const tenantsList = [
     {
       id: 1,
@@ -93,20 +100,35 @@ export default function Tenants() {
       header: "",
       render: (row: any) => (
         <div>
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger className="cursor-pointer">
               <Ellipsis />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mr-6">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={openModal}>
                 <ScanEye /> Profile
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <TenantProfile
+                // propertyType="co-working space" // example value
+                isOpen={isModalOpen}
+                closeModal={closeModal}
+              />
+              <DropdownMenuItem onClick={openModal}>
                 <Star /> Rate Tenant
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <TenantRating
+                // propertyType="co-working space" // example value
+                isOpen={isModalOpen}
+                closeModal={closeModal}
+              />
+              <DropdownMenuItem onClick={openModal}>
                 <FileWarning /> Report
               </DropdownMenuItem>
+              <ReportTenant
+                // propertyType="co-working space" // example value
+                isOpen={isModalOpen}
+                closeModal={closeModal}
+              />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
