@@ -8,12 +8,12 @@ export const amenities = [
   "Private Bath",
 ];
 export const facilities = ["Parking", "Gym", "Swimming Pool", "Security"];
-export const propertyTypes = [
-  "Standard Rental",
-  "Short Let",
-  "Serviced Apartment",
-  "Shared Apartment",
-];
+// export const propertyTypes = [
+//   "Standard Rental",
+//   "Short Let",
+//   "Serviced Apartment",
+//   "Shared Apartment",
+// ];
 export const pricingModels = ["Hourly", "Daily", "Weekly", "Monthly", "Yearly"];
 export const duration = ["Short Term", "Long Term"];
 
