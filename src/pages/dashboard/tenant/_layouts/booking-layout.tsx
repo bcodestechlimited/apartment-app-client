@@ -1,0 +1,37 @@
+import { Link, Outlet, useLocation } from "react-router";
+import { cn } from "@/lib/utils";
+
+export default function TenantBookingLayout() {
+  const location = useLocation();
+
+  const isActive = (path: string) => location.pathname === path;
+
+  const activeClassNames = "border-b-3 border-orange-500";
+
+  return (
+    <div>
+      <div className="flex gap-2 font-semibold mb-2">
+        <Link
+          to="/dashboard/bookings"
+          className={cn(
+            `py-0.5`,
+            isActive("/dashboard/bookings") && activeClassNames
+          )}
+        >
+          History
+        </Link>
+        <Link
+          to="/dashboard/bookings/requests"
+          className={cn(
+            `py-0.5`,
+            isActive("/dashboard/bookings/requests") && activeClassNames
+          )}
+        >
+          Requests
+        </Link>
+      </div>
+
+      <Outlet />
+    </div>
+  );
+}

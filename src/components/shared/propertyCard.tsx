@@ -123,8 +123,10 @@ export const PublicPropertyCard = ({ property, link }: PropertyCardProps) => {
                 : `${numberOfBedRooms} Bedrooms`}
             </small>
           </span>
-          <p className="font-medium">{title}</p>
-          <p className="font-semibold">{description}</p>
+          <p className="font-medium text-xl">{title}</p>
+          <p className="font-semibold text-sm">
+            {description.slice(0, 100)}...
+          </p>
 
           <p className="font-bold text-lg">
             {price ? formatCurrency(price) : ""}
@@ -191,7 +193,7 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
           </div>
         )} */}
 
-          <div className="p-4 text-start">
+          <div className="p-4 text-start space-y-1">
             <span>
               <small className="text-gray-500">
                 {Number(numberOfBedRooms) === 1
@@ -199,8 +201,10 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
                   : `${numberOfBedRooms} Bedrooms`}
               </small>
             </span>
-            <p className="font-medium">{title}</p>
-            <p className="font-semibold">{description}</p>
+            <p className="font-medium text-xl">{title}</p>
+            <p className="font-semibold text-sm">
+              {description.slice(0, 100)}...
+            </p>
 
             <p className="font-bold text-lg">
               {price ? formatCurrency(price) : ""}

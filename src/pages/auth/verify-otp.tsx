@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
 
-const RESEND_COOLDOWN_MS = 3 * 60 * 1000; // 3 minutes
+const RESEND_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes
 
 export default function VerifyOtp() {
   const navigate = useNavigate();
@@ -146,17 +146,17 @@ export default function VerifyOtp() {
         </Button>
 
         <p className="text-white/70 text-sm">
-          Didn’t get OTP? {"  "}
+          Didn’t get an OTP?{" "}
           {resendMutation.isPending ? (
             "Resending..."
           ) : timeLeft > 0 ? (
-            <span className="text-white font-medium">
+            <span className="text-white font-medium pl-1">
               Resend in {formatTime(timeLeft)}
             </span>
           ) : (
             <button
               onClick={handleResend}
-              className="text-white underline font-medium hover:opacity-80 cursor-pointer"
+              className="text-white underline font-medium hover:opacity-80 cursor-pointer pl-1"
             >
               Resend
             </button>

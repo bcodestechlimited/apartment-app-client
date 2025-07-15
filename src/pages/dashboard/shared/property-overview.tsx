@@ -4,7 +4,8 @@ import { formatCurrency, formatPrettyDate } from "@/lib/utils";
 import { Bath, Bed, Calendar1, Sparkle } from "lucide-react";
 import { useState } from "react";
 import { useOutletContext } from "react-router";
-import BookingModal from "./_components/booking-modal";
+import BookingModal from "../tenant/_components/booking-modal";
+import { useAuthStore } from "@/store/useAuthStore";
 
 type PropertyDetailProps = {
   property: IProperty;
@@ -14,7 +15,9 @@ export default function PropertyOverview() {
   const { property }: PropertyDetailProps = useOutletContext();
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log({ property });
+  const { user } = useAuthStore();
+
+  const isLandlord = user && user.roles.includes("landlord") ? true : false;
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
@@ -73,7 +76,11 @@ export default function PropertyOverview() {
           </div>
 
           <div>
-            <Button onClick={openModal} className="w-fit px-6 btn-primary">
+            <Button
+              disabled={isLandlord}
+              onClick={openModal}
+              className="w-fit px-6 btn-primary"
+            >
               Request to book
             </Button>
           </div>

@@ -7,9 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Star } from "lucide-react";
 
-import React from "react";
 
 interface AddTenantReportProps {
   isOpen: boolean;

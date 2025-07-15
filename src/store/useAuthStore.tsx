@@ -1,4 +1,4 @@
-import type { User } from "@/interfaces/user.interface";
+import type { IUser } from "@/interfaces/user.interface";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -8,10 +8,10 @@ interface AuthCredentials {
 }
 
 export interface UserState {
-  user: User | null;
+  user: IUser | null;
   authCredentials: AuthCredentials | null;
   actions: {
-    setUser: (user: User | null) => Promise<void>;
+    setUser: (user: IUser | null) => Promise<void>;
     setAuthCredentials: (creds: AuthCredentials | null) => void;
   };
 }
@@ -21,7 +21,7 @@ const actions = (
     state: Partial<UserState> | ((state: UserState) => Partial<UserState>)
   ) => void
 ) => ({
-  setUser: async (user: User | null) => {
+  setUser: async (user: IUser | null) => {
     set({ user });
   },
   setAuthCredentials: (creds: AuthCredentials | null) => {

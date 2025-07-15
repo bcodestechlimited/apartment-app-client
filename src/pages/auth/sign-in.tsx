@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/custom/loader";
 import { useAuthActions } from "@/store/useAuthStore";
-import type { User } from "@/interfaces/user.interface";
+import type { IUser } from "@/interfaces/user.interface";
 
 interface SignInFormInputs {
   email: string;
@@ -28,7 +28,7 @@ export default function SignIn() {
 
   const mutation = useMutation({
     mutationFn: authService.signIn,
-    onSuccess: (data: User) => {
+    onSuccess: (data: IUser) => {
       if (data.roles.includes("tenant")) {
         return navigate("/dashboard");
       } else if (data.roles.includes("landlord")) {

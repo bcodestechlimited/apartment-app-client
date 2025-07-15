@@ -8,12 +8,12 @@ export const amenities = [
   "Private Bath",
 ];
 export const facilities = ["Parking", "Gym", "Swimming Pool", "Security"];
-// export const propertyTypes = [
-//   "Standard Rental",
-//   "Short Let",
-//   "Serviced Apartment",
-//   "Shared Apartment",
-// ];
+export const propertyTypes = [
+  "Standard Rental",
+  "Short Let",
+  "Serviced Apartment",
+  "Shared Apartment",
+];
 export const pricingModels = ["Hourly", "Daily", "Weekly", "Monthly", "Yearly"];
 export const duration = ["Short Term", "Long Term"];
 
@@ -26,7 +26,7 @@ export interface IProperty {
   price: number;
   type: string;
   description: string;
-  availabilityDate?: string;
+  availabilityDate: string;
   // pricingModel?: "hourly" | "daily" | "weekly" | "monthly" | "yearly" ;
   pricingModel?: string;
   numberOfBedRooms?: string;
@@ -47,13 +47,14 @@ export interface IAddProperty {
   //   | "short-lets"
   //   | "co-working-space"
   //   | "other";
+  title: string;
+  description: string;
   type: string;
-  price: number;
-  availabilityDate: string;
   address: string;
   state: string;
   lga: string;
-  description: string;
+  price: number;
+  availabilityDate: string;
   numberOfBedRooms: string;
   numberOfBathrooms: string;
   pricingModel: string;
@@ -69,13 +70,14 @@ export interface IEditProperty {
   //   | "short-lets"
   //   | "co-working-space"
   //   | "other";
+  title: string;
+  description: string;
   type: string;
   price: number;
   availabilityDate: Date | string | undefined;
   address: string;
   state: string;
   lga: string;
-  description: string;
   numberOfBedRooms: string;
   numberOfBathrooms: string;
   pricingModel: string;

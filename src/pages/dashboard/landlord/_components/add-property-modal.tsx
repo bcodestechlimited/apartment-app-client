@@ -19,6 +19,7 @@ import {
   amenities,
   facilities,
   pricingModels,
+  propertyTypes,
   type IAddProperty,
 } from "@/interfaces/property.interface";
 import {
@@ -64,6 +65,7 @@ export default function AddPropertyModal({
   const [selectedBathrooms, setSelectedBathrooms] = useState<string | null>(
     null
   );
+  const [propertyType, setPropertyType] = useState<string | null>(null);
 
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(
     undefined
@@ -99,6 +101,22 @@ export default function AddPropertyModal({
 
   const runCustomValidation = (data: any) => {
     let hasError = false;
+
+    if (data.title === "") {
+      setError("title", {
+        type: "manual",
+        message: "Please enter a title",
+      });
+      hasError = true;
+    }
+
+    if (data.title.length < 10) {
+      setError("title", {
+        type: "manual",
+        message: "Title must be at least 10 characters",
+      });
+      hasError = true;
+    }
 
     if (data.description === "") {
       setError("description", {
@@ -223,6 +241,7 @@ export default function AddPropertyModal({
     if (hasErrors) return;
 
     const formData = new FormData();
+    formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("address", data.address);
     formData.append("state", data.state);
@@ -232,8 +251,8 @@ export default function AddPropertyModal({
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
     formData.append("facilities", JSON.stringify(selectedFacilities));
-    // formData.append("type", propertyType.toLowerCase());
-    formData.append("type", "serviced-apartment"); // hardcoded for now
+    formData.append("type", data.type.replace(" ", "-").toLowerCase());
+    // formData.append("type", "serviced-apartment"); // hardcoded for now
     formData.append("numberOfBedRooms", String(selectedRooms));
     formData.append("numberOfBathrooms", String(selectedBathrooms));
     for (let i = 0; i < data.pictures.length; i++) {
@@ -255,6 +274,14 @@ export default function AddPropertyModal({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          {/* Title */}
+          <div className="flex flex-col gap-2">
+            <Label className="text-start font-bold" htmlFor="title">
+              Title
+            </Label>
+            <Input placeholder="Enter title" {...register("title")} />
+          </div>
+
           {/* Description */}
           <div className="flex flex-col gap-2">
             <div className="flex justify-between">
@@ -269,6 +296,44 @@ export default function AddPropertyModal({
             {errors?.description && (
               <p className="text-destructive text-sm text-end">
                 {errors.description.message}
+              </p>
+            )}
+          </div>
+
+          {/* Type */}
+          <div className=" flex flex-col gap-2">
+            <Label className="text-start font-bold" htmlFor="state">
+              Property Type
+            </Label>
+            <Input type="text" {...register("type")} className="hidden" />
+
+            <Select
+              onValueChange={(value) => {
+                setPropertyType(value);
+                setValue("type", value);
+                clearErrors(["type"]);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="-select-" />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                <SelectGroup>
+                  {propertyTypes.map((propertyType) => (
+                    <SelectItem
+                      key={propertyType}
+                      value={String(propertyType)}
+                      className="capitalize"
+                    >
+                      {propertyType}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {errors?.state && (
+              <p className="text-destructive text-sm text-end">
+                {errors.state.message}
               </p>
             )}
           </div>
@@ -413,8 +478,9 @@ export default function AddPropertyModal({
                 >
                   <Calendar
                     mode="single"
+                    required
                     selected={availabilityDate}
-                    onSelect={(date) => {
+                    onSelect={(date: Date) => {
                       console.log(date);
                       if (!date) {
                         return;
@@ -428,7 +494,7 @@ export default function AddPropertyModal({
 
                       clearErrors(["availabilityDate"]);
                     }}
-                    disabled={(date) => date < new Date()}
+                    disabled={(date: Date) => date < new Date()}
                     className="rounded-md border bg-white z-50"
                   />
                 </PopoverContent>

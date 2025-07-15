@@ -1,4 +1,4 @@
-import type { User } from "@/interfaces/user.interface";
+import type { IUser } from "@/interfaces/user.interface";
 import axiosInstance from "@/lib/axios.config";
 import { handleAxiosError } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -37,13 +37,14 @@ class AuthService {
   getUser = async () => {
     try {
       const response = await axiosInstance.get(`/auth`);
-      useAuthStore.getState().actions.setUser(response.data?.data);
-      return response.data?.data?.user;
+      const user = response.data?.data?.user;
+      useAuthStore.getState().actions.setUser(user);
+      return user;
     } catch (error) {
       handleAxiosError(error, "Failed to get user");
     }
   };
-  updateUser = async (payload: Partial<User>) => {
+  updateUser = async (payload: Partial<IUser>) => {
     try {
       const response = await axiosInstance.patch(`/auth`, payload);
 

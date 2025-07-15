@@ -33,7 +33,7 @@ import Analytics from "./pages/dashboard/landlord/analytics";
 import Messages from "./pages/dashboard/landlord/messages";
 import SignIn from "./pages/auth/sign-in";
 import LandlordProfile from "./pages/dashboard/landlord/profile";
-import { LandlordAuthGuard } from "./guards/auth.guard";
+import { LandlordAuthGuard, TenantAuthGuard } from "./guards/auth.guard";
 import PaymentSummary from "./pages/dashboard/tenant/payment-summary";
 import PropertyDetailLayout from "./layouts/property-detail-layout";
 import PropertyOverview from "./pages/dashboard/shared/property-overview";
@@ -41,6 +41,11 @@ import PropertyDescription from "./pages/dashboard/shared/property-description";
 import PropertyDetails from "./pages/dashboard/shared/property-details";
 import PropertyAmenities from "./pages/dashboard/shared/property-amenities";
 import PropertyLocation from "./pages/dashboard/shared/property-location";
+import BookingLayout from "./pages/dashboard/landlord/_layouts/booking-layout";
+import BookingRequests from "./pages/dashboard/landlord/booking-requests";
+import TenantBookingLayout from "./pages/dashboard/tenant/_layouts/booking-layout";
+import TenantBookings from "./pages/dashboard/tenant/bookings";
+import TenantBookingRequests from "./pages/dashboard/tenant/booking-requests";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +55,7 @@ function App() {
       path: "/",
       element: <LandingPage />,
     },
+    // Auth Routes
     {
       path: "/auth",
       element: <OnboardingLayout />,
@@ -68,6 +74,7 @@ function App() {
         },
       ],
     },
+    // Onbaording Routes
     {
       element: <OnboardingLayoutLight />,
       children: [
@@ -114,8 +121,10 @@ function App() {
         },
       ],
     },
+    // Tenant Routes
     {
       path: "/dashboard",
+      element: <TenantAuthGuard />,
       children: [
         {
           element: <TenantLayout />,
@@ -123,6 +132,20 @@ function App() {
             {
               path: "",
               element: <Explore />,
+            },
+            {
+              path: "bookings",
+              element: <TenantBookingLayout />,
+              children: [
+                {
+                  path: "",
+                  element: <TenantBookings />,
+                },
+                {
+                  path: "requests",
+                  element: <TenantBookingRequests />,
+                },
+              ],
             },
             {
               path: "explore",
@@ -172,81 +195,97 @@ function App() {
             },
           ],
         },
+      ],
+    },
+    // Lanlord Routes
+    {
+      path: "dashboard/landlord",
+      element: <LandlordAuthGuard />,
+      children: [
         {
-          path: "landlord",
-          element: <LandlordAuthGuard />,
+          element: <LandlordLayout />,
           children: [
             {
-              element: <LandlordLayout />,
+              path: "",
+              element: <Listings />,
+            },
+            {
+              path: "listings",
+              element: <Listings />,
+            },
+            {
+              path: "bookings",
+              element: <BookingLayout />,
               children: [
                 {
                   path: "",
-                  element: <Listings />,
-                },
-                {
-                  path: "listings",
-                  element: <Listings />,
-                },
-                {
-                  path: "bookings",
                   element: <Bookings />,
                 },
                 {
-                  path: "tenants",
-                  element: <Tenants />,
-                },
-                {
-                  path: "payments",
-                  element: <Payments />,
-                },
-                {
-                  path: "analytics",
-                  element: <Analytics />,
-                },
-                {
-                  path: "messages",
-                  element: <Messages />,
-                },
-                {
-                  path: "profile",
-                  element: <LandlordProfile />,
-                },
-                {
-                  path: "property/:propertyId",
-                  element: <PropertyDetailLayout />,
-                  children: [
-                    {
-                      path: "",
-                      element: <PropertyOverview />,
-                    },
-                    {
-                      path: "description",
-                      element: <PropertyDescription />,
-                    },
-                    {
-                      path: "details",
-                      element: <PropertyDetails />,
-                    },
-                    {
-                      path: "amenities",
-                      element: <PropertyAmenities />,
-                    },
-                    {
-                      path: "location",
-                      element: <PropertyLocation />,
-                    },
-                  ],
-                },
-                {
-                  path: "*",
-                  element: <div>Page not found</div>,
+                  path: "requests",
+                  element: <BookingRequests />,
                 },
               ],
+            },
+            {
+              path: "bookings",
+              element: <Bookings />,
+            },
+            {
+              path: "tenants",
+              element: <Tenants />,
+            },
+            {
+              path: "payments",
+              element: <Payments />,
+            },
+            {
+              path: "analytics",
+              element: <Analytics />,
+            },
+            {
+              path: "messages",
+              element: <Messages />,
+            },
+            {
+              path: "profile",
+              element: <LandlordProfile />,
+            },
+            {
+              path: "property/:propertyId",
+              element: <PropertyDetailLayout />,
+              children: [
+                {
+                  path: "",
+                  element: <PropertyOverview />,
+                },
+                {
+                  path: "description",
+                  element: <PropertyDescription />,
+                },
+                {
+                  path: "details",
+                  element: <PropertyDetails />,
+                },
+                {
+                  path: "amenities",
+                  element: <PropertyAmenities />,
+                },
+                {
+                  path: "location",
+                  element: <PropertyLocation />,
+                },
+              ],
+            },
+            {
+              path: "*",
+              element: <div>Page not found</div>,
             },
           ],
         },
       ],
     },
+    // Public Routes
     {
       path: "property/:propertyId",
       element: <PropertyDetailLayout />,

@@ -36,12 +36,17 @@ export const formatDate = (date: string | Date): string => {
     day: "2-digit",
   };
 
-  return new Date(date).toLocaleDateString("en-US", options);
+  return new Date(date)
+    .toLocaleDateString("en-US", options)
+    .replace(/\//g, "-");
 };
 
 // returns: 19th June 2025
 export function formatPrettyDate(dateString: string) {
   // Helper function to get the ordinal suffix
+
+  if (!dateString) return " - ";
+
   function getOrdinalSuffix(day: number) {
     if (day > 3 && day < 21) return "th";
     switch (day % 10) {

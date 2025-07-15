@@ -76,6 +76,23 @@ class PropertyService {
       handleAxiosError(error, "Unable to get properties");
     }
   };
+
+  bookProperty = async (payload: {
+    propertyId: string;
+    moveInDate: string;
+  }) => {
+    console.log({ payload });
+
+    try {
+      const response = await axiosInstance.post(`/booking/request`, payload);
+
+      console.log({ response });
+
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to book property");
+    }
+  };
 }
 
 export const propertyService = new PropertyService();

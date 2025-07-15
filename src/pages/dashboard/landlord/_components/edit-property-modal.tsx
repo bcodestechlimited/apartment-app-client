@@ -26,6 +26,7 @@ import {
   amenities,
   facilities,
   pricingModels,
+  propertyTypes,
   type IEditProperty,
   type IProperty,
 } from "@/interfaces/property.interface";
@@ -65,6 +66,7 @@ export default function EditPropertyModal({
   const [selectedBathrooms, setSelectedBathrooms] = useState<string | null>(
     null
   );
+  const [propertyType, setPropertyType] = useState<string | null>(null);
 
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(
     undefined
@@ -82,7 +84,9 @@ export default function EditPropertyModal({
     formState: { errors },
   } = useForm<IEditProperty>({
     defaultValues: {
+      title: property.title,
       description: property.description,
+      type: property.type,
       address: property.address,
       state: property.state,
       lga: property.lga,
@@ -268,6 +272,14 @@ export default function EditPropertyModal({
 
         {/* You can now reuse the same layout/components as AddPropertyModal here */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          {/* Title */}
+          <div className="flex flex-col gap-2">
+            <Label className="text-start font-bold" htmlFor="title">
+              Title
+            </Label>
+            <Input placeholder="Enter title" {...register("title")} />
+          </div>
+
           {/* Description */}
           <div className="flex flex-col gap-2">
             <Label>Description</Label>
@@ -275,6 +287,47 @@ export default function EditPropertyModal({
             {errors.description && (
               <p className="text-destructive text-sm">
                 {errors.description.message}
+              </p>
+            )}
+          </div>
+
+          {/* Type */}
+          <div className=" flex flex-col gap-2">
+            <Label className="text-start font-bold" htmlFor="state">
+              Property Type
+            </Label>
+            <Input type="text" {...register("type")} className="hidden" />
+
+            <Select
+              onValueChange={(value) => {
+                setPropertyType(value);
+                setValue("type", value);
+                clearErrors(["type"]);
+              }}
+              defaultValue={property.type}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="-select-" />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                <SelectGroup>
+                  {propertyTypes.map((propertyType) => (
+                    <SelectItem
+                      key={propertyType}
+                      value={String(
+                        propertyType.replace(" ", "-").toLowerCase()
+                      )}
+                      className="capitalize"
+                    >
+                      {propertyType}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {errors?.state && (
+              <p className="text-destructive text-sm text-end">
+                {errors.state.message}
               </p>
             )}
           </div>
