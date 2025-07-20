@@ -123,7 +123,11 @@
 }
 
 .btn-primary {
-  @apply bg-custom-primary cursor-pointer hover:bg-custom-primary/90 transition-all ease-in-out duration-300;
+  @apply bg-custom-primary text-white hover:bg-white hover:text-custom-primary border hover:border-custom-primary transition-all ease-in-out duration-300 cursor-pointer;
+}
+
+.btn-secondary {
+  @apply bg-custom-primary text-white hover:bg-gray-100 hover:text-custom-primary border hover:border-custom-primary transition-all ease-in-out duration-300 cursor-pointer;
 }
 
 .btn-danger {

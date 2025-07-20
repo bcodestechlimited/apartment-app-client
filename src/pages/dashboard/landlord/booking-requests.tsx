@@ -2,7 +2,7 @@ import { bookingRequestService } from "@/api/bookingRequest.api";
 import DataTable from "@/components/custom/data-table";
 import { Spinner } from "@/components/custom/loader";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatPrettyDate } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { LanlordBookingRequestDetail } from "../shared/_components/booking-request-detail";
@@ -44,7 +44,11 @@ export default function BookingRequests() {
     },
     {
       header: "Stay Period",
-      render: (row: any) => row.stayPeriod || "N/A",
+      render: (row: any) => (
+        <span>
+          {formatPrettyDate(row.startDate)} - {formatPrettyDate(row.endDate)}
+        </span>
+      ),
     },
     {
       header: "Amount (NGN)",
@@ -65,6 +69,22 @@ export default function BookingRequests() {
           classNames[status] + " py-1 rounded-full capitalize";
 
         return <span className={fullClassName}>{row.status}</span>;
+      },
+    },
+    {
+      header: "Payment Status",
+      render: (row: any) => {
+        const status = row.paymentStatus.toLowerCase();
+        const classNames: Record<string, string> = {
+          success: "text-green-500",
+          pending: "text-gray-500",
+          failed: "text-red-500",
+        };
+
+        const fullClassName =
+          classNames[status] + " py-1 rounded-full capitalize";
+
+        return <span className={fullClassName}>{row.paymentStatus}</span>;
       },
     },
     {

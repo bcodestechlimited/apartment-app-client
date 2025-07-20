@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { House, MessageSquareText } from "lucide-react";
-import { formatPrettyDate } from "@/lib/utils";
+import { formatCurrency, formatPrettyDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bookingRequestService } from "@/api/bookingRequest.api";
@@ -69,24 +69,31 @@ export const LanlordBookingRequestDetail = ({
         <Separator />
 
         <div className="flex flex-col gap-2">
-          <div className="rounded w-full flex gap-4 items-start">
+          {/* <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
               <strong>{bookingRequest.property.description}</strong>
             </p>
-          </div>
+          </div> */}
+
+          {/* <div className="rounded w-full flex gap-4 items-start">
+            <House size={22} />
+            <p>
+              <strong>Address:</strong> {bookingRequest.property.address}
+            </p>
+          </div> */}
 
           <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
-              <strong>Address:</strong> {bookingRequest.property.address}
+              <strong>Property:</strong> {bookingRequest.property.title}
             </p>
           </div>
 
           <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
-              <strong>Price:</strong> {bookingRequest.netPrice}
+              <strong>Price:</strong> {formatCurrency(bookingRequest.netPrice)}
             </p>
           </div>
 
@@ -94,7 +101,7 @@ export const LanlordBookingRequestDetail = ({
             <House size={22} />
             <p>
               <strong>Service Charge:</strong>{" "}
-              {bookingRequest.serviceChargeAmount}
+              {formatCurrency(bookingRequest.serviceChargeAmount)}
             </p>
           </div>
 
@@ -197,32 +204,23 @@ ModalProps) => {
         <Separator />
 
         <div className="flex flex-col gap-2">
-          <div className="rounded w-full flex gap-4 items-start">
-            <House size={22} />
+          {/* <div className="rounded w-full flex gap-4 items-start">
+            <House size={42} />
             <p>
-              <strong>{bookingRequest.property.description}</strong>
+              <strong>Description: </strong>
+              {bookingRequest.property.description}
             </p>
-          </div>
-
-          <div className="rounded w-full flex gap-4 items-start">
+          </div> */}
+          {/* <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
               <strong>Address:</strong> {bookingRequest.property.address}
             </p>
-          </div>
-
+          </div> */}
           <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
-              <strong>Price:</strong> {bookingRequest.netPrice}
-            </p>
-          </div>
-
-          <div className="rounded w-full flex gap-4 items-start">
-            <House size={22} />
-            <p>
-              <strong>Service Charge:</strong>{" "}
-              {bookingRequest.serviceChargeAmount}
+              <strong>Property:</strong> {bookingRequest.property.title}
             </p>
           </div>
 
@@ -233,7 +231,6 @@ ModalProps) => {
               {bookingRequest.property.pricingModel}
             </p>
           </div>
-
           <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
@@ -241,12 +238,33 @@ ModalProps) => {
               {formatPrettyDate(bookingRequest.createdAt)}
             </p>
           </div>
-
           <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
               <strong>Preferred Move-In Date:</strong>{" "}
               {formatPrettyDate(bookingRequest.moveInDate)}
+            </p>
+          </div>
+
+          <div className="rounded w-full flex gap-4 items-start">
+            <House size={22} />
+            <p>
+              <strong>Price:</strong>{" "}
+              {formatCurrency(bookingRequest.property.price)}
+            </p>
+          </div>
+          <div className="rounded w-full flex gap-4 items-start">
+            <House size={22} />
+            <p>
+              <strong>Service Charge:</strong>{" "}
+              {formatCurrency(bookingRequest.serviceChargeAmount)}
+            </p>
+          </div>
+
+          <div className="rounded w-full flex gap-4 items-start">
+            <House size={22} />
+            <p>
+              <strong>Total:</strong> {formatCurrency(bookingRequest.netPrice)}
             </p>
           </div>
         </div>
@@ -273,7 +291,7 @@ ModalProps) => {
                     onClick={handleGeneratePaymentLink}
                     className="w-fit btn-primary px-6"
                   >
-                    Proceed to Pay
+                    Proceed to payment
                   </Button>
                 </div>
               )}

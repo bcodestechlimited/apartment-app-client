@@ -24,7 +24,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     type,
     price,
     pictures,
-    numberOfBedRooms,
+    numberOfBedrooms,
     numberOfBathrooms,
     isVerified,
   } = property;
@@ -47,11 +47,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
       <div className="p-4 text-start">
         <span>
-          {typeof numberOfBedRooms === "number" && (
+          {typeof numberOfBedrooms === "number" && (
             <span>
-              {numberOfBedRooms === 1
+              {numberOfBedrooms === 1
                 ? "1 Bedroom"
-                : `${numberOfBedRooms} Bedrooms`}
+                : `${numberOfBedrooms} Bedrooms`}
             </span>
           )}
         </span>
@@ -62,10 +62,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         </p>
 
         <div className="flex gap-4 flex-wrap mt-2">
-          {numberOfBedRooms ? (
+          {numberOfBedrooms ? (
             <p className="text-sm text-gray-500 flex items-center gap-1">
               <Bed size={18} />
-              {numberOfBedRooms}
+              {numberOfBedrooms}
             </p>
           ) : null}
           {numberOfBathrooms ? (
@@ -88,11 +88,9 @@ export const PublicPropertyCard = ({ property, link }: PropertyCardProps) => {
     type,
     price,
     pictures,
-    numberOfBedRooms,
+    numberOfBedrooms,
     numberOfBathrooms,
   } = property;
-
-  console.log({ property });
 
   if (!property) return null;
 
@@ -118,9 +116,9 @@ export const PublicPropertyCard = ({ property, link }: PropertyCardProps) => {
         <div className="p-4 text-start flex flex-col gap-1">
           <span>
             <small className="text-gray-500">
-              {Number(numberOfBedRooms) === 1
+              {Number(numberOfBedrooms) === 1
                 ? "1 Bedroom"
-                : `${numberOfBedRooms} Bedrooms`}
+                : `${numberOfBedrooms} Bedrooms`}
             </small>
           </span>
           <p className="font-medium text-xl">{title}</p>
@@ -133,10 +131,10 @@ export const PublicPropertyCard = ({ property, link }: PropertyCardProps) => {
           </p>
 
           <div className="flex gap-4 flex-wrap mt-2">
-            {numberOfBedRooms ? (
+            {numberOfBedrooms ? (
               <p className="text-sm text-gray-500 flex items-center gap-1">
                 <Bed size={18} />
-                {numberOfBedRooms}
+                {numberOfBedrooms}
               </p>
             ) : null}
             {numberOfBathrooms ? (
@@ -161,7 +159,7 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
     type,
     price,
     pictures,
-    numberOfBedRooms,
+    numberOfBedrooms,
     numberOfBathrooms,
     // isVerified,
   } = property;
@@ -196,9 +194,9 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
           <div className="p-4 text-start space-y-1">
             <span>
               <small className="text-gray-500">
-                {Number(numberOfBedRooms) === 1
+                {Number(numberOfBedrooms) === 1
                   ? "1 Bedroom"
-                  : `${numberOfBedRooms} Bedrooms`}
+                  : `${numberOfBedrooms} Bedrooms`}
               </small>
             </span>
             <p className="font-medium text-xl">{title}</p>
@@ -212,10 +210,10 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
 
             <div className="flex items-center justify-between">
               <div className="flex gap-4 flex-wrap mt-2">
-                {numberOfBedRooms ? (
+                {numberOfBedrooms ? (
                   <p className="text-sm text-gray-500 flex items-center gap-1">
                     <Bed size={18} />
-                    {numberOfBedRooms}
+                    {numberOfBedrooms}
                   </p>
                 ) : null}
                 {numberOfBathrooms ? (

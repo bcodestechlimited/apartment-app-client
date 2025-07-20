@@ -94,7 +94,7 @@ export default function EditPropertyModal({
       price: property.price,
       pricingModel: property.pricingModel,
       existingPictures: property.pictures,
-      numberOfBedRooms: String(property.numberOfBedRooms),
+      numberOfBedRooms: String(property.numberOfBedrooms),
       numberOfBathrooms: String(property.numberOfBathrooms),
     },
   });
@@ -105,7 +105,7 @@ export default function EditPropertyModal({
   useEffect(() => {
     setSelectedAmenities(property.amenities || []);
     setSelectedFacilities(property.facilities || []);
-    setSelectedRooms(String(property.numberOfBedRooms));
+    setSelectedRooms(String(property.numberOfBedrooms));
     setSelectedBathrooms(String(property.numberOfBathrooms));
     setAvailabilityDate(
       property.availabilityDate
@@ -124,7 +124,7 @@ export default function EditPropertyModal({
       closeModal();
     },
     onError: (error) => {
-      toast.error("Failed to update property");
+      toast.error(error.message);
       console.error(error);
     },
   });
@@ -243,7 +243,7 @@ export default function EditPropertyModal({
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
     formData.append("facilities", JSON.stringify(selectedFacilities));
-    formData.append("numberOfBedRooms", String(selectedRooms));
+    formData.append("numberOfBedrooms", String(selectedRooms));
     formData.append("numberOfBathrooms", String(selectedBathrooms));
     formData.append("type", property.type); // keep original type
     for (let i = 0; i < data.newPictures?.length; i++) {
@@ -534,7 +534,7 @@ export default function EditPropertyModal({
                     setValue("numberOfBedRooms", value);
                     clearErrors(["numberOfBedRooms"]);
                   }}
-                  defaultValue={property.numberOfBedRooms?.toString()}
+                  defaultValue={property.numberOfBedrooms?.toString()}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="-select-" />

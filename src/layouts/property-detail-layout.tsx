@@ -7,7 +7,7 @@ import { Link, Outlet, useParams } from "react-router";
 function PropertyDetailLayout() {
   const { propertyId } = useParams();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["property", propertyId],
     queryFn: () => propertyService.getProperty(propertyId!),
     retry: !!propertyId,
@@ -37,6 +37,16 @@ function PropertyDetailLayout() {
   ];
 
   if (isLoading) return <Loader />;
+
+  if (isError) return <div>Something went wrong</div>;
+
+  if (!data)
+    return (
+      <div>
+        <p>Property not found</p>
+        <Link to="/">Go back to home</Link>
+      </div>
+    );
 
   return (
     <div>

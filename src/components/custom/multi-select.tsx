@@ -17,13 +17,6 @@ type MultiSelectProps = {
   placeholder?: string;
 };
 
-/**
- * A multi-select component that allows the user to select multiple options from a list of options.
- * @param {string[]} options The list of options to select from.
- * @param {string[]} selected The currently selected options.
- * @param {(selected: string[]) => void} onChange A callback function that is called when the user selects or unselects an option.
- * @param {string} [placeholder="Select options..."] The placeholder text that is displayed when the user has not yet selected any options.
- */
 export function MultiSelect({
   options,
   selected,

@@ -44,7 +44,7 @@ class PropertyService {
 
       return response.data?.data?.property;
     } catch (error) {
-      handleAxiosError(error, "Unable to update property");
+      handleAxiosError(error, "Failed to update property");
     }
   };
 

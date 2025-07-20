@@ -3,17 +3,28 @@ import axiosInstance from "@/lib/axios.config";
 import { handleAxiosError } from "@/lib/utils";
 
 class BookingService {
-  createBooking = async (payload: any) => {
-    console.log({ payload });
-
+  getLandlordBookings = async (params: IParams) => {
     try {
-      const response = await axiosInstance.post(`/booking`, payload);
-      console.log({ response });
+      const response = await axiosInstance.get(`/booking/landlord`, {
+        params,
+      });
       return response.data?.data;
     } catch (error) {
-      handleAxiosError(error, "Unable to book property");
+      handleAxiosError(error, "Unable to get booking requests");
     }
   };
+
+  getTenantBookings = async (params: IParams) => {
+    try {
+      const response = await axiosInstance.get(`/booking/tenant`, {
+        params,
+      });
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to get booking requests");
+    }
+  };
+
   getBooking = async (propertyId: string) => {
     try {
       const response = await axiosInstance.get(`/property/${propertyId}`);

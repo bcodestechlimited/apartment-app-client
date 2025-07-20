@@ -2,23 +2,32 @@ import { bookingRequestService } from "@/api/bookingRequest.api";
 import DataTable from "@/components/custom/data-table";
 import { Spinner } from "@/components/custom/loader";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatPrettyDate } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { useState } from "react";
 import { TenantBookingRequestDetail } from "../shared/_components/booking-request-detail";
+import BookingRequestPaymentSuccessfulModal from "./_components/booking-request-payment-successful-modal";
 
 export default function TenantBookingRequests() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedBookingRequest, setSelectedBookingRequest] = useState(null);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(true);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    setSearchParams({});
+  };
+
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 10;
+
+  const bookingRequestId = searchParams.get("bookingRequestId");
 
   const { data, isLoading } = useQuery({
     queryKey: ["tenant-booking-requests", { page, limit }],
@@ -42,10 +51,14 @@ export default function TenantBookingRequests() {
       header: "Property",
       render: (row: any) => row.property.title || "N/A",
     },
-    // {
-    //   header: "Stay Period",
-    //   render: (row: any) => row.stayPeriod || "N/A",
-    // },
+    {
+      header: "Stay Period",
+      render: (row: any) => (
+        <span>
+          {formatPrettyDate(row.startDate)} - {formatPrettyDate(row.endDate)}
+        </span>
+      ),
+    },
     {
       header: "Amount (NGN)",
       render: (row: any) => row.netPrice ?? "N/A",
@@ -65,6 +78,22 @@ export default function TenantBookingRequests() {
           classNames[status] + " py-1 rounded-full capitalize";
 
         return <span className={fullClassName}>{row.status}</span>;
+      },
+    },
+    {
+      header: "Payment Status",
+      render: (row: any) => {
+        const status = row.paymentStatus.toLowerCase();
+        const classNames: Record<string, string> = {
+          success: "text-green-500",
+          pending: "text-gray-500",
+          failed: "text-red-500",
+        };
+
+        const fullClassName =
+          classNames[status] + " py-1 rounded-full capitalize";
+
+        return <span className={fullClassName}>{row.paymentStatus}</span>;
       },
     },
     {
@@ -100,6 +129,15 @@ export default function TenantBookingRequests() {
           setOpen={setIsOpen}
           closeModal={closeModal}
           bookingRequest={selectedBookingRequest}
+        />
+      )}
+
+      {bookingRequestId && (
+        <BookingRequestPaymentSuccessfulModal
+          isOpen={isSuccessModalOpen}
+          setOpen={setIsSuccessModalOpen}
+          closeModal={closeSuccessModal}
+          bookingRequestId={bookingRequestId}
         />
       )}
     </div>

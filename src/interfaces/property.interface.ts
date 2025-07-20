@@ -16,6 +16,8 @@ export const propertyTypes = [
 ];
 export const pricingModels = ["Hourly", "Daily", "Weekly", "Monthly", "Yearly"];
 export const duration = ["Short Term", "Long Term"];
+export const numberOfBathroomsArray = ["1", "2", "3", "4", "5"];
+export const numberOfBedRoomsArray = ["1", "2", "3", "4", "5"];
 
 export interface IProperty {
   _id: string;
@@ -29,8 +31,8 @@ export interface IProperty {
   availabilityDate: string;
   // pricingModel?: "hourly" | "daily" | "weekly" | "monthly" | "yearly" ;
   pricingModel?: string;
-  numberOfBedRooms?: string;
-  numberOfBathrooms?: string;
+  numberOfBedrooms?: number;
+  numberOfBathrooms?: number;
   seatingCapacity?: string;
   amenities: string[];
   facilities: string[];

@@ -40,6 +40,20 @@ class BookingRequestService {
     }
   };
 
+  getBookingRequest = async (bookingRequestId: string) => {
+    try {
+      const response = await axiosInstance.get(
+        `/booking-request/${bookingRequestId}`
+      );
+
+      console.log({ data: response.data?.data });
+
+      return response.data?.data
+    } catch (error) {
+      handleAxiosError(error, "Unable to get booking request");
+    }
+  };
+
   updateLandlordBookingRequests = async (
     bookingRequestId: string,
     payload: any

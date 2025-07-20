@@ -1,437 +1,503 @@
-// import CustomMultiSelect from "@/components/custom/custom-multi-select";
-// import { Dialog, DialogContent } from "@/components/ui/dialog";
-// import React, { useState } from "react";
-// import { propertyTypes } from "@/interfaces/property.interface";
-// import { amenities } from "@/interfaces/property.interface";
-// import { duration } from "@/interfaces/property.interface";
-
-// interface AddFilterModalProps {
-//   //   propertyType: string; // <-- added back this comment
-//   isOpen: boolean;
-//   closeModal: () => void;
-// }
-// const AddFilterModal = ({ isOpen, closeModal }: AddFilterModalProps) => {
-//   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-
-//   return (
-//     <Dialog open={isOpen} onOpenChange={closeModal}>
-//       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-//         <p>Filters</p>
-//         <hr />
-//         <p>Property type</p>
-
-//         <CustomMultiSelect
-//           options={propertyTypes}
-//           selected={selectedAmenities}
-//           onSelect={(value) => {
-//             setSelectedAmenities(value);
-//             setValue("amenities", value);
-//             clearErrors(["amenities"]);
-//           }}
-//         />
-//         <h2>Price range</h2>
-//         <div className=" flex   justify-between">
-//           <div>
-//             <p>Min</p>
-//             <button className=" border border-gray-400 rounded-lg  px-8 py-2">
-//               #50,000
-//             </button>
-//           </div>
-//           <div className="flex flex-col items-end">
-//             <p>Max</p>
-//             <button className=" border border-gray-400 rounded-lg  px-8 py-2">
-//               #100,000
-//             </button>
-//           </div>
-//         </div>
-//         <hr />
-//         <div>
-//           <h2>Beds and Bathrooms</h2>
-//           <p>Beds</p>
-//           <p>Bathrooms</p>
-//         </div>
-//         <hr />
-//         <div className="flex flex-col gap-4">
-//           <h2>Unit essentials</h2>
-//           <CustomMultiSelect
-//             options={amenities}
-//             selected={selectedAmenities}
-//             onSelect={(value) => {
-//               setSelectedAmenities(value);
-//               setValue("amenities", value);
-//               clearErrors(["amenities"]);
-//             }}
-//           />
-//           <p>show more</p>
-//         </div>
-//         <hr />
-//         <div>
-//           <h2 className="pb-3">Duration</h2>
-//           <CustomMultiSelect
-//             options={duration}
-//             selected={selectedAmenities}
-//             onSelect={(value) => {
-//               setSelectedAmenities(value);
-//               setValue("amenities", value);
-//               clearErrors(["amenities"]);
-//             }}
-//           />
-//         </div>
-//         <hr />
-//         <div>
-//           <h2 className="pb-3">Availability time</h2>
-//           <CustomMultiSelect
-//             options={amenities}
-//             selected={selectedAmenities}
-//             onSelect={(value) => {
-//               setSelectedAmenities(value);
-//               setValue("amenities", value);
-//               clearErrors(["amenities"]);
-//             }}
-//           />
-//           <p>show more</p>
-//         </div>
-//   </DialogContent>
-// </Dialog>
-//   );
-// };
-
-// export default AddFilterModal;
-
-// second snippet
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { CalendarIcon, CircleAlert } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  amenities,
+  facilities,
+  numberOfBathroomsArray,
+  numberOfBedRoomsArray,
+  pricingModels,
+  propertyTypes,
+} from "@/interfaces/property.interface";
+import { Separator } from "@/components/ui/separator";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import CustomMultiSelect from "@/components/custom/custom-multi-select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  NIGERIAN_STATE_CITIES,
+  NIGERIAN_STATES,
+} from "@/constants/nigerian-states";
+import { Button } from "@/components/ui/button";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+import CurrencyInput from "@/components/custom/currencyInput";
+import { formatDate } from "@/lib/utils";
+
+interface FilterState {
+  propertyType: string;
+  minPrice: string;
+  maxPrice: string;
+  numberOfBedrooms: string | null;
+  numberOfBathrooms: string | null;
+  pricingModel: string;
+  facilities: string[];
+  amenities: string[];
+  availableFrom: Date | undefined;
+  state: string;
+  lga: string | null;
+}
 
 interface AddFilterModalProps {
   isOpen: boolean;
   closeModal: () => void;
+  onApplyFilters: (data: Record<string, any>) => void;
 }
 
-interface FilterState {
-  propertyType: string[];
-  priceRange: { min: number; max: number };
-  beds: number | null;
-  bathrooms: number | null;
-  essentials: string[];
-  duration: string;
-  availabilityTime: string;
-}
-
-const AddFilterModal = ({ isOpen, closeModal }: AddFilterModalProps) => {
-  //   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+const AddFilterModal = ({
+  isOpen,
+  closeModal,
+  onApplyFilters,
+}: AddFilterModalProps) => {
   const [filters, setFilters] = useState<FilterState>({
-    propertyType: ["Standard rental"],
-    priceRange: { min: 50000, max: 100000 },
-    beds: null,
-    bathrooms: null,
-    essentials: ["Wi-Fi", "Kitchen", "Private bath"],
-    duration: "Short term",
-    availabilityTime: "All day",
+    propertyType: "",
+    minPrice: "",
+    maxPrice: "",
+    numberOfBedrooms: null,
+    numberOfBathrooms: null,
+    facilities: [],
+    amenities: [],
+    pricingModel: "",
+    availableFrom: undefined,
+    state: "",
+    lga: null,
   });
 
-  const [showMoreEssentials, setShowMoreEssentials] = useState(false);
+  // render count
+  // const renderCount = useRef(0);
+  // renderCount.current += 1;
 
-  const propertyTypes = [
-    "Standard rental",
-    "Short let",
-    "Serviced apartment",
-    "Shared apartment",
-  ];
+  // useEffect(() => {
+  //   console.log("AddFilterModal rendered", renderCount.current, "times");
+  // });
 
-  const essentialsList = [
-    "Wi-Fi",
-    "Kitchen",
-    "Gym",
-    "Air Conditioner",
-    "Washer",
-    "Private bath",
-    "Wi-Fi",
-    "Kitchen",
-    "Wi-Fi",
-  ];
+  const handleApplyFilters = () => {
+    // const excludedKeys = ["availableFrom", "availableFromString"];
 
-  const togglePropertyType = (type: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      propertyType: prev.propertyType.includes(type)
-        ? prev.propertyType.filter((t) => t !== type)
-        : [...prev.propertyType, type],
-    }));
+    const updatedFilters = Object.fromEntries(
+      Object.entries(filters)
+        .map(([key, value]) => {
+          if (value === null || value === "" || value === undefined) {
+            return [key, undefined];
+          }
+
+          if (Array.isArray(value) && value.length === 0) {
+            return [key, undefined];
+          }
+
+          // if (excludedKeys.includes(key)) {
+          //   return [key, undefined];
+          // }
+
+          if (key === "availableFrom" && filters.availableFrom) {
+            return ["availableFrom", formatDate(filters.availableFrom)];
+          }
+
+          return [key, value];
+        })
+        .filter(([_, value]) => value !== undefined)
+    );
+
+    console.log({ updatedFilters });
+
+    onApplyFilters(updatedFilters);
   };
 
-  const toggleEssential = (essential: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      essentials: prev.essentials.includes(essential)
-        ? prev.essentials.filter((e) => e !== essential)
-        : [...prev.essentials, essential],
-    }));
-  };
-
-  const handlePriceChange = (type: "min" | "max", value: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      priceRange: {
-        ...prev.priceRange,
-        [type]: value,
-      },
-    }));
-  };
-
-  const clearAllFilters = () => {
+  const handleClearFilters = () => {
     setFilters({
-      propertyType: [],
-      priceRange: { min: 0, max: 200000 },
-      beds: null,
-      bathrooms: null,
-      essentials: [],
-      duration: "",
-      availabilityTime: "All day",
+      propertyType: "",
+      minPrice: "",
+      maxPrice: "",
+      numberOfBedrooms: null,
+      numberOfBathrooms: null,
+      facilities: [],
+      amenities: [],
+      pricingModel: "",
+      availableFrom: undefined,
+      state: "",
+      lga: null,
     });
+
+    onApplyFilters({});
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Filters</h2>
-        <hr />
-        {/* Property Type */}
-        <div className="mb-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Property type
-          </h3>
-          <div className="flex flex-wrap gap-3">
-            {propertyTypes.map((type) => (
-              <button
-                key={type}
-                onClick={() => togglePropertyType(type)}
-                className={`px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
-                  filters.propertyType.includes(type)
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-400"
-                }`}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
-        </div>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto ">
+        <DialogTitle className="text-2xl font-semibold">Filters</DialogTitle>
+        <Separator />
+        <DialogDescription aria-describedby="modal-description">
+          Please select one or more filters to apply to your search results. You
+          can always clear the filters by clicking the <strong>Clear</strong>{" "}
+          button.
+        </DialogDescription>
+        <div className="flex flex-col gap-4">
+          {/* Type */}
+          <div className=" flex flex-col gap-2">
+            <Label className="text-start font-bold" htmlFor="state">
+              Property Type
+            </Label>
+            <Input type="text" className="hidden" />
 
-        {/* Price Range */}
-        <hr />
-        <div className="mb-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Price range
-          </h3>
-
-          {/* Price Range Slider */}
-          <div className="relative mb-6">
-            <div className="h-2 bg-gray-200 rounded-full">
-              <div
-                className="h-2 bg-teal-600 rounded-full relative"
-                style={{
-                  width: `${
-                    ((filters.priceRange.max - filters.priceRange.min) /
-                      200000) *
-                    100
-                  }%`,
-                  marginLeft: `${(filters.priceRange.min / 200000) * 100}%`,
-                }}
-              >
-                <div className="absolute -right-2 -top-1 w-4 h-4 bg-teal-600 rounded-full border-2 border-white shadow-md cursor-pointer"></div>
-                <div className="absolute -left-2 -top-1 w-4 h-4 bg-teal-600 rounded-full border-2 border-white shadow-md cursor-pointer"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Price Inputs */}
-
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="block text-[14px] font-medium text-gray-700 mb-2">
-                Min
-              </label>
-              <input
-                type="text"
-                value={`₦${filters.priceRange.min.toLocaleString()}`}
-                onChange={(e) => {
-                  const value =
-                    parseInt(e.target.value.replace(/[₦,]/g, "")) || 0;
-                  handlePriceChange("min", value);
-                }}
-                className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 bg-gray-50"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Max
-              </label>
-              <input
-                type="text"
-                value={`₦${filters.priceRange.max.toLocaleString()}`}
-                onChange={(e) => {
-                  const value =
-                    parseInt(e.target.value.replace(/[₦,]/g, "")) || 0;
-                  handlePriceChange("max", value);
-                }}
-                className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 bg-gray-50"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Beds and Bathrooms */}
-        <hr />
-        <div className="mb-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Beds and Bathrooms
-          </h3>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Beds
-              </label>
-              <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-600 bg-white"
-                value={filters.beds || ""}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    beds: e.target.value ? parseInt(e.target.value) : null,
-                  }))
-                }
-              >
-                <option value="">Any</option>
-                <option value="1">1 bed</option>
-                <option value="2">2 beds</option>
-                <option value="3">3 beds</option>
-                <option value="4">4+ beds</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Bathrooms
-              </label>
-              <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-600 bg-white"
-                value={filters.bathrooms || ""}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    bathrooms: e.target.value ? parseInt(e.target.value) : null,
-                  }))
-                }
-              >
-                <option value="">Any</option>
-                <option value="1">1 bathroom</option>
-                <option value="2">2 bathrooms</option>
-                <option value="3">3+ bathrooms</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Unit Essentials */}
-        <hr />
-        <div className="mb-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Unit essentials
-          </h3>
-          <div className="flex flex-wrap gap-3">
-            {essentialsList
-              .slice(0, showMoreEssentials ? essentialsList.length : 9)
-              .map((essential, index) => (
-                <button
-                  key={`${essential}-${index}`}
-                  onClick={() => toggleEssential(essential)}
-                  className={`px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
-                    filters.essentials.includes(essential)
-                      ? "bg-gray-900 text-white border-gray-900"
-                      : "bg-white text-gray-600 border-gray-300 hover:border-gray-400"
-                  }`}
-                >
-                  {essential}
-                </button>
-              ))}
-          </div>
-
-          {!showMoreEssentials && (
-            <button
-              onClick={() => setShowMoreEssentials(true)}
-              className="mt-3 text-sm font-medium text-gray-600 hover:text-gray-900 flex items-center gap-1"
+            <Select
+              onValueChange={(value) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  propertyType: value,
+                }));
+              }}
+              value={filters.propertyType}
             >
-              Show more
-              <ChevronDown className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-
-        {/* Duration */}
-        <hr />
-        <div className="mb-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Duration</h3>
-          <div className="flex gap-3">
-            {["Short term", "Long term"].map((duration) => (
-              <button
-                key={duration}
-                onClick={() => setFilters((prev) => ({ ...prev, duration }))}
-                className={`px-6 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
-                  filters.duration === duration
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-400"
-                }`}
-              >
-                {duration}
-              </button>
-            ))}
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="-select-" />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                <SelectGroup>
+                  {propertyTypes.map((propertyType) => (
+                    <SelectItem
+                      key={propertyType}
+                      value={String(propertyType)}
+                      className="capitalize"
+                    >
+                      {propertyType}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
-        </div>
 
-        {/* Availability Time */}
-        <hr />
-        <div className="mb-8 ">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Availability time
-          </h3>
-          <div className="flex justify-between items-center">
-            <div className="mb-4 bg-[#FAFAFA] p-3 rounded-lg">
-              <label className="block text-sm text-gray-600 mb-3">
-                Select time:
-              </label>
-              <div className="flex bg-white rounded-lg p-1">
-                {["All day", "Time", "Range"].map((option) => (
-                  <button
-                    key={option}
-                    onClick={() =>
+          {/* Price Range */}
+          <div className="flex flex-col gap-2">
+            <Label className="text-start font-bold" htmlFor="priceRange">
+              Price Range
+            </Label>
+            <div className="flex gap-4">
+              <CurrencyInput
+                type="number"
+                className="w-full"
+                placeholder="Min Price"
+                value={filters.minPrice}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    minPrice: e.target.value,
+                  }))
+                }
+              />
+              <CurrencyInput
+                type="number"
+                className="w-full"
+                placeholder="Max Price"
+                value={filters.maxPrice}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    maxPrice: e.target.value,
+                  }))
+                }
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            {/* State */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="state">
+                State
+              </Label>
+              <Input type="text" className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    state: value,
+                    lga: null,
+                  }));
+                }}
+                value={filters.state}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  <SelectGroup>
+                    {NIGERIAN_STATES.map((state) => (
+                      <SelectItem key={state} value={String(state)}>
+                        {state}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Local Government Area */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="lga">
+                LGA
+              </Label>
+              <Input type="text" className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    lga: value,
+                  }));
+                }}
+                value={filters.lga || ""}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {filters.state ? (
+                      NIGERIAN_STATE_CITIES[filters.state].map((lga) => (
+                        <SelectItem key={lga} value={String(lga)}>
+                          {lga}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <SelectItem value={"select"} disabled>
+                        Select a state first
+                      </SelectItem>
+                    )}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Availability Date  */}
+            {/* <div className=" flex flex-col gap-2">
+              <Label
+                className="text-start font-bold"
+                htmlFor="availabilityDate"
+              >
+                Avalability Date
+              </Label>
+              <Input type="text" className="hidden" />
+
+              <Popover modal={true}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className="w-full pl-3 text-left font-normal"
+                  >
+                    {filters.availableFrom
+                      ? formatDate(filters.availableFrom)
+                      : "Pick a date"}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto p-0 flex justify-end"
+                  align="center"
+                >
+                  <Calendar
+                    mode="single"
+                    required
+                    selected={filters.availableFrom}
+                    onSelect={(date: Date) => {
+                      if (!date) {
+                        return;
+                      }
+
                       setFilters((prev) => ({
                         ...prev,
-                        availabilityTime: option,
-                      }))
-                    }
-                    className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
-                      filters.availabilityTime === option
-                        ? "bg-[#0045421A] text-[#004542] shadow-sm"
-                        : "text-gray-600 hover:text-gray-900"
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
+                        availableFrom: date,
+                      }));
+                    }}
+                    disabled={(date: Date) => date < new Date()}
+                    className="rounded-md border bg-white z-50"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div> */}
+
+            {/* Pricing Model  */}
+            <div className=" flex flex-col gap-2">
+              <Label className="text-start font-bold" htmlFor="pricingModel">
+                Pricing Model
+              </Label>
+              <Input type="text" className="hidden" />
+
+              <Select
+                onValueChange={(value) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    pricingModel: value,
+                  }));
+                }}
+                value={filters.pricingModel}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="-select-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {pricingModels.map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Key Features */}
+          {/* <div>
+            <div className="flex flex-col sm:flex-row gap-6 mt-2">
+              <div className="flex flex-col gap-2 w-full sm:w-1/2">
+                <Label>No of bedrooms</Label>
+                <Input type="string" className="hidden" />
+                <Select
+                  onValueChange={(value) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      numberOfBedrooms: value,
+                    }));
+                  }}
+                  value={filters.numberOfBedrooms || ""}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="-select-" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {numberOfBedRoomsArray.map((num) => (
+                        <SelectItem key={num} value={String(num)}>
+                          {num}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-2 w-full sm:w-1/2">
+                <Label>No of bathrooms</Label>
+                <Input type="string" className="hidden" />
+                <Select
+                  onValueChange={(value) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      numberOfBathrooms: value,
+                    }));
+                  }}
+                  value={filters.numberOfBathrooms || ""}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="-select-" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {numberOfBathroomsArray.map((num) => (
+                        <SelectItem key={num} value={String(num)}>
+                          {num}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
+          </div> */}
 
-            {/* Footer */}
-            <div className="flex justify-end pt-4 ">
-              <button
-                onClick={clearAllFilters}
-                className="border border-[#0045424D] rounded-md px-4 py-2 text-sm font-medium text-[#004542] hover:text-teal-700 transition-colors"
-              >
-                CLEAR ALL
-              </button>
+          {/* Amenities and Facilites */}
+          {/* <div>
+            <p className="font-semibold tracking-wide">Amenities</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 mt-2">
+                <span className="font-semibold text-sm flex gap-2 items-center">
+                  Add unit features
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>
+                        <CircleAlert className=" cursor-pointer" size={14} />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        This includes only amenities available inside the unit
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </span>
+                <CustomMultiSelect
+                  options={amenities}
+                  selected={filters.amenities}
+                  onSelect={(value) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      amenities: value,
+                    }));
+                  }}
+                />
+              </div>
+              <div className="flex flex-col gap-2 mt-2">
+                <span className="font-semibold text-sm flex gap-2 items-center">
+                  Add facilities
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>
+                        <CircleAlert className=" cursor-pointer" size={14} />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        This includes only facilities available outside the unit
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </span>
+                <CustomMultiSelect
+                  options={facilities}
+                  selected={filters.facilities}
+                  onSelect={(value) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      facilities: value,
+                    }));
+                  }}
+                />
+              </div>
             </div>
+          </div> */}
+
+          <div className="flex gap-4 justify-end items-center pt-2 ">
+            <Button onClick={handleClearFilters} className="btn-danger">
+              Clear Filters
+            </Button>
+            <Button
+              className="btn-primary"
+              onClick={() => {
+                handleApplyFilters();
+              }}
+            >
+              Apply Filters
+            </Button>
           </div>
         </div>
       </DialogContent>

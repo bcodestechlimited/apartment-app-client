@@ -64,9 +64,9 @@ export function formatPrettyDate(dateString: string) {
   // Create a Date object from the ISO 8601 string
   const date = new Date(dateString);
 
-  const day = date.getUTCDate();
+  const day = date.getDate();
   const monthName = date.toLocaleString("en-US", { month: "long" });
-  const year = date.getUTCFullYear();
+  const year = date.getFullYear();
   const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
 
   return `${dayWithSuffix} ${monthName} ${year}`;
@@ -96,3 +96,6 @@ export const getActualTypeFromParam = (type: string): string | undefined => {
 
   return propertyTypes[type.toLowerCase()].replace("-", " ");
 };
+
+
+

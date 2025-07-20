@@ -387,7 +387,6 @@ export default function AddPropertyModal({
 
               <Select
                 onValueChange={(value) => {
-                  setSelectedRooms(value);
                   setValue("state", value);
                   clearErrors(["state"]);
                 }}
@@ -421,7 +420,6 @@ export default function AddPropertyModal({
 
               <Select
                 onValueChange={(value) => {
-                  setSelectedRooms(value);
                   setValue("lga", value);
                   clearErrors(["lga"]);
                 }}
@@ -520,7 +518,6 @@ export default function AddPropertyModal({
 
               <Select
                 onValueChange={(value) => {
-                  setSelectedRooms(value);
                   setValue("pricingModel", value);
                   clearErrors(["pricingModel"]);
                 }}

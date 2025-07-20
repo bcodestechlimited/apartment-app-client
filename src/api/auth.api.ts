@@ -2,7 +2,6 @@ import type { IUser } from "@/interfaces/user.interface";
 import axiosInstance from "@/lib/axios.config";
 import { handleAxiosError } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
-import { AxiosError } from "axios";
 
 class AuthService {
   register = async (payload: any) => {
