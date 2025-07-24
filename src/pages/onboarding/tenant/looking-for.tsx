@@ -38,7 +38,7 @@ export default function LookingFor() {
     mutationKey: ["updateUser"],
     onSuccess: () => {
       toast.success("You're all set!");
-      navigate("/dashboard");
+      navigate("/dashboard/tenant");
     },
     onError: (error) => {
       toast.error(error.message);

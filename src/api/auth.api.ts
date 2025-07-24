@@ -73,6 +73,39 @@ class AuthService {
       handleAxiosError(error, "Failed to resen OTP");
     }
   };
+
+  forgotPassword = async (payload: any) => {
+    try {
+      const response = await axiosInstance.post(
+        `/auth/forgot-password`,
+        payload
+      );
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to forgot password");
+    }
+  };
+
+  resetPassword = async (payload: any) => {
+    try {
+      const response = await axiosInstance.post(
+        `/auth/reset-password`,
+        payload
+      );
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to reset password");
+    }
+  };
+
+  loginWithGoogle = async () => {
+    try {
+      const response = await axiosInstance.get(`/auth/google`);
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to login with Google");
+    }
+  };
 }
 
 export const authService = new AuthService();

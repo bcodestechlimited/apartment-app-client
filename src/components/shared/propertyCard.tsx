@@ -16,6 +16,7 @@ import DeletePropertyModal from "@/pages/dashboard/landlord/_components/delete-p
 interface PropertyCardProps {
   property: IProperty;
   link?: string;
+  label?: string;
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
@@ -81,7 +82,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   );
 };
 
-export const PublicPropertyCard = ({ property, link }: PropertyCardProps) => {
+export const PublicPropertyCard = ({
+  property,
+  link,
+  label,
+}: PropertyCardProps) => {
   const {
     title,
     description,
@@ -101,7 +106,7 @@ export const PublicPropertyCard = ({ property, link }: PropertyCardProps) => {
       <div className="relative bg-white rounded-lg overflow-hidden w-full border border-gray-200">
         <img src={pictures[0]} alt="" className="w-full h-48 object-cover" />
         <span className="bg-custom-primary text-white text-xs px-2 py-1 absolute top-4 left-0 capitalize rounded-r z-10">
-          {type}
+          {label || type}
         </span>
 
         {/* Overlay if not verified */}

@@ -18,84 +18,69 @@ import { useState } from "react";
 import TenantProfile from "../tenant/_components/tenant-profile";
 import TenantRating from "../tenant/_components/tenant-rating";
 import ReportTenant from "../tenant/_components/report-tenant";
+import { useQuery } from "@tanstack/react-query";
+import { tenantService } from "@/api/tenant.api";
+import { useSearchParams } from "react-router";
 
 export default function Tenants() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-  const tenantsList = [
-    {
-      id: 1,
-      name: "John Doe",
-      verification: true,
-      property: "Sunset Villa",
-      duration: "2025-06-10 - 2025-06-15",
-      status: "Confirmed",
-      rating: 4.5,
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      verification: false,
-      property: "Ocean Breeze",
-      duration: "2025-06-12 - 2025-06-18",
-      status: "Pending",
-      rating: null,
-    },
-    {
-      id: 3,
-      name: "Mark Johnson",
-      verification: true,
-      property: "Mountain Retreat",
-      duration: "2025-06-20 - 2025-06-25",
-      status: "Cancelled",
-      rating: 3.0,
-    },
-    {
-      id: 4,
-      name: "Emily Brown",
-      verification: true,
-      property: "City Loft",
-      duration: "2025-07-01 - 2025-07-05",
-      status: "Confirmed",
-      rating: 5.0,
-    },
-    {
-      id: 5,
-      name: "Michael Lee",
-      verification: false,
-      property: "Lakeside Cabin",
-      duration: "2025-07-10 - 2025-07-15",
-      status: "Pending",
-      rating: null,
-    },
-  ];
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(true);
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [selectedTenant, setSelectedTenant] = useState(null);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const openProfileModal = (tenant: any) => {
+    setSelectedTenant(tenant);
+    setIsProfileModalOpen(true);
+  };
+  const closeProfileModal = () => setIsProfileModalOpen(false);
+
+  const openRatingModal = (tenant: any) => {
+    setSelectedTenant(tenant);
+    setIsRatingModalOpen(true);
+  };
+  const closeRatingModal = () => setIsRatingModalOpen(false);
+
+  const openReportModal = (tenant: any) => {
+    setSelectedTenant(tenant);
+    setIsReportModalOpen(true);
+  };
+  const closeReportModal = () => setIsReportModalOpen(false);
+
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+  const { data, isLoading } = useQuery({
+    queryKey: ["landlord-booking-requests", { page, limit }],
+    queryFn: () =>
+      tenantService.getLandlordTenants({
+        page: 1,
+        limit: 10,
+      }),
+  });
 
   const columns = [
     {
       header: "Tenant Name",
-      render: (row: any) => row.name || "N/A",
+      render: (row: any) => row?.user?.firstname || "N/A",
     },
     {
-      header: "Verified",
-      render: (row: any) => (row.verification ? "Verified" : "Unverified"),
+      header: "Verification Status",
+      render: (row: any) => row?.user?.firstname || "N/A",
     },
     {
       header: "Property",
-      render: (row: any) => row.property || "N/A",
-    },
-    {
-      header: "Duration",
-      render: (row: any) => row.duration || "N/A",
+      render: (row: any) => row?.property.title || "N/A",
     },
     {
       header: "Status",
-      render: (row: any) => row.status || "N/A",
+      render: (row: any) => row?.property.title.slice(0, 15) || "N/A",
     },
     {
       header: "Rating",
-      render: (row: any) => (row.rating !== null ? row.rating : "—"),
+      render: (row: any) => row?.property.title.slice(0, 15) || "N/A",
     },
+
     {
       header: "",
       render: (row: any) => (
@@ -105,30 +90,17 @@ export default function Tenants() {
               <Ellipsis />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mr-6">
-              <DropdownMenuItem onClick={openModal}>
+              <DropdownMenuItem onClick={() => openProfileModal(row?.user)}>
                 <ScanEye /> Profile
               </DropdownMenuItem>
-              <TenantProfile
-                // propertyType="co-working space" // example value
-                isOpen={isModalOpen}
-                closeModal={closeModal}
-              />
-              <DropdownMenuItem onClick={openModal}>
+
+              <DropdownMenuItem onClick={openRatingModal}>
                 <Star /> Rate Tenant
               </DropdownMenuItem>
-              <TenantRating
-                // propertyType="co-working space" // example value
-                isOpen={isModalOpen}
-                closeModal={closeModal}
-              />
-              <DropdownMenuItem onClick={openModal}>
+
+              <DropdownMenuItem onClick={openReportModal}>
                 <FileWarning /> Report
               </DropdownMenuItem>
-              <ReportTenant
-                // propertyType="co-working space" // example value
-                isOpen={isModalOpen}
-                closeModal={closeModal}
-              />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -156,7 +128,33 @@ export default function Tenants() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <DataTable columns={columns} data={tenantsList} />
+
+      <DataTable
+        columns={columns}
+        data={data?.tenants || []}
+        isLoading={isLoading}
+      />
+
+      {selectedTenant && isProfileModalOpen && (
+        <TenantProfile
+          tenant={selectedTenant}
+          // propertyType="co-working space" // example value
+          isOpen={isProfileModalOpen}
+          closeModal={closeProfileModal}
+        />
+      )}
+
+      <TenantRating
+        // propertyType="co-working space" // example value
+        isOpen={isRatingModalOpen}
+        closeModal={closeRatingModal}
+      />
+
+      <ReportTenant
+        // propertyType="co-working space" // example value
+        isOpen={isReportModalOpen}
+        closeModal={closeReportModal}
+      />
     </div>
   );
 }

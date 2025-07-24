@@ -2,7 +2,7 @@ import { bookingRequestService } from "@/api/bookingRequest.api";
 import DataTable from "@/components/custom/data-table";
 import { Spinner } from "@/components/custom/loader";
 import { Button } from "@/components/ui/button";
-import { formatDate, formatPrettyDate } from "@/lib/utils";
+import { formatCurrency, formatDate, formatPrettyDate } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { useState } from "react";
@@ -45,23 +45,24 @@ export default function TenantBookingRequests() {
     },
     {
       header: "Tenant Name",
-      render: (row: any) => row.tenant.firstname || "N/A",
+      render: (row: any) => row?.tenant?.firstname || "N/A",
     },
     {
       header: "Property",
-      render: (row: any) => row.property.title || "N/A",
+      render: (row: any) => row?.property?.title || "N/A",
     },
     {
       header: "Stay Period",
       render: (row: any) => (
         <span>
-          {formatPrettyDate(row.startDate)} - {formatPrettyDate(row.endDate)}
+          {formatPrettyDate(row?.moveInDate)} -{" "}
+          {formatPrettyDate(row?.moveOutDate)}
         </span>
       ),
     },
     {
       header: "Amount (NGN)",
-      render: (row: any) => row.netPrice ?? "N/A",
+      render: (row: any) => formatCurrency(row.netPrice) ?? "N/A",
     },
     {
       header: "Status",

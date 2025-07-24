@@ -1,30 +1,45 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import tenantprofileimage from "@/assets/images/tenantprofileimage.png";
 import { Check, Phone, Mail, Star, OctagonAlert } from "lucide-react";
-import React from "react";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 interface AddTenantProfileProps {
   isOpen: boolean;
   closeModal: () => void;
+  tenant: any;
 }
 
-const TenantProfile = ({ isOpen, closeModal }: AddTenantProfileProps) => {
+const TenantProfile = ({
+  isOpen,
+  closeModal,
+  tenant,
+}: AddTenantProfileProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto py-12 rounded-4xl">
-        <p className="font-[500] text-[20px]">Tenant Info</p>
-        <hr />
+      <DialogContent className="">
+        <DialogHeader>
+          <DialogTitle>Tenant Info</DialogTitle>
+        </DialogHeader>
+        <Separator />
         <div className="flex flex-col gap-4 mt-3">
           <div>
-            <img src={tenantprofileimage} className="w-10" alt="" />
+            <img src={tenant.avatar} className="w-10 rounded-full" alt="" />
           </div>
           <div className="flex gap-3 items-center">
-            <p className="font-[500] text-[18px]">Ashley Walters</p>
+            <p className="font-[500] text-[18px]">
+              {tenant?.firstName} {tenant.lastName}
+            </p>
             <Check className="bg-green-500 text-white rounded-sm w-4 h-4" />
           </div>
           <div className="flex gap-4">
             <Phone className="w-4" />
-            <p className="text-[#616161]">09076237409</p>
+            <p className="text-[#616161]">{tenant.phoneNumber}</p>
           </div>
           <div className="flex gap-4">
             <Mail className="w-4" />
@@ -32,17 +47,17 @@ const TenantProfile = ({ isOpen, closeModal }: AddTenantProfileProps) => {
           </div>
 
           <p className="underline text-[#004542] ">View booking history</p>
-          <hr />
+          <Separator />
 
           <div className="flex gap-4 mt-4">
-            <button className="flex gap-2 border border-gray-500 rounded-lg bg-[#004542] text-white px-6 py-1">
-              <Star className="w-2 " color="white" fill="white" />
+            <Button className="btn-primary">
+              <Star className="" />
               Rate
-            </button>
-            <button className=" flex gap-3 border border-gray-200 rounded-lg  text-[#004542] px-6 py-1">
+            </Button>
+            <Button className="btn-primary ">
               <OctagonAlert className="w-4" />
               Report
-            </button>
+            </Button>
           </div>
         </div>
       </DialogContent>

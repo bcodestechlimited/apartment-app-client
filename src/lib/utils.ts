@@ -96,6 +96,3 @@ export const getActualTypeFromParam = (type: string): string | undefined => {
 
   return propertyTypes[type.toLowerCase()].replace("-", " ");
 };
-
-
-

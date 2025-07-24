@@ -59,6 +59,7 @@ export const LandlordAuthGuard = () => {
 
   return <Outlet />;
 };
+
 export const TenantAuthGuard = () => {
   const location = useLocation();
 
@@ -80,7 +81,7 @@ export const TenantAuthGuard = () => {
     return <Navigate to="/auth/sign-in" state={{ from: location }} replace />;
   }
 
-  if (!user?.roles?.includes("user")) {
+  if (!user?.roles?.includes("tenant")) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <h2>Access Denied</h2>

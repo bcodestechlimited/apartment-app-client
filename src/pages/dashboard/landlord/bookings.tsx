@@ -38,7 +38,8 @@ export default function Bookings() {
       header: "Stay Period",
       render: (row: any) => (
         <span>
-          {formatPrettyDate(row.startDate)} - {formatPrettyDate(row.endDate)}
+          {formatPrettyDate(row?.moveInDate)} -{" "}
+          {formatPrettyDate(row?.moveOutDate)}
         </span>
       ),
     },
