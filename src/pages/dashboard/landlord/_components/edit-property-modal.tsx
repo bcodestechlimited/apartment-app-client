@@ -48,6 +48,7 @@ import {
   NIGERIAN_STATE_CITIES,
 } from "@/constants/nigerian-states";
 import { FileUpdateInput } from "@/components/custom/file-update-input";
+import { formatDate } from "@/lib/utils";
 
 interface EditPropertyModalProps {
   isOpen: boolean;
@@ -435,7 +436,7 @@ export default function EditPropertyModal({
                     className="w-full pl-3 text-left font-normal"
                   >
                     {availabilityDate
-                      ? availabilityDate.toISOString().split("T")[0]
+                      ? formatDate(availabilityDate)
                       : "Pick a date"}
                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                   </Button>
@@ -452,7 +453,6 @@ export default function EditPropertyModal({
                       if (!date) {
                         return;
                       }
-                      console.log(date?.toISOString());
 
                       const newDate = date;
 

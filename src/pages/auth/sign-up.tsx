@@ -39,6 +39,18 @@ export default function SignUp() {
     },
   });
 
+  const googleMutation = useMutation({
+    mutationFn: authService.loginWithGoogle,
+    onSuccess: (data) => {
+      console.log(data);
+      window.location.href = data.redirectURL;
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.log(error);
+    },
+  });
+
   const onSubmit = (data: SignUpFormInputs) => {
     data.confirmPassword = undefined;
     setAuthCredentials({
@@ -60,6 +72,8 @@ export default function SignUp() {
 
       {/* Google Auth Button */}
       <Button
+        onClick={() => googleMutation.mutateAsync()}
+        disabled={googleMutation.isPending}
         variant="outline"
         className="w-full mb-3 bg-transparent text-white border-white cursor-pointer"
       >

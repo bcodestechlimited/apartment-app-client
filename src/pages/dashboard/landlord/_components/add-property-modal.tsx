@@ -47,6 +47,7 @@ import {
   NIGERIAN_STATE_CITIES,
   NIGERIAN_STATES,
 } from "@/constants/nigerian-states";
+import { formatDate } from "@/lib/utils";
 
 interface AddPropertyModalProps {
   //   propertyType: string; // <-- added back this comment
@@ -253,7 +254,7 @@ export default function AddPropertyModal({
     formData.append("facilities", JSON.stringify(selectedFacilities));
     formData.append("type", data.type.replace(" ", "-").toLowerCase());
     // formData.append("type", "serviced-apartment"); // hardcoded for now
-    formData.append("numberOfBedRooms", String(selectedRooms));
+    formData.append("numberOfBedrooms", String(selectedRooms));
     formData.append("numberOfBathrooms", String(selectedBathrooms));
     for (let i = 0; i < data.pictures.length; i++) {
       formData.append("pictures", data.pictures[i]);
@@ -465,7 +466,7 @@ export default function AddPropertyModal({
                     className="w-full pl-3 text-left font-normal"
                   >
                     {availabilityDate
-                      ? availabilityDate.toISOString().split("T")[0]
+                      ? formatDate(availabilityDate)
                       : "Pick a date"}
                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                   </Button>

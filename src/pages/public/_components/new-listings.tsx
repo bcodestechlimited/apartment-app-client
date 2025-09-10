@@ -5,7 +5,7 @@ import type { IProperty } from "@/interfaces/property.interface";
 import { useQuery } from "@tanstack/react-query";
 
 export default function NewListings() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["properties"],
     queryFn: () =>
       propertyService.getProperties({
@@ -22,15 +22,27 @@ export default function NewListings() {
           View more →
         </a>
       </div>
-      <PropertyGrid properties={data?.properties} isLoading={isLoading} />
+      <PropertyGrid
+        properties={data?.properties}
+        isLoading={isLoading}
+        isError={isError}
+      />
     </section>
   );
 }
 
-function PropertyGrid({ properties, isLoading }: any) {
+function PropertyGrid({ properties, isLoading, isError }: any) {
   if (isLoading) return <PropertySkeletonGrid />;
 
-  if (properties.length < 1) {
+  if (isError) {
+    return (
+      <div>
+        <p>Something went wrong</p>
+      </div>
+    );
+  }
+
+  if (!properties || properties.length < 1) {
     return (
       <div className="col-span-4 py-6">
         <p className="text-center">No properties found</p>

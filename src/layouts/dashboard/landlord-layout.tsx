@@ -29,6 +29,7 @@ import { authService } from "@/api/auth.api";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
 
 interface Submenu {
   name: string;
@@ -254,6 +255,8 @@ function TopBar() {
 }
 
 export default function LandlordLayout() {
+  useSocketConnection();
+
   return (
     <div className="flex h-screen">
       <LandlordSideBar />

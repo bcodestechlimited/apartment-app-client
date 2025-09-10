@@ -76,11 +76,11 @@ export default function Tenants() {
       header: "Status",
       render: (row: any) => row?.property.title.slice(0, 15) || "N/A",
     },
+
     {
       header: "Rating",
       render: (row: any) => row?.property.title.slice(0, 15) || "N/A",
     },
-
     {
       header: "",
       render: (row: any) => (
@@ -144,17 +144,21 @@ export default function Tenants() {
         />
       )}
 
-      <TenantRating
-        // propertyType="co-working space" // example value
-        isOpen={isRatingModalOpen}
-        closeModal={closeRatingModal}
-      />
+      {selectedTenant && isRatingModalOpen && (
+        <TenantRating
+          // propertyType="co-working space" // example value
+          isOpen={isRatingModalOpen}
+          closeModal={closeRatingModal}
+        />
+      )}
 
-      <ReportTenant
-        // propertyType="co-working space" // example value
-        isOpen={isReportModalOpen}
-        closeModal={closeReportModal}
-      />
+      {selectedTenant && isReportModalOpen && (
+        <ReportTenant
+          // propertyType="co-working space" // example value
+          isOpen={isReportModalOpen}
+          closeModal={closeReportModal}
+        />
+      )}
     </div>
   );
 }

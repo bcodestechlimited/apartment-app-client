@@ -46,6 +46,8 @@ import BookingRequests from "./pages/dashboard/landlord/booking-requests";
 import TenantBookingLayout from "./pages/dashboard/tenant/_layouts/booking-layout";
 import TenantBookings from "./pages/dashboard/tenant/bookings";
 import TenantBookingRequests from "./pages/dashboard/tenant/booking-requests";
+import TenantMessages from "./pages/dashboard/tenant/messages";
+import TenantDocuments from "./pages/dashboard/tenant/documents";
 
 const queryClient = new QueryClient();
 
@@ -178,17 +180,13 @@ function App() {
               ],
             },
             {
-              path: "property/:propertyId/pay",
-              element: <PaymentSummary />,
+              path: "documents",
+              element: <TenantDocuments />,
             },
-            // {
-            //   path: "onboarding/verify-identity",
-            //   element: <VerifyIdentity />,
-            // },
-            // {
-            //   path: "onboarding/looking-for",
-            //   element: <LookingFor />,
-            // },
+            {
+              path: "messages",
+              element: <TenantMessages />,
+            },
             {
               path: "*",
               element: <div>Page not found</div>,

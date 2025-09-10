@@ -23,7 +23,7 @@ export default function Bookings() {
 
   const columns = [
     {
-      header: "Request Date",
+      header: "Booking Date",
       render: (row: any) => formatDate(row.createdAt) || "N/A",
     },
     {

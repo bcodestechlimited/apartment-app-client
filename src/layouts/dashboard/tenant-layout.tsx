@@ -28,6 +28,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useSocketConnection } from "@/hooks/useSocketConnection";
 
 interface Submenu {
   name: string;
@@ -263,6 +264,8 @@ function TopBar() {
 }
 
 export default function TenantLayout() {
+  useSocketConnection();
+
   return (
     <div className="flex h-screen">
       <TenantSideBar />

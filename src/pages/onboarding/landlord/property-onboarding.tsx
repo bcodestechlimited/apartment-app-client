@@ -8,6 +8,7 @@ import {
   amenities,
   facilities,
   pricingModels,
+  propertyTypes,
   type IAddProperty,
   type IAddPropertyCoWorkingSpace,
 } from "@/interfaces/property.interface";
@@ -26,7 +27,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useLocation, useNavigate } from "react-router";
 import CustomMultiSelect from "@/components/custom/custom-multi-select";
-import { CircleAlert } from "lucide-react";
+import { CalendarIcon, CircleAlert } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -36,6 +37,13 @@ import {
   NIGERIAN_STATE_CITIES,
   NIGERIAN_STATES,
 } from "@/constants/nigerian-states";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { formatDate } from "@/lib/utils";
 
 export function PropertyOnboarding() {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -43,6 +51,10 @@ export function PropertyOnboarding() {
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
   const [selectedBathrooms, setSelectedBathrooms] = useState<string | null>(
     null
+  );
+
+  const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(
+    undefined
   );
 
   const {
@@ -56,7 +68,7 @@ export function PropertyOnboarding() {
   } = useForm<IAddProperty>();
 
   const location = useLocation();
-  const propertyType = location.state?.propertyType.replace(" ", "-") as string;
+  const propertyType = location.state?.propertyType.replace("-", " ") as string;
   const navigate = useNavigate();
 
   const pictures = watch("pictures") || [];
@@ -77,6 +89,22 @@ export function PropertyOnboarding() {
 
   const runCustomValidation = (data: any) => {
     let hasError = false;
+
+    if (data.title === "") {
+      setError("title", {
+        type: "manual",
+        message: "Please enter a title",
+      });
+      hasError = true;
+    }
+
+    if (data.title.length < 10) {
+      setError("title", {
+        type: "manual",
+        message: "Title must be at least 10 characters",
+      });
+      hasError = true;
+    }
 
     if (data.description === "") {
       setError("description", {
@@ -199,7 +227,10 @@ export function PropertyOnboarding() {
     const hasErrors = runCustomValidation(data);
     if (hasErrors) return;
 
+    console.log(data.type);
+
     const formData = new FormData();
+    formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("address", data.address);
     formData.append("state", data.state);
@@ -209,9 +240,9 @@ export function PropertyOnboarding() {
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
     formData.append("facilities", JSON.stringify(selectedFacilities));
-    formData.append("type", propertyType.toLowerCase());
+    formData.append("type", data.type.replace(" ", "-").toLowerCase());
     // formData.append("type", "serviced-apartment"); // hardcoded for now
-    formData.append("numberOfBedRooms", String(selectedRooms));
+    formData.append("numberOfBedrooms", String(selectedRooms));
     formData.append("numberOfBathrooms", String(selectedBathrooms));
     for (let i = 0; i < data.pictures.length; i++) {
       formData.append("pictures", data.pictures[i]);
@@ -236,6 +267,13 @@ export function PropertyOnboarding() {
           onSubmit={handleSubmit(onSubmit)}
           className=" flex flex-col gap-3 w-full md:w-2/3"
         >
+          {/* Title */}
+          <div className="flex flex-col gap-2">
+            <Label className="text-start font-bold" htmlFor="title">
+              Title
+            </Label>
+            <Input placeholder="Enter title" {...register("title")} />
+          </div>
           {/* Description  */}
           <div className="flex flex-col gap-2 justify-between">
             <div className="flex justify-between">
@@ -253,6 +291,45 @@ export function PropertyOnboarding() {
               </p>
             )}
           </div>
+
+          {/* Type */}
+          <div className=" flex flex-col gap-2">
+            <Label className="text-start font-bold" htmlFor="state">
+              Property Type
+            </Label>
+            <Input type="text" {...register("type")} className="hidden" />
+
+            <Select
+              onValueChange={(value) => {
+                setValue("type", value);
+                clearErrors(["type"]);
+              }}
+              defaultValue={propertyType}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="-select-" />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                <SelectGroup>
+                  {propertyTypes.map((propertyType) => (
+                    <SelectItem
+                      key={propertyType}
+                      value={String(propertyType)}
+                      className="capitalize"
+                    >
+                      {propertyType}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {errors?.state && (
+              <p className="text-destructive text-sm text-end">
+                {errors.state.message}
+              </p>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-6">
             {/* Address  */}
             <div className=" flex flex-col gap-2">
@@ -374,26 +451,45 @@ export function PropertyOnboarding() {
                 className="hidden"
               />
 
-              <Select
-                onValueChange={(value) => {
-                  setSelectedRooms(value);
-                  setValue("availabilityDate", value);
-                  clearErrors(["availabilityDate"]);
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="-select-" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {pricingModels.map((num) => (
-                      <SelectItem key={num} value={String(num)}>
-                        {num}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <Popover modal={true}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className="w-full pl-3 text-left font-normal"
+                  >
+                    {availabilityDate
+                      ? formatDate(availabilityDate)
+                      : "Pick a date"}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto p-0 flex justify-end"
+                  align="center"
+                >
+                  <Calendar
+                    mode="single"
+                    required
+                    selected={availabilityDate}
+                    onSelect={(date: Date) => {
+                      console.log(date);
+                      if (!date) {
+                        return;
+                      }
+
+                      const newDate = date;
+
+                      setAvailabilityDate(newDate);
+                      setValue("availabilityDate", newDate.toISOString());
+
+                      clearErrors(["availabilityDate"]);
+                    }}
+                    disabled={(date: Date) => date < new Date()}
+                    className="rounded-md border bg-white z-50"
+                  />
+                </PopoverContent>
+              </Popover>
+
               {errors?.availabilityDate && (
                 <p className="text-destructive text-sm text-end">
                   {errors.availabilityDate.message}

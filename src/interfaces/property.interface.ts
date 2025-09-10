@@ -13,6 +13,8 @@ export const propertyTypes = [
   "Short Let",
   "Serviced Apartment",
   "Shared Apartment",
+  "Co-working Space",
+  "Other",
 ];
 export const pricingModels = ["Hourly", "Daily", "Weekly", "Monthly", "Yearly"];
 export const duration = ["Short Term", "Long Term"];

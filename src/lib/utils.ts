@@ -37,8 +37,7 @@ export const formatDate = (date: string | Date): string => {
   };
 
   return new Date(date)
-    .toLocaleDateString("en-US", options)
-    .replace(/\//g, "-");
+    .toLocaleDateString("en-CA", options);
 };
 
 // returns: 19th June 2025

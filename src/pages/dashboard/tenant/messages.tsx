@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { IConversation } from "@/interfaces/message.interface";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Loader } from "lucide-react";
+import { Loader } from "@/components/custom/loader";
 import { useSearchParams } from "react-router";
-import { useForm } from "react-hook-form";
 import { useChat, useChatWindow } from "@/hooks/useChat";
+import { useForm } from "react-hook-form";
 import socket from "@/lib/socket";
+import type React from "react";
 
-export default function LandlordMessages() {
+export default function TenantMessages() {
   const [searchParams] = useSearchParams();
 
   const { conversations, isLoading, isError } = useChat();
@@ -24,6 +25,7 @@ export default function LandlordMessages() {
     </div>
   );
 }
+
 function ChatSidebar({ conversations }: { conversations: IConversation[] }) {
   const [_, setSearchParams] = useSearchParams();
   const { user } = useAuthStore();
@@ -109,7 +111,6 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     if (!otherParticipant) return;
 
     console.log(event.target.value);
-    console.log({ otherParticipant });
 
     if (!event.target.value) {
       socket.emit("send_typing_status", {
