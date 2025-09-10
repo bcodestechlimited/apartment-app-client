@@ -23,7 +23,7 @@ export default function PropertyDescription() {
         <div className="flex gap-8">
           <div className="flex flex-col items-center">
             <Bed size={32} />
-            <p>{property?.numberOfBedRooms} bed</p>
+            <p>{property?.numberOfBedrooms} bed</p>
           </div>
           <div className="flex flex-col items-center">
             <Bath size={32} />
