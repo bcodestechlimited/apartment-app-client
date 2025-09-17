@@ -1,15 +1,18 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import { useNavigate } from "react-router";
 import { useFormContext } from "react-hook-form";
 import { cn } from "@/lib/utils";
 
 export default function ProfileSetup() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useFormContext<{
+  const form = useFormContext<{
     firstName: string;
     lastName: string;
     phoneNumber: string;
@@ -23,59 +26,77 @@ export default function ProfileSetup() {
   };
 
   return (
-    <div className=" bg-white flex flex-col gap-12 justify-center items-center px-4 w-full max-w-sm mx-auto">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-3">
-        <div>
-          <Input
-            {...register("firstName", {
+    <div className="bg-white flex flex-col gap-12 justify-center items-center px-4 w-full max-w-sm mx-auto">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-3"
+        >
+          {/* First Name */}
+          <FormField
+            control={form.control}
+            name="firstName"
+            rules={{
               required: "First name is required",
               minLength: {
                 value: 2,
                 message: "First name must be at least 2 characters",
               },
-            })}
-            placeholder="Enter your first name"
-            className={cn(
-              "bg-white border border-gray-300 placeholder:text-gray-400",
-              {
-                "border-red-500": errors.firstName,
-              }
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter your first name"
+                    className={cn(
+                      "bg-white border border-gray-300 placeholder:text-gray-400",
+                      {
+                        "border-red-500": form.formState.errors.firstName,
+                      }
+                    )}
+                  />
+                </FormControl>
+                <FormMessage className="text-end" />
+              </FormItem>
             )}
           />
 
-          {errors.firstName && (
-            <span className="text-sm text-red-500 text-end block pt-1">
-              {errors.firstName.message}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <Input
-            {...register("lastName", {
+          {/* Last Name */}
+          <FormField
+            control={form.control}
+            name="lastName"
+            rules={{
               required: "Last name is required",
               minLength: {
                 value: 2,
                 message: "Last name must be at least 2 characters",
               },
-            })}
-            placeholder="Enter your last name"
-            className={cn(
-              "bg-white border border-gray-300 placeholder:text-gray-400",
-              {
-                "border-red-500": errors.lastName,
-              }
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter your last name"
+                    className={cn(
+                      "bg-white border border-gray-300 placeholder:text-gray-400",
+                      {
+                        "border-red-500": form.formState.errors.lastName,
+                      }
+                    )}
+                  />
+                </FormControl>
+                <FormMessage className="text-end" />
+              </FormItem>
             )}
           />
-          {errors.lastName && (
-            <span className="text-sm text-red-500 text-end block pt-1">
-              {errors.lastName.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <Input
-            {...register("phoneNumber", {
+
+          {/* Phone Number */}
+          <FormField
+            control={form.control}
+            name="phoneNumber"
+            rules={{
               required: "Phone number is required",
               minLength: {
                 value: 10,
@@ -89,26 +110,34 @@ export default function ProfileSetup() {
                 value: /^[0-9]+$/,
                 message: "Phone number must be numeric",
               },
-            })}
-            placeholder="Enter your phone number"
-            className={cn(
-              "bg-white border border-gray-300 placeholder:text-gray-400",
-              {
-                "border-red-500": errors.phoneNumber,
-              }
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter your phone number"
+                    className={cn(
+                      "bg-white border border-gray-300 placeholder:text-gray-400",
+                      {
+                        "border-red-500": form.formState.errors.phoneNumber,
+                      }
+                    )}
+                  />
+                </FormControl>
+                <FormMessage className="text-end" />
+              </FormItem>
             )}
           />
-          {errors.phoneNumber && (
-            <span className="text-sm text-red-500 text-end block pt-1">
-              {errors.phoneNumber.message}
-            </span>
-          )}
-        </div>
 
-        <Button className="w-full bg-custom-primary text-white hover:opacity-90 cursor-pointer">
-          Continue
-        </Button>
-      </form>
+          <Button
+            type="submit"
+            className="w-full bg-custom-primary text-white hover:opacity-90 cursor-pointer"
+          >
+            Continue
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

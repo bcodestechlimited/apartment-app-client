@@ -1,14 +1,13 @@
 import { motion } from "motion/react";
-import cityLightsLogo from "@/assets/images/citylights-logo-main.png";
-import cityLightsLogoLight from "@/assets/images/citylights-logo-main-light.png";
 import { Outlet } from "react-router";
+import { images } from "@/constants/images";
 export const OnboardingLayout = () => {
   return (
     <div className="bg-custom-primary min-h-screen flex flex-col justify-center items-center px-4">
       {/* Animated Logo */}
       <motion.img
-        src={cityLightsLogo}
-        alt="CityLights Logo"
+        src={images.havenLeaseLogoWhite}
+        alt="Haven Lease Logo"
         initial={{ y: 0, opacity: 1 }}
         animate={{ y: -100, opacity: 1 }}
         transition={{ duration: 1 }}
@@ -33,8 +32,8 @@ export const OnboardingLayoutLight = () => {
     <div className="bg-white min-h-screen flex flex-col justify-center items-center px-4">
       {/* Animated Logo */}
       <motion.img
-        src={cityLightsLogoLight}
-        alt="CityLights Logo"
+        src={images.havenLeaseLogoGreen}
+        alt="Haven Lease Logo"
         initial={{ y: 0, opacity: 1 }}
         animate={{ y: -30, opacity: 1 }}
         transition={{ duration: 1 }}

@@ -3,6 +3,7 @@ import { PublicPropertyCard } from "@/components/shared/propertyCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { IProperty } from "@/interfaces/property.interface";
 import { useQuery } from "@tanstack/react-query";
+import { Layers } from "lucide-react";
 
 export default function CoWorkingSpaces() {
   const { data, isLoading, isError } = useQuery({
@@ -45,8 +46,14 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
 
   if (!properties || properties.length < 1) {
     return (
-      <div className="col-span-4 py-6">
-        <p className="text-center">No properties found</p>
+      <div className="col-span-4 py-8 flex flex-col gap-1 items-center">
+        <Layers className="w-16 h-16 text-custom-primary" />
+        <p className="text-center text-lg text-custom-primary">
+          No properties found.
+        </p>
+        <p className="text-center text-sm text-custom-primary/70">
+          Please check back later.
+        </p>
       </div>
     );
   }

@@ -18,8 +18,8 @@ export default function Discover() {
     useState<(typeof NIGERIAN_STATES)[number]>("");
 
   return (
-    <section className="bg-gray-200 flex items-center justify-center hero-background  rounded-lg">
-      <div className=" flex flex-col gap-6 text-center text-white py-12 px-6">
+    <section className="bg-gray-200 flex items-center justify-center hero-background rounded-lg ">
+      <div className=" flex flex-col gap-6 text-center text-white py-12 px-6 md:py-24">
         <h1 className="text-3xl md:text-5xl font-medium mb-4">
           FIND, BOOK, LIVE. THE SMARTER WAY TO RENT APARTMENTS & CO-WORKING
           SPACES
@@ -30,7 +30,7 @@ export default function Discover() {
           verified listings
         </p>
         <div className="flex flex-wrap items-center justify-center space-x-4 bg-white p-4 rounded-lg shadow-md text-[#2C3A61]/70 w-full">
-          <div className="grid grid-cols-6 items-center gap-4 text-sm w-full">
+          <div className="grid grid-cols-5 items-center gap-4 text-sm w-full">
             <div className="flex flex-col gap-2 items-center border-r-2 border-gray-300 pr-4">
               <h3 className="font-bold">State</h3>
               <Select
@@ -106,7 +106,7 @@ export default function Discover() {
               </Select>
             </div>
             {/* <Separator orientation="vertical" /> */}
-            <div className="flex flex-col gap-2 items-center">
+            {/* <div className="flex flex-col gap-2 items-center">
               <h3 className="font-bold">Duration</h3>
               <Select>
                 <SelectTrigger className="border-0 shadow-none w-full">
@@ -118,7 +118,7 @@ export default function Discover() {
                   <SelectItem value="system">System</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
             <Button className="w-fit px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 justify-self-center cursor-pointer">
               Search

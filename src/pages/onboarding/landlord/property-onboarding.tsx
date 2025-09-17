@@ -223,6 +223,7 @@ export function PropertyOnboarding() {
 
   const onSubmit = async (data: IAddProperty) => {
     console.log("Form submitted");
+    console.log({ data });
 
     const hasErrors = runCustomValidation(data);
     if (hasErrors) return;
@@ -252,7 +253,7 @@ export function PropertyOnboarding() {
   };
 
   return (
-    <div className="w-full max-w-3xl flex flex-col gap-4">
+    <div className="w-full max-w-3xl flex flex-col gap-4 mb-14">
       <Header text="Property Onboarding" />
       <p>
         Tell us about property and it's features to get matched with the right

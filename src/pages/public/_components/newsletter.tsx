@@ -17,10 +17,10 @@ export default function Newsletter() {
 
       {/* Content */}
       <div className="relative z-10 text-left max-w-xl">
-        <h2 className="text-2xl font-medium mb-2">
+        <h2 className="text-2xl font-medium">
           Get exclusive property insights
         </h2>
-        <p className="mb-6">
+        <p className="mb-4">
           Sign up for our newsletter and get exclusive property insights
         </p>
         <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 max-w-sm bg-white p-2 rounded">

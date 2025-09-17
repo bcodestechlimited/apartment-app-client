@@ -8,14 +8,12 @@ import {
   Mail,
   Search,
   Bell,
-  PenLine,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
 import { useState, type JSX } from "react";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import cityLightsLogo from "@/assets/images/citylights-logo-main-light.png";
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
@@ -29,6 +27,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
+import { images } from "@/constants/images";
 
 interface Submenu {
   name: string;
@@ -109,8 +108,8 @@ function TenantSideBar() {
       {/* Logo Section */}
       <div className="p-4">
         <img
-          src={cityLightsLogo}
-          alt="CityLights Logo"
+          src={images.havenLeaseLogoGreen}
+          alt="Haven Lease Logo"
           className="w-14 h-14 mx-auto"
         />
       </div>
@@ -216,12 +215,12 @@ function TopBar() {
         <div className="flex items-center cursor-pointer  px-3 py-2   gap-5 transition-colors">
           <Popover>
             <PopoverTrigger asChild>
-              <div className="flex items-center gap-2 border px-4 py-2 rounded-full bg-white shadow-sm hover:bg-gray-100 transition-colors">
+              <div className="flex items-center gap-2 border px-2 py-2 rounded-full bg-white shadow-sm hover:bg-custom-primary/10 transition-colors">
                 <Avatar>
                   <AvatarImage
                     src={user?.avatar || "https://github.com/shadcn.png"}
                   />
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-custom-primary text-white">
                     {`${user?.firstName?.charAt(0) || "A"}${
                       user?.lastName?.charAt(0) || "A"
                     }`}
@@ -229,7 +228,7 @@ function TopBar() {
                 </Avatar>
                 <div className="text-left">
                   <p className="text-sm  text-[#000000] text-[14px] font-[600] ">
-                    {`${user?.firstName || "A"}${user?.lastName || "A"}`}
+                    {`${user?.firstName || "A"} ${user?.lastName || "A"}`}
                   </p>
                   <p className="text-xs text-[#93A3AB]">Tenant</p>
                 </div>

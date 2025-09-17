@@ -3,6 +3,7 @@ import { PublicPropertyCard } from "@/components/shared/propertyCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { IProperty } from "@/interfaces/property.interface";
 import { useQuery } from "@tanstack/react-query";
+import { Layers } from "lucide-react";
 
 export default function NewProjects() {
   const { data, isLoading, isError } = useQuery({
@@ -17,7 +18,7 @@ export default function NewProjects() {
   return (
     <section className="py-10">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">New projects in popular areas</h2>
+        <h2 className="text-xl font-semibold">New projects in popular areas</h2>
         <a href="#" className="hover:underline">
           View More →
         </a>
@@ -44,8 +45,14 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
 
   if (!properties || properties.length < 1) {
     return (
-      <div className="col-span-4 py-6">
-        <p className="text-center">No properties found</p>
+      <div className="col-span-4 py-8 flex flex-col gap-1 items-center">
+        <Layers className="w-16 h-16 text-custom-primary" />
+        <p className="text-center text-lg text-custom-primary">
+          No properties found.
+        </p>
+        <p className="text-center text-sm text-custom-primary/70">
+          Please check back later.
+        </p>
       </div>
     );
   }

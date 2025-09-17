@@ -53,9 +53,17 @@ export default function SelectProperty() {
       </div>
       <div className="flex justify-between">
         <Link to="/onboarding/landlord/get-started">
-          <Button className="px-14 cursor-pointer">Back</Button>
+          <Button
+            variant="outline"
+            className="px-14 cursor-pointer border-custom-primary/20"
+          >
+            Back
+          </Button>
         </Link>
-        <Button className="px-14 cursor-pointer" onClick={handleNext}>
+        <Button
+          className="px-14 cursor-pointer bg-custom-primary hover:bg-custom-primary/90"
+          onClick={handleNext}
+        >
           Next
         </Button>
       </div>

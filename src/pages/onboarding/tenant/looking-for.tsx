@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { toast } from "sonner";
+import { Spinner } from "@/components/custom/loader";
 
 const OPTIONS = [
   "Standard rental",
@@ -132,7 +133,13 @@ export default function LookingFor() {
         type="submit"
         className="w-full max-w-sm cursor-pointer"
       >
-        Continue
+        {updateProfileMutation.isPending ? (
+          <span className="flex items-center justify-center">
+            <Spinner /> One moment...
+          </span>
+        ) : (
+          "Sign In"
+        )}
       </Button>
     </form>
   );

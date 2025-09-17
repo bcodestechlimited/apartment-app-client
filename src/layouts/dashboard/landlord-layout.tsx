@@ -17,7 +17,6 @@ import { Link, useLocation } from "react-router";
 import { useState, type JSX } from "react";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
-import cityLightsLogo from "@/assets/images/citylights-logo-main-light.png";
 import {
   Popover,
   PopoverContent,
@@ -30,6 +29,7 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
+import { images } from "@/constants/images";
 
 interface Submenu {
   name: string;
@@ -99,8 +99,8 @@ function LandlordSideBar() {
       {/* Logo Section */}
       <div className="p-4">
         <img
-          src={cityLightsLogo}
-          alt="CityLights Logo"
+          src={images.havenLeaseLogoGreen}
+          alt="Haven Lease Logo"
           className="w-14 h-14 mx-auto"
         />
       </div>
