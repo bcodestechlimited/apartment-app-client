@@ -2,12 +2,8 @@ import facebookicon from "@/assets/images/Facebook - Original.png";
 import Instagram from "@/assets/images/Instagram - Original.png";
 import Twitter from "@/assets/images/Twitter - Original.png";
 import LinkedIn from "@/assets/images/LinkedIn - Original.png";
-import whyChooseUs1 from "@/assets/images/whychooseus1.png";
-import whyChooseUs2 from "@/assets/images/whychooseustwo.png";
-import whyChooseUs3 from "@/assets/images/two-guys.jpg";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
-import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import NewListings from "./_components/new-listings";
 import NewProjects from "./_components/newprojects";
@@ -87,7 +83,7 @@ const LandingPage = () => {
           <Newsletter />
         </main>
         {/* Footer Section */}
-        <footer className="bg-[#222222] text-white p-15 ">
+        <footer className="bg-[#222222] text-white p-8 ">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center md:text-left">
               <h3 className="text-lg font-semibold mb-4">
@@ -98,8 +94,8 @@ const LandingPage = () => {
                 />
               </h3>
               <p className="text-gray-400">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Vestibulum euismod, nisl sit amet.
+                At HavenLease, we are redefining urban living by making quality
+                homes easy to access, affordable, and stress-free.
               </p>
               <div className="flex justify-center md:justify-start space-x-4 my-8 gap-6">
                 {[
@@ -173,6 +169,9 @@ const LandingPage = () => {
                 </form>
               </div>
             </div>
+          </div>
+          <div className="flex justify-center">
+            <p className="text-muted-foreground">Built By BCT Limited</p>
           </div>
         </footer>
       </div>
