@@ -59,8 +59,9 @@ export interface IAddProperty {
   lga: string;
   price: number;
   availabilityDate: string;
-  numberOfBedRooms: string;
-  numberOfBathrooms: string;
+  numberOfBedRooms?: string;
+  numberOfBathrooms?: string;
+  seatingCapacity?: string;
   pricingModel: string;
   amenities: string[];
   facilities: string[];

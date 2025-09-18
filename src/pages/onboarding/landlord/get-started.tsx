@@ -7,9 +7,7 @@ export default function GetStarted() {
     <div className=" flex items-center">
       {/* Left Content */}
       <div className="w-1/2 p-10 text-start">
-        <h2 className="text-2xl font-bold mb-6">
-          Get Started with CitiLights Realty
-        </h2>
+        <h2 className="text-2xl font-bold mb-6">Get Started with HavenLease</h2>
 
         <ol className="space-y-6">
           <div>
@@ -38,7 +36,7 @@ export default function GetStarted() {
           </div>
         </ol>
 
-        <Link to="/onboarding/landlord/select-property">
+        <Link to="/onboarding/landlord/property-onboarding">
           <Button className="mt-8 bg-green-900 text-white py-2 px-6 rounded-md w-full cursor-pointer">
             Continue
           </Button>

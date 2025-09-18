@@ -60,10 +60,10 @@ export default function RoleSelection() {
     <div className="">
       <div className="text-center mb-12">
         <h2 className="text-xl font-bold mb-2">
-          Welcome to CitiLights Realty! What would you like to do?
+          Welcome to HavenLease! What would you like to do?
         </h2>
         <p className="text-sm text-gray-600">
-          Choose the role that best describes how you’d like to use the platform
+          Choose the role that best describes how you'd like to use the platform
         </p>
       </div>
 

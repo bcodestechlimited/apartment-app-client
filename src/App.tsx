@@ -18,11 +18,7 @@ import SignUp from "./pages/auth/sign-up";
 import LandingPage from "./pages/public/landing-page";
 import RoleSelection from "./pages/onboarding/role-selection";
 import GetStarted from "./pages/onboarding/landlord/get-started";
-import SelectProperty from "./pages/onboarding/landlord/select-property";
-import {
-  PropertyOnboarding,
-  PropertyOnboardingWorkSpace,
-} from "./pages/onboarding/landlord/property-onboarding";
+import { PropertyOnboarding } from "./pages/onboarding/landlord/property-onboarding";
 import OnboardingError from "./pages/onboarding/onboarding-error";
 import LandlordLayout from "./layouts/dashboard/landlord-layout";
 import Listings from "./pages/dashboard/landlord/listings";
@@ -106,16 +102,8 @@ function App() {
           element: <GetStarted />,
         },
         {
-          path: "/onboarding/landlord/select-property",
-          element: <SelectProperty />,
-        },
-        {
           path: "/onboarding/landlord/property-onboarding",
           element: <PropertyOnboarding />,
-        },
-        {
-          path: "/onboarding/landlord/property-onboarding/workspace",
-          element: <PropertyOnboardingWorkSpace />,
         },
         {
           path: "/onboarding/*",

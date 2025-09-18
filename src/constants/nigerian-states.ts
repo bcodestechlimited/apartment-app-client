@@ -35,7 +35,7 @@ export const NIGERIAN_STATES = [
   "Taraba",
   "Yobe",
   "Zamfara",
-  "Federal Capital Territory",
+  "FCT",
 ];
 
 // src/constants/nigerianStateCities.ts

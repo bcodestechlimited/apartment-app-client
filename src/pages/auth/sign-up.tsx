@@ -79,7 +79,7 @@ export default function SignUp() {
   return (
     <div className="flex flex-col items-center w-full max-w-sm">
       <h2 className="text-white text-lg font-semibold mb-1 text-center">
-        Welcome to CitiLights
+        Welcome to HavenLease
       </h2>
       <p className="text-sm text-white/80 mb-4 text-center">
         Start your journey to finding a home
