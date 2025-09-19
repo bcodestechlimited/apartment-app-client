@@ -2,6 +2,7 @@ import { propertyService } from "@/api/property.api";
 import { PublicPropertyCard } from "@/components/shared/propertyCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { IProperty } from "@/interfaces/property.interface";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import { Layers } from "lucide-react";
 
@@ -33,6 +34,19 @@ export default function NewProjects() {
 }
 
 function PropertyGrid({ properties, isLoading, isError }: any) {
+  const { user } = useAuthStore();
+
+  const isLandlord = user?.roles?.includes("landlord");
+  const isTenant = user?.roles?.includes("tenant");
+  const isAuthenticated = !!user;
+
+  const getPropertyLink = (propertyId: string) => {
+    if (!isAuthenticated) return `/property/${propertyId}`;
+    if (isLandlord) return `/dashboard/landlord/property/${propertyId}`;
+    if (isTenant) return `/dashboard/property/${propertyId}`;
+    return `/property/${propertyId}`;
+  };
+
   if (isLoading) return <PropertySkeletonGrid />;
 
   if (isError) {
@@ -64,6 +78,7 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
           property={property}
           key={property._id}
           label="New Listing"
+          link={getPropertyLink(property._id)}
         />
       ))}
     </div>

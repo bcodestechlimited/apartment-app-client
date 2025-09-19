@@ -111,6 +111,7 @@ export default function AddPropertyModal({
       toast.success("Property added successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-properties"] });
       closeModal();
+      form.reset();
     },
     onError: (error) => {
       toast.error(error.message || "Something went wrong");

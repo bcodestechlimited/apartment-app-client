@@ -12,8 +12,20 @@ import Discover from "./_components/discover";
 import Newsletter from "./_components/newsletter";
 import { images } from "@/constants/images";
 import WhyChooseUs from "./_components/why-choose-us";
+import { useQuery } from "@tanstack/react-query";
+import { authService } from "@/api/auth.api";
 
 const LandingPage = () => {
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["auth-user"],
+    queryFn: () => authService.getUser(),
+    retry: false,
+  });
+
   return (
     <div className="min-h-screen bg-sky-50">
       <div className="max-w-7xl mx-auto">

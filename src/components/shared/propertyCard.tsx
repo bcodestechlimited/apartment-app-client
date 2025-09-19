@@ -103,7 +103,7 @@ export const PublicPropertyCard = ({
 
   return (
     <Link to={href}>
-      <div className="relative bg-white rounded-lg overflow-hidden w-full border border-gray-200">
+      <div className="relative bg-white rounded-lg overflow-hidden w-full border border-gray-200 h-full ">
         <img src={pictures[0]} alt="" className="w-full h-48 object-cover" />
         <span className="bg-custom-primary text-white text-xs px-2 py-1 absolute top-4 left-0 capitalize rounded-r z-10">
           {label || type}

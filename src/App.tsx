@@ -44,6 +44,7 @@ import TenantBookings from "./pages/dashboard/tenant/bookings";
 import TenantBookingRequests from "./pages/dashboard/tenant/booking-requests";
 import TenantMessages from "./pages/dashboard/tenant/messages";
 import TenantDocuments from "./pages/dashboard/tenant/documents";
+import PublicPropertyLayout from "./layouts/public/public-property-layout";
 
 const queryClient = new QueryClient();
 
@@ -273,28 +274,34 @@ function App() {
     },
     // Public Routes
     {
-      path: "property/:propertyId",
-      element: <PropertyDetailLayout />,
+      path: "property",
+      element: <PublicPropertyLayout />, // <-- Outer Layout
       children: [
         {
-          path: "",
-          element: <PropertyOverview />,
-        },
-        {
-          path: "description",
-          element: <PropertyDescription />,
-        },
-        {
-          path: "details",
-          element: <PropertyDetails />,
-        },
-        {
-          path: "amenities",
-          element: <PropertyAmenities />,
-        },
-        {
-          path: "location",
-          element: <PropertyLocation />,
+          path: ":propertyId",
+          element: <PropertyDetailLayout />, // <-- Inner Layout
+          children: [
+            {
+              path: "",
+              element: <PropertyOverview />,
+            },
+            {
+              path: "description",
+              element: <PropertyDescription />,
+            },
+            {
+              path: "details",
+              element: <PropertyDetails />,
+            },
+            {
+              path: "amenities",
+              element: <PropertyAmenities />,
+            },
+            {
+              path: "location",
+              element: <PropertyLocation />,
+            },
+          ],
         },
       ],
     },
