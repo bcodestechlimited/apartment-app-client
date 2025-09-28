@@ -15,7 +15,7 @@ import LookingFor from "./pages/onboarding/tenant/looking-for";
 import TenantLayout from "./layouts/dashboard/tenant-layout";
 import Explore from "./pages/dashboard/tenant/explore";
 import SignUp from "./pages/auth/sign-up";
-import LandingPage from "./pages/public/landing-page";
+import LandingPage from "./pages/public/landing-page/landing-page";
 import RoleSelection from "./pages/onboarding/role-selection";
 import GetStarted from "./pages/onboarding/landlord/get-started";
 import { PropertyOnboarding } from "./pages/onboarding/landlord/property-onboarding";
@@ -29,7 +29,11 @@ import Analytics from "./pages/dashboard/landlord/analytics";
 import Messages from "./pages/dashboard/landlord/messages";
 import SignIn from "./pages/auth/sign-in";
 import LandlordProfile from "./pages/dashboard/landlord/profile";
-import { LandlordAuthGuard, TenantAuthGuard } from "./guards/auth.guard";
+import {
+  AdminAuthGuard,
+  LandlordAuthGuard,
+  TenantAuthGuard,
+} from "./guards/auth.guard";
 import PaymentSummary from "./pages/dashboard/tenant/payment-summary";
 import PropertyDetailLayout from "./layouts/property-detail-layout";
 import PropertyOverview from "./pages/dashboard/shared/property-overview";
@@ -45,6 +49,13 @@ import TenantBookingRequests from "./pages/dashboard/tenant/booking-requests";
 import TenantMessages from "./pages/dashboard/tenant/messages";
 import TenantDocuments from "./pages/dashboard/tenant/documents";
 import PublicPropertyLayout from "./layouts/public/public-property-layout";
+import About from "./pages/public/about/about";
+import AdminLayout from "./layouts/dashboard/admin-layout";
+import AdminDashboard from "./pages/dashboard/admin/admin-dashboard/admin-dashboard";
+import Admin404 from "./pages/dashboard/admin/admin-404";
+import AdminUserManagement from "./pages/dashboard/admin/admin-user-management/admin-user-management";
+import AdminPropertyManagement from "./pages/dashboard/admin/admin-property-management/admin-property-management";
+import AdminPropertyDetail from "./pages/dashboard/admin/admin-property-detail/admin-property-detail";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +64,10 @@ function App() {
     {
       path: "/",
       element: <LandingPage />,
+    },
+    {
+      path: "about",
+      element: <About />,
     },
     // Auth Routes
     {
@@ -272,6 +287,38 @@ function App() {
         },
       ],
     },
+    //Admin Routes
+    {
+      path: "admin",
+      element: <AdminAuthGuard />,
+      children: [
+        {
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <AdminDashboard />,
+            },
+            {
+              path: "users",
+              element: <AdminUserManagement />,
+            },
+            {
+              path: "properties",
+              element: <AdminPropertyManagement />,
+            },
+            {
+              path: "properties/:propertyId",
+              element: <AdminPropertyDetail />,
+            },
+            {
+              path: "*",
+              element: <div>Page not found</div>,
+            },
+          ],
+        },
+      ],
+    },
     // Public Routes
     {
       path: "property",
@@ -307,7 +354,7 @@ function App() {
     },
     {
       path: "*",
-      element: <div>Page not found</div>,
+      element: <Admin404 />,
     },
   ]);
 

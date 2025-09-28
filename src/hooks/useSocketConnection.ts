@@ -8,15 +8,15 @@ export const useSocketConnection = () => {
   useEffect(() => {
     if (!socket.connected) {
       socket.connect();
-      console.log("Socket connecting...");
+      // console.log("Socket connecting...");
     }
 
     socket.on("connect", () => {
-      console.log({ user });
+      // console.log({ user });
 
-      console.log("Socket connected:", socket.id);
+      // console.log("Socket connected:", socket.id);
       if (user) {
-        console.log("Adding user to online users...");
+        // console.log("Adding user to online users...");
         socket.emit("add_online_user", {
           userId: user._id,
         });

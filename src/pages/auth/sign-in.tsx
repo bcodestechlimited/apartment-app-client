@@ -9,15 +9,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Eye, EyeOff } from "lucide-react";
-import googleIconImage from "@/assets/images/google-icon.png";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { useNavigate } from "react-router";
-import { toast } from "sonner";
 import { Spinner } from "@/components/custom/loader";
 import { useAuthActions } from "@/store/useAuthStore";
 import type { IUser } from "@/interfaces/user.interface";
+import { CustomAlert } from "@/components/custom/custom-alert";
+import GoogleAuthButton from "@/components/custom/google-auth-button";
 
 interface SignInFormInputs {
   email: string;
@@ -29,6 +29,7 @@ export default function SignIn() {
   const { setAuthCredentials } = useAuthActions();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<SignInFormInputs>({
     defaultValues: {
@@ -41,32 +42,24 @@ export default function SignIn() {
   const mutation = useMutation({
     mutationFn: authService.signIn,
     onSuccess: (data: IUser) => {
-      if (data.roles.includes("tenant")) {
-        return navigate("/dashboard");
+      if (data.roles.includes("admin")) {
+        return navigate("/admin/dashboard");
       } else if (data.roles.includes("landlord")) {
         return navigate("/dashboard/landlord");
       }
+      //Tenant
       navigate("/dashboard");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Something went wrong");
-      console.log(error);
-    },
-  });
-
-  const googleMutation = useMutation({
-    mutationFn: authService.loginWithGoogle,
-    onSuccess: (data) => {
-      window.location.href = data.redirectURL;
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Something went wrong");
+      // toast.error(error.message || "Something went wrong");
+      setError(error.message || "Something went wrong");
       console.log(error);
     },
   });
 
   /** ---- Submit Handler ---- */
   const onSubmit = (data: SignInFormInputs) => {
+    setError(null);
     setAuthCredentials({
       email: data.email,
       password: data.password,
@@ -84,16 +77,7 @@ export default function SignIn() {
       </p>
 
       {/* Google Auth Button */}
-      <Button
-        onClick={() => googleMutation.mutateAsync()}
-        disabled={googleMutation.isPending}
-        variant="outline"
-        className="w-full mb-3 bg-transparent text-white border-white cursor-pointer"
-      >
-        <img src={googleIconImage} alt="Google" className="w-4 h-4" />
-        Continue with Google
-      </Button>
-
+      <GoogleAuthButton />
       <p className="text-white/60 text-sm mb-3">Or</p>
 
       {/* ---- ShadCN Form ---- */}
@@ -165,9 +149,12 @@ export default function SignIn() {
             )}
           />
 
+          {/* Error Message */}
+          {error && <CustomAlert variant="destructive" message={error} />}
+
           {/* Submit Button */}
           <Button
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || !form.formState.isValid}
             type="submit"
             className="w-full bg-white text-custom-primary hover:bg-white/80 cursor-pointer"
           >

@@ -18,6 +18,7 @@ import { Spinner } from "@/components/custom/loader";
 import { useAuthActions } from "@/store/useAuthStore";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import GoogleAuthButton from "@/components/custom/google-auth-button";
 
 interface SignUpFormInputs {
   email: string;
@@ -54,18 +55,6 @@ export default function SignUp() {
     },
   });
 
-  /** --- Mutation for Google Sign In --- */
-  const googleMutation = useMutation({
-    mutationFn: authService.loginWithGoogle,
-    onSuccess: (data) => {
-      window.location.href = data.redirectURL;
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Something went wrong");
-      console.log(error);
-    },
-  });
-
   /** --- Submit Handler --- */
   const onSubmit = (data: SignUpFormInputs) => {
     const { confirmPassword, ...payload } = data; // exclude confirmPassword before sending
@@ -86,15 +75,7 @@ export default function SignUp() {
       </p>
 
       {/* Google Auth Button */}
-      <Button
-        onClick={() => googleMutation.mutateAsync()}
-        disabled={googleMutation.isPending}
-        variant="outline"
-        className="w-full mb-3 bg-transparent text-white border-white cursor-pointer"
-      >
-        <img src={googleIconImage} alt="Google" className="w-4 h-4" />
-        Continue with Google
-      </Button>
+      <GoogleAuthButton />
 
       <p className="text-white/60 text-sm mb-3">Or</p>
 

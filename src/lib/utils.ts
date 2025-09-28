@@ -10,7 +10,7 @@ export const handleAxiosError = (
   error: any,
   alternateMessage?: string
 ): string => {
-  console.log({ error: error.response?.data?.errors });
+  // console.log({ error: error.response?.data?.errors });
 
   if (!error) {
     throw new Error("An unknown error occurred");
@@ -22,7 +22,7 @@ export const handleAxiosError = (
     );
   }
   if (error instanceof AxiosError) {
-    console.log(error?.response?.data);
+    // console.log(error?.response?.data);
     throw new Error(error.response?.data?.message || alternateMessage);
   }
   throw error;
@@ -36,8 +36,7 @@ export const formatDate = (date: string | Date): string => {
     day: "2-digit",
   };
 
-  return new Date(date)
-    .toLocaleDateString("en-CA", options);
+  return new Date(date).toLocaleDateString("en-CA", options);
 };
 
 // returns: 19th June 2025
