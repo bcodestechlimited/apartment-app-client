@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
 import { cn, formatCurrency } from "@/lib/utils";
-import { Bath, Bed, Ellipsis, Eye } from "lucide-react";
+import { Bath, Bed, CheckCircle, Ellipsis, Eye } from "lucide-react";
 import { Link } from "react-router";
 
 interface PropertyCardProps {
@@ -48,10 +48,16 @@ export const AdminPropertyCard = ({ property, link }: PropertyCardProps) => {
         <span
           className={cn(
             "absolute top-4 right-0 text-xs px-2 py-1 rounded-l font-medium z-10",
-            isVerified ? "bg-green-500 text-white" : "bg-yellow-500 text-black"
+            isVerified ? "bg-green-700 text-white" : "bg-yellow-500 text-black"
           )}
         >
-          {isVerified ? <span>Verified</span> : "Pending"}
+          {isVerified ? (
+            <span className="flex items-center gap-1">
+              Verified <CheckCircle className="w-4 h-4" />
+            </span>
+          ) : (
+            "Pending"
+          )}
         </span>
       </div>
 
