@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 export default function Admin404() {
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-50 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center bg-custom-primary overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0 -z-10">
         <img
@@ -18,7 +18,7 @@ export default function Admin404() {
       {/* Content */}
       <div className="text-center px-6 sm:px-12">
         <AlertTriangle className="mx-auto h-16 w-16 text-yellow-400 mb-4" />
-        <h1 className="text-7xl font-extrabold text-white drop-shadow-lg">
+        <h1 className="text-7xl font-extrabold text-white drop-shadow-lg tracking-widest">
           404
         </h1>
         <p className="mt-4 text-2xl text-gray-200">
@@ -30,14 +30,14 @@ export default function Admin404() {
 
         <div className="mt-8 flex justify-center gap-4">
           <Link to="/admin">
-            <Button className="rounded-2xl px-6 py-2 text-lg shadow-lg hover:scale-105 transition">
+            <Button className="rounded px-6 py-6 text-lg shadow-lg hover:scale-105 transition cursor-pointer">
               Go to Dashboard
             </Button>
           </Link>
           <Link to="/">
             <Button
               variant="outline"
-              className="rounded-2xl px-6 py-2 text-lg text-white border-white hover:bg-white hover:text-black transition"
+              className="rounded px-6 py-6 text-lg text-custom-primary border-white hover:bg-white hover:text-black transition"
             >
               Go Home
             </Button>
