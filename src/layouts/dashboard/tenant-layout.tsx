@@ -201,7 +201,7 @@ function TopBar() {
   });
 
   return (
-    <div className="flex justify-between p-4 bg-white  mb-4">
+    <div className="flex justify-between p-4 bg-white mb-4">
       <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
         <Search className="w-5 h-5 text-gray-600 ml-3" />
         <Input
@@ -266,11 +266,11 @@ export default function TenantLayout() {
   useSocketConnection();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
       <TenantSideBar />
       <div className="flex-1 bg-white p-4">
         <TopBar />
-        <div className="w-full max-w-[1440px]">
+        <div className="w-full max-w-[1440px] mb-12">
           <Breadcrumb />
           <Outlet />
         </div>

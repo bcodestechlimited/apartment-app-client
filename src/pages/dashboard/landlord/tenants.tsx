@@ -3,8 +3,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -51,13 +49,15 @@ export default function Tenants() {
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 10;
   const { data, isLoading } = useQuery({
-    queryKey: ["landlord-booking-requests", { page, limit }],
+    queryKey: ["landlord-tenants", { page, limit }],
     queryFn: () =>
       tenantService.getLandlordTenants({
         page: 1,
         limit: 10,
       }),
   });
+
+  console.log({ tenants: data?.tenants || [] });
 
   const columns = [
     {

@@ -258,12 +258,12 @@ export default function LandlordLayout() {
   useSocketConnection();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
       <LandlordSideBar />
       <div className="flex-1 bg-white p-4">
         <TopBar />
         {/* <div className="w-full max-w-[1440px]"> */}
-        <div className="w-full">
+        <div className="w-full mb-12">
           <Breadcrumb />
           <Outlet />
         </div>

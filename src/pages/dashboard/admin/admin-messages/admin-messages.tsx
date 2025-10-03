@@ -9,9 +9,13 @@ import { useChat, useChatWindow } from "@/hooks/useChat";
 import { useForm } from "react-hook-form";
 import socket from "@/lib/socket";
 import type React from "react";
+import { useTenants } from "@/hooks/useTenants";
+import { useState } from "react";
+import SelectTenantDialog from "./_components/select-tenant";
 
-export default function TenantMessages() {
+export default function AdminMessages() {
   const [searchParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
 
   const { conversations, isLoading, isError } = useChat();
 
@@ -19,9 +23,20 @@ export default function TenantMessages() {
   if (isError) return <div>Error</div>;
 
   return (
-    <div className="flex max-h-[88vh] border rounded-md overflow-hidden">
-      <ChatSidebar conversations={conversations || []} />
-      <ChatWindow conversationId={searchParams.get("conversationId") || ""} />
+    <div>
+      <div className="flex justify-end mb-2 ">
+        <Button
+          onClick={() => setOpen(true)}
+          className="bg-custom-primary hover:bg-custom-primary/80 cursor-pointer"
+        >
+          View Tenants
+        </Button>
+      </div>
+      <div className="flex border rounded-md overflow-hidden">
+        <ChatSidebar conversations={conversations || []} />
+        <ChatWindow conversationId={searchParams.get("conversationId") || ""} />
+      </div>
+      <SelectTenantDialog isOpen={open} onClose={() => setOpen(false)} />
     </div>
   );
 }
@@ -29,6 +44,8 @@ export default function TenantMessages() {
 function ChatSidebar({ conversations }: { conversations: IConversation[] }) {
   const [_, setSearchParams] = useSearchParams();
   const { user } = useAuthStore();
+
+  const { data } = useTenants({ page: 1, limit: 100 });
 
   function getOtherParticipantName(conversation: IConversation) {
     if (!user) return "";

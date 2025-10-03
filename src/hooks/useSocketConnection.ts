@@ -12,11 +12,11 @@ export const useSocketConnection = () => {
     }
 
     socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
       // console.log({ user });
 
-      // console.log("Socket connected:", socket.id);
       if (user) {
-        // console.log("Adding user to online users...");
+        console.log("Adding user to online users...");
         socket.emit("add_online_user", {
           userId: user._id,
         });

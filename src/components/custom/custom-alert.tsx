@@ -42,7 +42,7 @@ export function CustomAlert({
   return (
     <Alert
       className={cn(
-        "mb-4 mt-3 rounded flex items-center gap-1 w-full py-2",
+        "rounded flex items-center gap-1 w-full py-2",
         className,
         variantStyles[variant]
       )}

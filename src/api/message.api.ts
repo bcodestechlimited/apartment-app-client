@@ -17,8 +17,10 @@ class MessageService {
 
   // Create a new conversation (e.g. landlord + tenant)
   createConversation = async (payload: {
-    participants: string[]; // user IDs
-  }): Promise<IConversation | undefined> => {
+    receiverId: string; // user IDs
+  }) => {
+    console.log({ payload });
+
     try {
       const response = await axiosInstance.post(
         `/message/conversation`,

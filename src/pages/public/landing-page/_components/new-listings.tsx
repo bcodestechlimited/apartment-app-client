@@ -10,7 +10,7 @@ export default function NewListings() {
   const { user } = useAuthStore();
 
   const isLandord =
-    user && user.roles.includes("landlord")
+    user && user?.roles?.includes("landlord")
       ? "/dashboard/landlord/"
       : "/dashboard";
 

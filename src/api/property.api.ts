@@ -93,6 +93,24 @@ class PropertyService {
       handleAxiosError(error, "Unable to book property");
     }
   };
+
+  //Admin
+  adminUpdateProperty = async (propertyId: string, payload: any) => {
+    console.log({ payload });
+
+    try {
+      const response = await axiosInstance.patch(
+        `/admin/property/${propertyId}`,
+        payload
+      );
+
+      console.log({ response });
+
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to update property");
+    }
+  };
 }
 
 export const propertyService = new PropertyService();

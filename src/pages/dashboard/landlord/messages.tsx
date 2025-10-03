@@ -70,6 +70,7 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
   const {
     register,
     handleSubmit,
+    reset,
     // formState: { errors },
   } = useForm<{ message: string }>();
 
@@ -92,6 +93,7 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     const otherParticipant = getOtherParticipant(conversation as IConversation);
     if (!otherParticipant) return;
     sendMessage(payload.message, otherParticipant._id);
+    reset();
   };
 
   function getOtherParticipantName(conversation: IConversation | undefined) {

@@ -56,6 +56,7 @@ import Admin404 from "./pages/dashboard/admin/admin-404";
 import AdminUserManagement from "./pages/dashboard/admin/admin-user-management/admin-user-management";
 import AdminPropertyManagement from "./pages/dashboard/admin/admin-property-management/admin-property-management";
 import AdminPropertyDetail from "./pages/dashboard/admin/admin-property-detail/admin-property-detail";
+import AdminMessages from "./pages/dashboard/admin/admin-messages/admin-messages";
 
 const queryClient = new QueryClient();
 
@@ -310,6 +311,10 @@ function App() {
             {
               path: "properties/:propertyId",
               element: <AdminPropertyDetail />,
+            },
+            {
+              path: "messages",
+              element: <AdminMessages />,
             },
             {
               path: "*",

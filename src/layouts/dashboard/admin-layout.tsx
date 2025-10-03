@@ -77,13 +77,18 @@ const routes: Route[] = [
     icon: <FileChartColumnIncreasing className="w-5 h-5" />,
   },
   {
+    name: "Messages",
+    path: "/admin/messages",
+    icon: <Mail className="w-5 h-5" />,
+  },
+  {
     name: "Support",
-    path: "/dashboard/landlord/messages",
+    path: "/admin/support",
     icon: <Mail className="w-5 h-5" />,
   },
   {
     name: "Settings",
-    path: "/dashboard/landlord/messages",
+    path: "/admin/settings",
     icon: <Settings className="w-5 h-5" />,
   },
 ];
@@ -109,7 +114,7 @@ function AdminSideBar() {
       )}
     >
       {/* Logo Section */}
-      <div className="p-4 border-b">
+      <div className="p-2 border-b">
         <img
           src={images.havenLeaseLogoGreen}
           alt="Haven Lease Logo"
@@ -118,7 +123,7 @@ function AdminSideBar() {
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 p-4 min-w-64 max-w-68">
+      <nav className="flex-1 p-2 min-w-64 max-w-68">
         <ul className="space-y-2">
           {routes.map((route, index) => (
             <li key={index}>
@@ -205,7 +210,7 @@ function TopBar() {
   });
 
   return (
-    <div className="flex justify-between p-4 bg-white  mb-4">
+    <div className="flex items-center justify-between py-2 bg-white  mb-4">
       <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
         <Search className="w-5 h-5 text-gray-600 ml-3" />
         <Input
@@ -214,9 +219,9 @@ function TopBar() {
         />
       </div>
 
-      <div className="flex items-center gap-2">
-        <Bell className="w-6 h-6 text-gray-300 mr-3" />
-        <div className="flex items-center cursor-pointer  px-3 py-2   gap-5 transition-colors">
+      <div className="flex items-center">
+        <Bell className="w-6 h-6 text-gray-300" />
+        <div className="flex items-center cursor-pointer px-3 py-2 gap-5 transition-colors">
           <Popover>
             <PopoverTrigger asChild>
               <div className="flex items-center gap-2 border px-4 py-2 rounded-full bg-white shadow-sm hover:bg-gray-100 transition-colors">
@@ -270,12 +275,12 @@ export default function AdminLayout() {
   useSocketConnection();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
       <AdminSideBar />
       <div className="flex-1 bg-white p-4">
         <TopBar />
         {/* <div className="w-full max-w-[1440px]"> */}
-        <div className="w-full">
+        <div className="w-full mb-12">
           <Breadcrumb />
           <Outlet />
         </div>
