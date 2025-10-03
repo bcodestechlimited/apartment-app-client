@@ -17,26 +17,26 @@ export default function GoogleAuthButton() {
     onSuccess: (data) => {
       return (window.location.href = data.redirectURL);
       // Centered popup window logic
-      const width = 500;
-      const height = 600;
-      const left = window.screenX + (window.outerWidth - width) / 2;
-      const top = window.screenY + (window.outerHeight - height) / 2;
+      // const width = 500;
+      // const height = 600;
+      // const left = window.screenX + (window.outerWidth - width) / 2;
+      // const top = window.screenY + (window.outerHeight - height) / 2;
 
-      const popup = window.open(
-        data.redirectURL,
-        "GoogleAuth",
-        `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes,resizable=yes`
-      );
+      // const popup = window.open(
+      //   data.redirectURL,
+      //   "GoogleAuth",
+      //   `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes,resizable=yes`
+      // );
 
-      if (popup) {
-        popupRef.current = popup;
-        console.log("Popup opened successfully");
+      // if (popup) {
+      //   popupRef.current = popup;
+      //   console.log("Popup opened successfully");
 
-        // Focus the popup window
-        popup.focus();
-      } else {
-        setError("Popup was blocked. Please allow popups for this site.");
-      }
+      //   // Focus the popup window
+      //   popup.focus();
+      // } else {
+      //   setError("Popup was blocked. Please allow popups for this site.");
+      // }
     },
 
     onError: (error: any) => {
