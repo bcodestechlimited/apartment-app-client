@@ -57,6 +57,10 @@ import AdminUserManagement from "./pages/dashboard/admin/admin-user-management/a
 import AdminPropertyManagement from "./pages/dashboard/admin/admin-property-management/admin-property-management";
 import AdminPropertyDetail from "./pages/dashboard/admin/admin-property-detail/admin-property-detail";
 import AdminMessages from "./pages/dashboard/admin/admin-messages/admin-messages";
+import Settings from "./pages/dashboard/tenant/settings/settings";
+import PersonalInfo from "./pages/dashboard/tenant/settings/_components/personal-info";
+import Employement from "./pages/dashboard/tenant/settings/_components/employment";
+import Documents from "./pages/dashboard/tenant/settings/_components/documents";
 
 const queryClient = new QueryClient();
 
@@ -191,6 +195,40 @@ function App() {
             {
               path: "messages",
               element: <TenantMessages />,
+            },
+            {
+              path: "settings",
+              element: <Settings />,
+              children: [
+                {
+                  path: "",
+                  element: <PersonalInfo />,
+                },
+                {
+                  path: "employment",
+                  element: <Employement />,
+                },
+                {
+                  path: "documents",
+                  element: <Documents />,
+                },
+                {
+                  path: "next-of-kin",
+                  element: <Documents />,
+                },
+                {
+                  path: "guarantor",
+                  element: <Documents />,
+                },
+                {
+                  path: "notification",
+                  element: <Documents />,
+                },
+                {
+                  path: "*",
+                  element: <div>Page not found</div>,
+                },
+              ],
             },
             {
               path: "*",

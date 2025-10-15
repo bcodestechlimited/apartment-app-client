@@ -9,6 +9,7 @@ import {
   Search,
   Bell,
   LogOut,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
@@ -82,6 +83,12 @@ const routes: Route[] = [
     name: "Messages",
     path: "/dashboard/messages",
     icon: <Mail className="w-5 h-5" />,
+    // submenu: [],
+  },
+  {
+    name: "Settings",
+    path: "/dashboard/settings",
+    icon: <Settings className="w-5 h-5" />,
     // submenu: [],
   },
 ];

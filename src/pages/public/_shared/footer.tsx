@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 export default function Footer() {
   return (
     <footer className="bg-[#222222] text-white p-8 ">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="text-center md:text-left">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="text-center md:text-left md:col-span-2">
           <h3 className="text-lg font-semibold mb-4">
             <img
               src={images.havenLeaseLogoWhite}
@@ -18,11 +18,11 @@ export default function Footer() {
               className="mx-auto md:mx-0 w-16 h-16"
             />
           </h3>
-          <p className="text-gray-400">
-            At HavenLease, we are redefining urban living by making quality
-            homes easy to access, affordable, and stress-free.
+          <p className="text-white">
+            Built for proprty owners and seekers - making renting, sharing,
+            living easier for everyone.
           </p>
-          <div className="flex justify-center md:justify-start space-x-4 my-8 gap-6">
+          <div className="flex justify-center md:justify-start space-x-4 my-8 md:my-4">
             {[
               { icon: facebookicon, link: "#" },
               { icon: Twitter, link: "#" },
@@ -34,21 +34,20 @@ export default function Footer() {
                 href={link}
                 className="text-gray-400 hover:text-white"
               >
-                <img src={icon} alt={`${link} icon`} />
+                <img src={icon} alt={`${link} icon`} className="w-4" />
               </a>
             ))}
           </div>
           <p>&copy; {new Date().getFullYear()}. All rights reserved.</p>
         </div>
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Take a Tour</h3>
+        <div className="md:text-left">
+          <h3 className="text-lg font-semibold mb-4">Explore</h3>
           <ul className="leading-8">
             {[
-              { title: "Features", link: "#" },
-              { title: "Partners", link: "#" },
-              { title: "Pricing", link: "#" },
-              { title: "Product", link: "#" },
-              { title: "Support", link: "#" },
+              { title: "Find apartment", link: "#" },
+              { title: "List apartment", link: "#" },
+              { title: "Co-working space", link: "#" },
+              { title: "Patners", link: "#" },
             ].map(({ title, link }) => (
               <li key={title}>
                 <a href={link} className="text-gray-400 hover:text-white">
@@ -58,15 +57,14 @@ export default function Footer() {
             ))}
           </ul>
         </div>
-        <div>
+        <div className="md:text-left">
           <h3 className="text-lg font-semibold mb-4">Our Company</h3>
           <ul className="leading-8">
             {[
-              { title: "About Us", link: "#" },
-              // { title: "Agents", link: "#" },
-              { title: "Blog", link: "#" },
-              { title: "Media", link: "#" },
+              { title: "About Us", link: "/about" },
               { title: "Contact Us", link: "#" },
+              { title: "Terms and Conditions", link: "#" },
+              { title: "Privacy Policy", link: "#" },
             ].map(({ title, link }) => (
               <li key={title}>
                 <a href={link} className="text-gray-400 hover:text-white">
@@ -77,9 +75,9 @@ export default function Footer() {
           </ul>
         </div>
         <div className="flex flex-col text-left">
-          <h3 className="text-xl font-semibold mb-4">Subscribe</h3>
+          <h3 className="text-xl font-semibold mb-2">Subscribe</h3>
           <div>
-            <p className="font-light text-muted-foreground">
+            <p className="font-light text-white">
               Subscibe to get latest property, blog news from us
             </p>
             <form className="space-x-4 relative mt-4 w-full">
@@ -95,8 +93,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center">
-        <p className="text-muted-foreground">Built By BCT Limited</p>
+      <div className="flex items-center justify-center mt-4">
+        <img src={images.bctLogoWhite} alt="" className=" w-14" />
+        <p className="text-white">Powered By BCT Limited</p>
       </div>
     </footer>
   );

@@ -1,20 +1,16 @@
-import facebookicon from "@/assets/images/Facebook - Original.png";
-import Instagram from "@/assets/images/Instagram - Original.png";
-import Twitter from "@/assets/images/Twitter - Original.png";
-import LinkedIn from "@/assets/images/LinkedIn - Original.png";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import NewListings from "./_components/new-listings";
 import NewProjects from "./_components/newprojects";
 import CoWorkingSpaces from "./_components/co-working-spaces";
 import Discover from "./_components/discover";
 import Newsletter from "./_components/newsletter";
-import { images } from "@/constants/images";
 import WhyChooseUs from "./_components/why-choose-us";
 import { useQuery } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import Navbar from "../_shared/navbar";
 import Footer from "../_shared/footer";
+import BrowseWorkspaces from "./_components/browse-workspaces";
+import BuiltForEveryone from "./_components/built-for-everyone";
+import FAQs from "./_components/faqs";
 
 const LandingPage = () => {
   const {
@@ -28,15 +24,18 @@ const LandingPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-sky-50">
-      <div className="max-w-[1920px] mx-auto">
+    <div className="min-h-screen bg-custom-light-blue">
+      <div>
         <Navbar />
-        <main className="px-4">
+        <main className="">
           <Discover />
           <NewListings />
-          <WhyChooseUs />
-          <NewProjects />
-          <CoWorkingSpaces />
+          {/* <WhyChooseUs /> */}
+          <BrowseWorkspaces />
+          <BuiltForEveryone />
+          {/* <NewProjects /> */}
+          {/* <CoWorkingSpaces /> */}
+          <FAQs />
           <Newsletter />
         </main>
         <Footer />

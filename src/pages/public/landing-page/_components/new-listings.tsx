@@ -24,19 +24,23 @@ export default function NewListings() {
   });
 
   return (
-    <section className="py-10">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">New Listings</h2>
-        <a href="#" className="text-sm hover:underline">
-          View more →
-        </a>
+    <div className="">
+      <div className="max-w-custom">
+        <section className="py-10">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">New Listings</h2>
+            <a href="#" className="text-sm hover:underline">
+              View more →
+            </a>
+          </div>
+          <PropertyGrid
+            properties={data?.properties}
+            isLoading={isLoading}
+            isError={isError}
+          />
+        </section>
       </div>
-      <PropertyGrid
-        properties={data?.properties}
-        isLoading={isLoading}
-        isError={isError}
-      />
-    </section>
+    </div>
   );
 }
 

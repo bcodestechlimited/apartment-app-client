@@ -11,7 +11,7 @@ export default function About() {
       <Navbar />
       <HeroSection />
       <MissionVision />
-      <WhyChooseUs />
+      {/* <WhyChooseUs /> */}
       <SmarterWay />
       <Footer />
     </div>
