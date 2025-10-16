@@ -106,6 +106,21 @@ class AuthService {
       handleAxiosError(error, "Failed to login with Google");
     }
   };
+
+  updateUserPersonalInfo = async (payload: any) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/auth/profile/personal-info`,
+        payload
+      );
+
+      console.log({ response });
+
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to update user personal info");
+    }
+  };
 }
 
 export const authService = new AuthService();

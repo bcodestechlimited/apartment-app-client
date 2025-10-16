@@ -9,9 +9,9 @@ export const OnboardingLayout = () => {
         src={images.havenLeaseLogoWhite}
         alt="Haven Lease Logo"
         initial={{ y: 0, opacity: 1 }}
-        animate={{ y: -100, opacity: 1 }}
+        animate={{ y: -30, opacity: 1 }}
         transition={{ duration: 1 }}
-        className="w-24 h-24 mb-6"
+        className="w-24 h-24"
       />
 
       {/* Animated Form Section */}

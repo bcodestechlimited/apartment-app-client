@@ -34,7 +34,6 @@ import {
   LandlordAuthGuard,
   TenantAuthGuard,
 } from "./guards/auth.guard";
-import PaymentSummary from "./pages/dashboard/tenant/payment-summary";
 import PropertyDetailLayout from "./layouts/property-detail-layout";
 import PropertyOverview from "./pages/dashboard/shared/property-overview";
 import PropertyDescription from "./pages/dashboard/shared/property-description";
@@ -61,6 +60,9 @@ import Settings from "./pages/dashboard/tenant/settings/settings";
 import PersonalInfo from "./pages/dashboard/tenant/settings/_components/personal-info";
 import Employement from "./pages/dashboard/tenant/settings/_components/employment";
 import Documents from "./pages/dashboard/tenant/settings/_components/documents";
+import NextOfKin from "./pages/dashboard/tenant/settings/_components/next-of-kin";
+import Guarantor from "./pages/dashboard/tenant/settings/_components/guarantor";
+import Notification from "./pages/dashboard/tenant/settings/_components/notification";
 
 const queryClient = new QueryClient();
 
@@ -214,15 +216,15 @@ function App() {
                 },
                 {
                   path: "next-of-kin",
-                  element: <Documents />,
+                  element: <NextOfKin />,
                 },
                 {
                   path: "guarantor",
-                  element: <Documents />,
+                  element: <Guarantor />,
                 },
                 {
                   path: "notification",
-                  element: <Documents />,
+                  element: <Notification />,
                 },
                 {
                   path: "*",
