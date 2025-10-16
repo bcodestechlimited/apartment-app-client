@@ -4,7 +4,6 @@ import {
   Compass,
   BookOpenCheck,
   HandCoins,
-  FileText,
   Mail,
   Search,
   Bell,
@@ -73,12 +72,7 @@ const routes: Route[] = [
     icon: <HandCoins className="w-5 h-5" />,
     // submenu: [],
   },
-  {
-    name: "Documents",
-    path: "/dashboard/documents",
-    icon: <FileText className="w-5 h-5" />,
-    // submenu: [],
-  },
+
   {
     name: "Messages",
     path: "/dashboard/messages",

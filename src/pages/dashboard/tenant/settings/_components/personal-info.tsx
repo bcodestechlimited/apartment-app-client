@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader, Loader2 } from "lucide-react";
 
 import {
   Form,
@@ -27,10 +27,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomAlert } from "@/components/custom/custom-alert";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
@@ -58,6 +59,13 @@ const formSchema = z.object({
 export default function PersonalInfo() {
   const [error, setError] = useState<string | null>(null);
 
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["user-personal-info"],
+    queryFn: () => authService.getUserPersonalInfo(),
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,10 +81,26 @@ export default function PersonalInfo() {
     },
   });
 
+  useEffect(() => {
+    if (data?.personalInfo) {
+      form.setValue("firstName", data.personalInfo.firstName);
+      form.setValue("lastName", data.personalInfo.lastName);
+      form.setValue("email", data.personalInfo.email);
+      form.setValue("phoneNumber", data.personalInfo.phoneNumber);
+      form.setValue("gender", data.personalInfo.gender);
+      form.setValue("dob", data.personalInfo.dob);
+      form.setValue("address", data.personalInfo.address);
+      form.setValue("state", data.personalInfo.state);
+      form.setValue("city", data.personalInfo.city);
+    }
+  }, [data, form]);
+
   const mutation = useMutation({
     mutationFn: authService.updateUserPersonalInfo,
     onSuccess: (data) => {
       console.log({ data });
+      queryClient.invalidateQueries({ queryKey: ["user-personal-info"] });
+      toast.success("Personal info updated successfully!");
     },
     onError: (error: any) => {
       // toast.error(error.message || "Something went wrong");
@@ -90,6 +114,10 @@ export default function PersonalInfo() {
     console.log("Form data:", data);
     mutation.mutateAsync(data);
   };
+
+  const personalInfo = data?.personalInfo;
+
+  console.log({ personalInfo });
 
   return (
     <div className="max-w-2xl mr-auto space-y-6 py-4">
@@ -187,29 +215,33 @@ export default function PersonalInfo() {
           <FormField
             control={form.control}
             name="gender"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-muted-foreground font-normal">
-                  Gender
-                </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="rounded-full py-5 px-5 w-full">
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="rounded-xl">
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              console.log({ value: field.value });
+
+              return (
+                <FormItem>
+                  <FormLabel className="text-muted-foreground font-normal">
+                    Gender
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value ?? ""}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="rounded-full py-5 px-5 w-full">
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
 
           {/* Date of Birth */}
@@ -288,7 +320,7 @@ export default function PersonalInfo() {
                 </FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value ?? ""}
                 >
                   <FormControl>
                     <SelectTrigger className="rounded-full w-full py-5 px-5">
@@ -333,11 +365,17 @@ export default function PersonalInfo() {
           {/* Submit Button */}
           <div className="col-span-2 flex justify-end mt-4">
             <Button
-              disabled={mutation.isPending}
+              disabled={mutation.isPending || !form.formState.isDirty}
               type="submit"
               className="btn-primary rounded-full px-12"
             >
-              Save Changes
+              {mutation.isPending ? (
+                <span className="flex items-center gap-2">
+                  <Loader className="animate-spin" /> Saving...
+                </span>
+              ) : (
+                "Save Changes"
+              )}
             </Button>
           </div>
         </form>

@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,12 +19,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { authService } from "@/api/auth.api";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
-  email: z.string().email("Enter a valid email address"),
-  phone: z.string().min(7, "Enter a valid phone number"),
+  email: z.email("Enter a valid email address"),
+  phoneNumber: z.string().min(7, "Enter a valid phone number"),
   relationship: z.enum(
     ["parent", "sibling", "spouse", "child", "relative", "friend", "other"],
     {
@@ -37,20 +39,57 @@ const formSchema = z.object({
 });
 
 export default function NextOfKin() {
+  const [error, setError] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["user-next-of-kin"],
+    queryFn: () => authService.getUserNextOfKin(),
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
-      phone: "",
+      phoneNumber: "",
       relationship: undefined,
     },
   });
 
+  useEffect(() => {
+    if (data?.nextOfKin) {
+      form.setValue("firstName", data.nextOfKin.firstName);
+      form.setValue("lastName", data.nextOfKin.lastName);
+      form.setValue("email", data.nextOfKin.email);
+      form.setValue("phoneNumber", data.nextOfKin.phoneNumber);
+      form.setValue("relationship", data.nextOfKin.relationship);
+    }
+  }, [data, form]);
+
+  const mutation = useMutation({
+    mutationFn: authService.updateUserNextOfKin,
+    onSuccess: (data) => {
+      console.log({ data });
+      queryClient.invalidateQueries({ queryKey: ["user-personal-info"] });
+      toast.success("Personal info updated successfully!");
+    },
+    onError: (error: any) => {
+      // toast.error(error.message || "Something went wrong");
+      setError(error.message || "Something went wrong");
+      console.log(error);
+    },
+  });
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
+    setError(null);
     console.log("Next of Kin Data:", data);
+    mutation.mutateAsync(data);
   };
+
+  console.log({ data });
 
   return (
     <div className="max-w-2xl mr-auto space-y-6 py-4">
@@ -126,7 +165,7 @@ export default function NextOfKin() {
           {/* Phone */}
           <FormField
             control={form.control}
-            name="phone"
+            name="phoneNumber"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-muted-foreground font-normal">
@@ -155,7 +194,7 @@ export default function NextOfKin() {
                 </FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value ?? ""}
                 >
                   <FormControl>
                     <SelectTrigger className="rounded-full py-5 px-5 w-full">
@@ -179,8 +218,18 @@ export default function NextOfKin() {
 
           {/* Submit Button */}
           <div className="col-span-2 flex justify-end mt-4">
-            <Button type="submit" className="btn-primary rounded-full px-12">
-              Save Changes
+            <Button
+              disabled={mutation.isPending || !form.formState.isDirty}
+              type="submit"
+              className="btn-primary rounded-full px-12"
+            >
+              {mutation.isPending ? (
+                <span className="flex items-center gap-2">
+                  <Loader className="animate-spin" /> Saving...
+                </span>
+              ) : (
+                "Save Changes"
+              )}
             </Button>
           </div>
         </form>
