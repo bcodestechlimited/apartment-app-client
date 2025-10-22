@@ -22,7 +22,7 @@ button {
 }
 
 .hero-background {
-  background-image: url("assets/images/backgroundimage1.webp");
+  background-image: url("assets/images/hero-image.jpg");
   background-size: cover;
   background-position: center;
 }

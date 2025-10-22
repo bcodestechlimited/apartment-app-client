@@ -63,18 +63,65 @@ import Documents from "./pages/dashboard/tenant/settings/_components/documents";
 import NextOfKin from "./pages/dashboard/tenant/settings/_components/next-of-kin";
 import Guarantor from "./pages/dashboard/tenant/settings/_components/guarantor";
 import Notification from "./pages/dashboard/tenant/settings/_components/notification";
+import PropertySearch from "./pages/public/property-search/property-search";
+import PublicLayout from "./pages/public/_layouts/public-layout";
 
 const queryClient = new QueryClient();
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: <LandingPage />,
+      element: <PublicLayout />,
+      children: [
+        {
+          path: "",
+          element: <LandingPage />,
+        },
+        {
+          path: "about",
+          element: <About />,
+        },
+        {
+          path: "properties",
+          element: <PropertySearch />,
+        },
+        {
+          path: "properties/:propertyId",
+          element: <PropertySearch />,
+        },
+      ],
     },
     {
-      path: "about",
-      element: <About />,
+      path: "property",
+      element: <PublicPropertyLayout />, // <-- Outer Layout
+      children: [
+        {
+          path: ":propertyId",
+          element: <PropertyDetailLayout />, // <-- Inner Layout
+          children: [
+            {
+              path: "",
+              element: <PropertyOverview />,
+            },
+            {
+              path: "description",
+              element: <PropertyDescription />,
+            },
+            {
+              path: "details",
+              element: <PropertyDetails />,
+            },
+            {
+              path: "amenities",
+              element: <PropertyAmenities />,
+            },
+            {
+              path: "location",
+              element: <PropertyLocation />,
+            },
+          ],
+        },
+      ],
     },
     // Auth Routes
     {
@@ -359,39 +406,6 @@ function App() {
             {
               path: "*",
               element: <div>Page not found</div>,
-            },
-          ],
-        },
-      ],
-    },
-    // Public Routes
-    {
-      path: "property",
-      element: <PublicPropertyLayout />, // <-- Outer Layout
-      children: [
-        {
-          path: ":propertyId",
-          element: <PropertyDetailLayout />, // <-- Inner Layout
-          children: [
-            {
-              path: "",
-              element: <PropertyOverview />,
-            },
-            {
-              path: "description",
-              element: <PropertyDescription />,
-            },
-            {
-              path: "details",
-              element: <PropertyDetails />,
-            },
-            {
-              path: "amenities",
-              element: <PropertyAmenities />,
-            },
-            {
-              path: "location",
-              element: <PropertyLocation />,
             },
           ],
         },
