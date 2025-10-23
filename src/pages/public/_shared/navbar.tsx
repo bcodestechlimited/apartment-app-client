@@ -24,11 +24,11 @@ export default function Navbar() {
           </a>
         </div>
         <div className="flex items-center space-x-4 font-semibold text-sm">
-          <Link to={"/auth/sign-up"} className="font-medium">
+          <Link to={"/onboarding"} className="font-medium">
             Register
           </Link>
           <Link
-            to={"/auth/sign-in"}
+            to={"/login"}
             className="px-6 py-1.5 text-custom-primary bg-white rounded-full hover:bg-gray-200"
           >
             Login

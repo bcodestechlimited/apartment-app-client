@@ -52,7 +52,7 @@ export default function GoogleAuthButton() {
         onClick={() => googleMutation.mutateAsync()}
         disabled={googleMutation.isPending}
         variant="outline"
-        className="w-full mb-3 bg-transparent text-white border-white cursor-pointer"
+        className="w-full mb-3 bg-transparent text-gray-300 border-white/40 cursor-pointer rounded-full"
       >
         <img src={googleIconImage} alt="Google" className="w-4 h-4" />
         Continue with Google

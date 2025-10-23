@@ -65,6 +65,9 @@ import Guarantor from "./pages/dashboard/tenant/settings/_components/guarantor";
 import Notification from "./pages/dashboard/tenant/settings/_components/notification";
 import PropertySearch from "./pages/public/property-search/property-search";
 import PublicLayout from "./pages/public/_layouts/public-layout";
+import LandlordSignup from "./pages/onboarding/landlord-signup";
+import Login from "./pages/auth/login";
+import TenantSignup from "./pages/onboarding/tenant-signup";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +93,35 @@ function App() {
           element: <PropertySearch />,
         },
       ],
+    },
+    {
+      path: "onboarding",
+      children: [
+        {
+          index: true,
+          element: <RoleSelection />,
+        },
+        {
+          path: "tenant",
+          element: <TenantSignup />,
+        },
+        {
+          path: "landlord",
+          element: <LandlordSignup />,
+        },
+        {
+          path: "verify-otp",
+          element: <VerifyOtp />,
+        },
+        {
+          path: "*",
+          element: <OnboardingError />,
+        },
+      ],
+    },
+    {
+      path: "/login",
+      element: <Login />,
     },
     {
       path: "property",

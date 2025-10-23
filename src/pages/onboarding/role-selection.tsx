@@ -4,11 +4,10 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
-import { authService } from "@/api/auth.api";
+import { CustomAlert } from "@/components/custom/custom-alert";
 
 export default function RoleSelection() {
+  const [error, setError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -24,45 +23,28 @@ export default function RoleSelection() {
       value: "landlord",
       image: landlordRoleImage,
     },
-    // {
-    //   name: "Agent",
-    //   image: "/images/agent.jpg",
-    // },
   ];
 
-  const roleMutation = useMutation({
-    mutationFn: authService.updateUser,
-    onSuccess: () => {
-      // toast.success("Role selected successfully");
-      if (selectedRole === "tenant") {
-        navigate("/onboarding/tenant/setup-profile");
-      } else if (selectedRole === "landlord") {
-        navigate("/onboarding/landlord/get-started");
-      }
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to select role");
-      console.error(error);
-    },
-  });
+  const handleRoleSelection = (role: string) => {
+    setError(null);
+    setSelectedRole(role);
+  };
 
   const handleNext = () => {
     if (!selectedRole) {
-      return toast.error("Please select a role");
+      return setError("Please select a role");
     }
 
-    roleMutation.mutateAsync({
-      roles: [selectedRole],
-    });
+    navigate(`/onboarding/${selectedRole}`);
   };
 
   return (
-    <div className="">
+    <div className=" flex flex-col items-center justify-center min-h-screen">
       <div className="text-center mb-12">
         <h2 className="text-xl font-bold mb-2">
           Welcome to HavenLease! What would you like to do?
         </h2>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm md:text-base text-gray-600">
           Choose the role that best describes how you'd like to use the platform
         </p>
       </div>
@@ -71,7 +53,7 @@ export default function RoleSelection() {
         {roles.map((role) => (
           <div
             key={role.name}
-            onClick={() => setSelectedRole(role.value)}
+            onClick={() => handleRoleSelection(role.value)}
             className={cn(
               "relative overflow-hidden border-4 border-red-500 shadow-md cursor-pointer transition-all duration-200",
               {
@@ -89,12 +71,12 @@ export default function RoleSelection() {
         ))}
       </div>
 
-      <Button
-        onClick={handleNext}
-        disabled={!selectedRole}
-        className="mt-6 cursor-pointer btn-primary"
-      >
-        {roleMutation.isPending ? "Loading..." : `Continue`}
+      <div className="pt-4">
+        {error && <CustomAlert variant="destructive" message={error} />}
+      </div>
+
+      <Button onClick={handleNext} className="mt-6 cursor-pointer btn-primary">
+        Continue
       </Button>
     </div>
   );

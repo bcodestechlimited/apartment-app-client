@@ -14,6 +14,7 @@ import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
 const RESEND_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes
 
 export default function VerifyOtp() {
+  const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const authCredentials = useAuthStore((state) => state.authCredentials);
@@ -59,6 +60,7 @@ export default function VerifyOtp() {
       localStorage.setItem("lastResendTime", Date.now().toString());
       setTimeLeft(RESEND_COOLDOWN_MS);
       toast.success("OTP resent successfully!");
+      setSuccess("OTP resent successfully!");
     },
     onError: (error) => {
       toast.error(error.message || "Something went wrong");
@@ -68,14 +70,15 @@ export default function VerifyOtp() {
 
   const verifyMutation = useMutation({
     mutationFn: authService.verifyOTP,
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       toast.success("Email verified successfully!");
-      console.log({ email, password });
+      console.log({ email, password, data });
 
       try {
         await authService.signIn({ email, password });
         setAuthCredentials(null);
-        navigate("/onboarding/role-selection");
+        // navigate("/onboarding/role-selection");
+        // navigate("/onboarding/role-selection");
       } catch (error) {
         console.error(error);
       }
@@ -97,7 +100,7 @@ export default function VerifyOtp() {
   };
 
   const handleVerify = () => {
-    console.log("Verifying OTP:", otp);
+    console.log("Verifying OTP:", { otp, email });
 
     if (!otp || otp.length !== 4) {
       toast.error("Please enter the 4-digit OTP");
@@ -118,14 +121,14 @@ export default function VerifyOtp() {
   };
 
   return (
-    <div className="bg-custom-primary flex flex-col justify-center items-center px-4">
-      <div className="flex flex-col items-center w-full max-w-sm text-center">
-        <h2 className="text-white text-base font-semibold mb-1">
-          Enter OTP and verify your email
+    <div className="bg-custom-primary flex flex-col justify-center items-center px-4 min-h-screen">
+      <div className="flex flex-col items-center w-full max-w-lg text-center">
+        <h2 className="text-white text-lg font-semibold mb-1 text-center">
+          Enter OTP and verify to your email
         </h2>
         <p className="text-sm text-white/80 mb-4">
-          We've sent a 4-digit code to your email - {email}. Please enter it
-          below to continue
+          We've sent a 4-digit code to your email. Please enter it below to
+          continue
         </p>
 
         <InputOTP maxLength={4} value={otp} onChange={setOtp}>
@@ -138,7 +141,7 @@ export default function VerifyOtp() {
         </InputOTP>
 
         <Button
-          className="w-full mb-3 bg-white text-custom-primary cursor-pointer"
+          className="w-full mb-3 bg-white text-custom-primary cursor-pointer rounded-full font-light"
           onClick={handleVerify}
           disabled={verifyMutation.isPending}
         >

@@ -185,7 +185,7 @@ function TopBar() {
     mutationFn: authService.logOut,
     onSuccess: (response) => {
       toast.success(response.message);
-      navigate("/auth/sign-in", { replace: true });
+      navigate("/", { replace: true });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to log out");
