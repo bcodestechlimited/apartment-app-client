@@ -24,6 +24,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import { CustomAlert } from "@/components/custom/custom-alert";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
@@ -73,8 +74,8 @@ export default function NextOfKin() {
     mutationFn: authService.updateUserNextOfKin,
     onSuccess: (data) => {
       console.log({ data });
-      queryClient.invalidateQueries({ queryKey: ["user-personal-info"] });
-      toast.success("Personal info updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["user-next-of-kin"] });
+      toast.success("Next of kin updated successfully!");
     },
     onError: (error: any) => {
       // toast.error(error.message || "Something went wrong");
@@ -215,6 +216,8 @@ export default function NextOfKin() {
               </FormItem>
             )}
           />
+
+          {error && <CustomAlert variant="destructive" message={error} />}
 
           {/* Submit Button */}
           <div className="col-span-2 flex justify-end mt-4">

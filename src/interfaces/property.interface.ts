@@ -41,6 +41,7 @@ export interface IProperty {
   pictures: string[];
   isVerified: boolean;
   isAvailable: boolean;
+  requestedBy: string[];
 }
 
 export interface IAddProperty {

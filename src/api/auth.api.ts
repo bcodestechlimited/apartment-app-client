@@ -214,6 +214,36 @@ class AuthService {
       handleAxiosError(error, "Failed to update user guarantor info");
     }
   };
+
+  getUserDocuments = async () => {
+    try {
+      const response = await axiosInstance.get(`/auth/profile/documents`);
+      console.log({ response });
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to get user guarantor info");
+    }
+  };
+
+  updateUserDocuments = async (payload: any) => {
+    try {
+      const response = await axiosInstance.post(
+        `/auth/profile/documents`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log({ response });
+
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to upload user documents");
+    }
+  };
 }
 
 export const authService = new AuthService();
