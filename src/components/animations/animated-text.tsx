@@ -40,7 +40,7 @@ export default function AnimatedText({
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -40, opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="bg-gradient-to-r from-[#FF612D]/50 to-[#FF612D] bg-clip-text text-transparent inline-block"
+          className="bg-gradient-to-r from-[#FF612D]/60 to-[#FF612D] bg-clip-text text-transparent inline-block"
         >
           {words[index]}
         </motion.h1>

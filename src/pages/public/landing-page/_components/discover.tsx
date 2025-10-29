@@ -26,10 +26,14 @@ export default function Discover() {
   const navigate = useNavigate();
 
   return (
-    <div className="bgw-full py-8">
+    <div className="w-full py-8">
       <div className="max-w-custom">
-        <section className="flex items-center justify-center hero-background rounded-2xl overflow-hidden">
-          <div className="flex flex-col gap-6 text-center text-white py-16 pt-12 px-6 md:pt-29">
+        <section className="flex items-center justify-center hero-background rounded-2xl overflow-hidden relative">
+            <div className="absolute inset-0 w-full bg-black/20 backdrop-blur-xs z-0">
+              DDD
+            </div>
+          <div className="flex flex-col gap-6 text-center text-white py-16 pt-12 px-6 md:pt-29 z-10">
+
             {/* Heading - slides in first */}
             <AnimationWrapper
               delay={0.1}
@@ -51,7 +55,7 @@ export default function Discover() {
 
             {/* Subtitle - fades in slightly after heading */}
             <AnimationWrapper delay={0.3} yOffset={20} duration={0.8}>
-              <p className="text-lg mb-6">
+              <p className="text-lg md:text-xl mb-6">
                 Discover standard rentals, shared spaces, serviced apartments,
                 co-working spaces or short lets with flexible payment plans and
                 verified listings
