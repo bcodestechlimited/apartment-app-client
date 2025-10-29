@@ -68,6 +68,7 @@ import PublicLayout from "./pages/public/_layouts/public-layout";
 import LandlordSignup from "./pages/onboarding/landlord-signup";
 import Login from "./pages/auth/login";
 import TenantSignup from "./pages/onboarding/tenant-signup";
+import TenantPayments from "./pages/dashboard/tenant/payments/payments";
 
 const queryClient = new QueryClient();
 
@@ -270,8 +271,8 @@ function App() {
               ],
             },
             {
-              path: "documents",
-              element: <TenantDocuments />,
+              path: "payments",
+              element: <TenantPayments />,
             },
             {
               path: "messages",

@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -55,6 +55,8 @@ export default function BookingModal({
     dateString: "",
   });
 
+  const queryClient = useQueryClient();
+
   const propertyMutation = useMutation({
     mutationFn: ({
       propertyId,
@@ -66,6 +68,7 @@ export default function BookingModal({
       bookingRequestService.createBookingRequest({ propertyId, moveInDate }),
     onSuccess: async () => {
       toast.success("Booking request sent successfully!");
+      queryClient.invalidateQueries({ queryKey: ["property"] });
       closeModal();
     },
     onError: (error) => {

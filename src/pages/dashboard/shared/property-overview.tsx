@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
 import { formatCurrency, formatPrettyDate } from "@/lib/utils";
-import { Bath, Bed, Calendar1, Sparkle } from "lucide-react";
+import { Bath, Bed, Calendar1, Sparkle, Timer } from "lucide-react";
 import { useState } from "react";
 import { useOutletContext } from "react-router";
 import BookingModal from "../tenant/_components/booking-modal";
@@ -77,11 +77,19 @@ export default function PropertyOverview() {
 
           <div>
             <Button
-              disabled={isLandlord}
+              disabled={
+                isLandlord || property.requestedBy.includes(user?._id as string)
+              }
               onClick={openModal}
               className="w-fit px-6 btn-primary"
             >
-              Request to book
+              {property.requestedBy.includes(user?._id as string) ? (
+                <span className="flex items-center gap-1">
+                  <Timer className="" /> Pending
+                </span>
+              ) : (
+                "Request to book"
+              )}
             </Button>
           </div>
         </div>
