@@ -3,6 +3,7 @@ import axiosInstance from "@/lib/axios.config";
 import { handleAxiosError } from "@/lib/utils";
 
 class PropertyService {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addProperty = async (payload: any) => {
     console.log({ payload });
 
@@ -22,6 +23,8 @@ class PropertyService {
   };
   getProperty = async (propertyId: string) => {
     try {
+      //testing for fix
+      // console.log("testing get property for fix");
       const response = await axiosInstance.get(`/property/${propertyId}`);
 
       console.log({ response });
@@ -31,6 +34,7 @@ class PropertyService {
       handleAxiosError(error, "Unable to get property");
     }
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   updateProperty = async (propertyId: string, payload: any) => {
     console.log({ payload });
 
@@ -95,6 +99,7 @@ class PropertyService {
   };
 
   //Admin
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   adminUpdateProperty = async (propertyId: string, payload: any) => {
     console.log({ payload });
 

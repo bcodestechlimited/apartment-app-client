@@ -156,6 +156,9 @@ export const PublicPropertyCard = ({
 };
 
 export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [unavailableOpen, setUnavailableOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   if (!property) return null;
 
   const {
@@ -172,10 +175,6 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
   console.log({ property });
 
   const href = link || `/property/${property._id}`;
-
-  const [editOpen, setEditOpen] = useState(false);
-  const [unavailableOpen, setUnavailableOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
 
   return (
     <>

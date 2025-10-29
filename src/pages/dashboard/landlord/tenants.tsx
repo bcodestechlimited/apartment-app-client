@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DataTable from "@/components/custom/data-table";
 import {
   DropdownMenu,
@@ -94,7 +95,7 @@ export default function Tenants() {
                 <ScanEye /> Profile
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={openRatingModal}>
+              <DropdownMenuItem onClick={() => openRatingModal(row?.user)}>
                 <Star /> Rate Tenant
               </DropdownMenuItem>
 
@@ -146,6 +147,7 @@ export default function Tenants() {
 
       {selectedTenant && isRatingModalOpen && (
         <TenantRating
+          tenant={selectedTenant}
           // propertyType="co-working space" // example value
           isOpen={isRatingModalOpen}
           closeModal={closeRatingModal}
