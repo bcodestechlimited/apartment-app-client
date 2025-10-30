@@ -52,7 +52,13 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
   const isAuthenticated = !!user;
 
   const getPropertyLink = (propertyId: string) => {
-    if (!isAuthenticated) return `/property/${propertyId}`;
+    console.log({
+      isAuthenticated: !isAuthenticated,
+      isLandlord,
+      isTenant,
+    });
+
+    if (!isAuthenticated) return `/properties/${propertyId}`;
     if (isLandlord) return `/dashboard/landlord/property/${propertyId}`;
     if (isTenant) return `/dashboard/property/${propertyId}`;
     return `/property/${propertyId}`;

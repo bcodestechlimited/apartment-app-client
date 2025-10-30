@@ -17,7 +17,7 @@ export default function PropertyOverview() {
 
   const { user } = useAuthStore();
 
-  const isLandlord = user && user.roles.includes("landlord") ? true : false;
+  const isLandlord = user && user?.roles?.includes("landlord") ? true : false;
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);

@@ -29,7 +29,7 @@ class PropertyService {
 
       console.log({ response });
 
-      return response.data?.data?.property;
+      return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to get property");
     }

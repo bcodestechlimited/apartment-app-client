@@ -19,7 +19,7 @@ class AuthService {
     try {
       const response = await axiosInstance.post(`/auth/signin`, payload);
       console.log({ response });
-      return response.data?.data?.user;
+      return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to sign in");
     }

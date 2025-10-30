@@ -55,7 +55,7 @@ export default function LandlordSignup() {
     mutationFn: authService.register,
     onSuccess: () => {
       toast.success("Registration successful");
-      navigate("/auth/verify-otp");
+      navigate("/onboarding/verify-otp");
     },
     onError: (error: any) => {
       toast.error(error.message || "Something went wrong");
@@ -70,7 +70,7 @@ export default function LandlordSignup() {
       email: data.email,
       password: data.password,
     });
-    mutation.mutateAsync(payload);
+    mutation.mutateAsync({ ...payload, roles: ["landlord"] });
   };
 
   return (
@@ -186,10 +186,10 @@ export default function LandlordSignup() {
                 name="phoneNumber"
                 rules={{
                   required: "Phone number is required",
-                  pattern: {
-                    value: /^(\+\d{1,3}[- ]?)?\d{10}$/, // Regular expression for phone number validation
-                    message: "Please enter a valid phone number",
-                  },
+                  // pattern: {
+                  //   value: /^(\+\d{1,3}[- ]?)?\d{10}$/, // Regular expression for phone number validation
+                  //   message: "Please enter a valid phone number",
+                  // },
                 }}
                 render={({ field }) => (
                   <FormItem className="flex flex-col items-start gap-1">

@@ -14,6 +14,7 @@ import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
 const RESEND_COOLDOWN_MS = 2 * 60 * 1000; // 2 minutes
 
 export default function VerifyOtp() {
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -70,15 +71,20 @@ export default function VerifyOtp() {
 
   const verifyMutation = useMutation({
     mutationFn: authService.verifyOTP,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       toast.success("Email verified successfully!");
-      console.log({ email, password, data });
 
       try {
-        await authService.signIn({ email, password });
+        const signInResponse = await authService.signIn({ email, password });
         setAuthCredentials(null);
-        // navigate("/onboarding/role-selection");
-        // navigate("/onboarding/role-selection");
+        const { user } = signInResponse;
+        if (user && user?.roles?.includes("tenant")) {
+          navigate("/dashboard");
+        } else if (user && user?.roles?.includes("landlord")) {
+          navigate("/dashboard/landlord");
+        } else {
+          navigate("/dashboard/admin");
+        }
       } catch (error) {
         console.error(error);
       }

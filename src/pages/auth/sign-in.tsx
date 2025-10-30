@@ -41,14 +41,15 @@ export default function SignIn() {
   /** ---- Mutations ---- */
   const mutation = useMutation({
     mutationFn: authService.signIn,
-    onSuccess: (data: IUser) => {
-      if (data.roles.includes("admin")) {
+    onSuccess: (signInResponse: { user: IUser }) => {
+      const { user } = signInResponse;
+      if (user?.roles?.includes("admin")) {
         return navigate("/admin/dashboard");
-      } else if (data.roles.includes("landlord")) {
+      } else if (user?.roles?.includes("landlord")) {
         return navigate("/dashboard/landlord");
+      } else {
+        navigate("/dashboard");
       }
-      //Tenant
-      navigate("/dashboard");
     },
     onError: (error: any) => {
       // toast.error(error.message || "Something went wrong");

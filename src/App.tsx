@@ -69,6 +69,7 @@ import LandlordSignup from "./pages/onboarding/landlord-signup";
 import Login from "./pages/auth/login";
 import TenantSignup from "./pages/onboarding/tenant-signup";
 import TenantPayments from "./pages/dashboard/tenant/payments/payments";
+import PublicPropertyDetail from "./pages/public/public-property-detail/public-property-detail";
 
 const queryClient = new QueryClient();
 
@@ -91,7 +92,7 @@ function App() {
         },
         {
           path: "properties/:propertyId",
-          element: <PropertySearch />,
+          element: <PublicPropertyDetail />,
         },
       ],
     },
@@ -452,7 +453,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster position="top-right" />
+      <Toaster position="top-right" richColors />
       <RouterProvider router={router} />
       {process.env.NODE_ENV === "development" && (
         <ReactQueryDevtools initialIsOpen={false} />

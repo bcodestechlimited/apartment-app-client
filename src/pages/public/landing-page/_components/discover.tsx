@@ -29,11 +29,8 @@ export default function Discover() {
     <div className="w-full py-8">
       <div className="max-w-custom">
         <section className="flex items-center justify-center hero-background rounded-2xl overflow-hidden relative">
-            <div className="absolute inset-0 w-full bg-black/20 backdrop-blur-xs z-0">
-              DDD
-            </div>
+          <div className="absolute inset-0 w-full bg-black/20 backdrop-blur-xs z-0"></div>
           <div className="flex flex-col gap-6 text-center text-white py-16 pt-12 px-6 md:pt-29 z-10">
-
             {/* Heading - slides in first */}
             <AnimationWrapper
               delay={0.1}
