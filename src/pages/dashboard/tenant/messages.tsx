@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router";
 import { useChat, useChatWindow } from "@/hooks/useChat";
 import { useForm } from "react-hook-form";
 import socket from "@/lib/socket";
-import type React from "react";
+import React from "react";
 
 export default function TenantMessages() {
   const [searchParams] = useSearchParams();
@@ -77,8 +77,15 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
   } = useForm<{ message: string }>();
 
   const { user } = useAuthStore();
-  const { messages, sendMessage, conversation, isLoading, isError } =
-    useChatWindow(conversationId as string, user?._id as string);
+  const {
+    messages,
+    sendMessage,
+    conversation,
+    isLoading,
+    isError,
+    isTyping,
+    setIsTyping,
+  } = useChatWindow(conversationId as string, user?._id as string);
 
   function getOtherParticipant(conversation: IConversation | undefined | null) {
     if (!user) return "";
@@ -95,6 +102,10 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     const otherParticipant = getOtherParticipant(conversation as IConversation);
     if (!otherParticipant) return;
     sendMessage(payload.message, otherParticipant._id);
+    socket.emit("send_typing_status", {
+      isTyping: false,
+      recipientId: otherParticipant._id,
+    });
     reset();
   };
 
@@ -128,13 +139,25 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     });
   };
 
+  console.log({ isTyping });
+
   if (!conversationId) return <div>No conversation selected</div>;
 
-  if (isLoading) return <Loader />;
-  if (isError) return <div>Error</div>;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  if (isError)
+    return (
+      <div className="flex items-center justify-center">
+        <p>Error</p>
+      </div>
+    );
 
   return (
-    <div className="flex-1 flex flex-col justify-between max-h-screen">
+    <div className="w-full flex flex-col justify-between relative">
       {/* Header */}
       <div className="p-4 border-b bg-background shadow-sm text-left">
         <h2 className="font-semibold">
@@ -144,20 +167,20 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4 space-y-3 bg-muted/30">
-        <div className="flex flex-col space-y-2">
-          {messages.length > 1 &&
-            messages?.map((message) => {
-              return (
-                <ChatBubble
-                  key={message._id}
-                  text={message.content}
-                  isSender={message.sender._id === user?._id}
-                />
-              );
-            })}
-        </div>
-      </ScrollArea>
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/80">
+        {messages.length > 1 &&
+          messages?.map((message) => {
+            return (
+              <ChatBubble
+                key={message._id}
+                text={message.content}
+                isSender={message.sender._id === user?._id}
+              />
+            );
+          })}
+
+        {isTyping && <p>Typing...</p>}
+      </div>
 
       {/* Input */}
       <form
@@ -181,7 +204,7 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
 function ChatBubble({ text, isSender }: { text: string; isSender: boolean }) {
   return (
     <div
-      className={`max-w-xs md:max-w-sm px-4 py-2 rounded-xl text-sm ${
+      className={`max-w-xs md:max-w-sm px-4 py-2 rounded-xl text-sm w-fit ${
         isSender
           ? "bg-custom-primary text-white border ml-auto"
           : "bg-white text-custom-primary mr-auto"

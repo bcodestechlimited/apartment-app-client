@@ -70,6 +70,8 @@ export const useChatWindow = (
     enabled: !!conversationId,
   });
 
+  // console.log({ messages: data });
+
   useEffect(() => {
     if (!conversationId) return;
 
@@ -86,7 +88,7 @@ export const useChatWindow = (
     socket.on(
       "receive_typing_status",
       (payload: { isTyping: boolean; recipientId: string }) => {
-        console.log(payload);
+        console.log({ payload });
         setIsTyping(payload.isTyping);
       }
     );
@@ -122,6 +124,7 @@ export const useChatWindow = (
     sendMessage,
     conversation: data?.conversation || [],
     isTyping,
+    setIsTyping,
     isLoading,
     isError,
   };
