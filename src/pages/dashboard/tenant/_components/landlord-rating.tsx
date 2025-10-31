@@ -6,23 +6,29 @@ import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { landlordRatingService } from "@/api/lanlord-rating.api";
+import { tenantRatingService } from "@/api/tenant-rating.api";
 
-interface AddTenantRatingProps {
-  tenant: any;
+interface AddPropertyRatingProps {
+  booking: any;
   isOpen: boolean;
   closeModal: () => void;
   onSubmit?: (data: { rating: number; comment: string }) => void;
 }
 
-const TenantRating = ({ tenant, isOpen, closeModal }: AddTenantRatingProps) => {
+const LandlordRating = ({
+  booking,
+  isOpen,
+  closeModal,
+}: AddPropertyRatingProps) => {
   const [rating, setRating] = useState<number>(0);
   const [hovered, setHovered] = useState<number | null>(null);
   const [comment, setComment] = useState<string>("");
 
+  console.log({ booking });
+
   const createRatingMutation = useMutation({
     mutationFn: (payload: any) =>
-      landlordRatingService.createTenantRating(payload),
+      tenantRatingService.createLandlordRating(payload),
     onSuccess: () => {
       toast.success("Rating added successfully!");
     },
@@ -38,7 +44,7 @@ const TenantRating = ({ tenant, isOpen, closeModal }: AddTenantRatingProps) => {
       return;
     }
 
-    const data = { rating, comment, tenantId: tenant?._id };
+    const data = { rating, comment, landlordId: booking?.landlord._id };
     console.log("Submitted:", data);
     createRatingMutation.mutateAsync(data);
 
@@ -49,7 +55,7 @@ const TenantRating = ({ tenant, isOpen, closeModal }: AddTenantRatingProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto py-12 rounded-4xl">
-        <p className="font-[500] text-[20px] mb-4 text-center">Rate Tenant</p>
+        <p className="font-[500] text-[20px] mb-4 text-center">Rate Landlord</p>
         <hr className="mb-6" />
 
         {/* Rating Stars */}
@@ -96,4 +102,4 @@ const TenantRating = ({ tenant, isOpen, closeModal }: AddTenantRatingProps) => {
   );
 };
 
-export default TenantRating;
+export default LandlordRating;
