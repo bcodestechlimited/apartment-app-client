@@ -52,10 +52,10 @@ export default function Bookings() {
       render: (row: any) => {
         const status = row.status.toLowerCase();
         const classNames: Record<string, string> = {
-          approved: "text-green-500",
-          pending: "text-yellow-500",
-          declined: "text-red-500",
-          expired: "text-red-500",
+          active:
+            "text-green-500 bg-green-100 px-4 py-1 rounded-full capitalize",
+          declined: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
+          inactive: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
         };
 
         const fullClassName =
@@ -69,9 +69,11 @@ export default function Bookings() {
       render: (row: any) => {
         const status = row.paymentStatus.toLowerCase();
         const classNames: Record<string, string> = {
-          success: "text-green-500",
-          pending: "text-gray-500",
-          failed: "text-red-500",
+          success:
+            "text-green-500 bg-green-100 px-4 py-1 rounded-full capitalize",
+          pending:
+            "text-gray-500 bg-gray-100 px-4 py-1 rounded-full capitalize",
+          failed: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
         };
 
         const fullClassName =

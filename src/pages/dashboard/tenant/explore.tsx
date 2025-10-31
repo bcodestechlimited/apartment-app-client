@@ -49,7 +49,7 @@ export default function Explore() {
   });
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <div className="flex justify-end">
         <Button onClick={openModal} className="px-6 btn-primary">
           <SearchIcon /> Filter

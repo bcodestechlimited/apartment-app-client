@@ -4,27 +4,17 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import VerifyOtp from "./pages/auth/verify-otp";
-import {
-  OnboardingLayout,
-  OnboardingLayoutLight,
-} from "./layouts/onboarding-layout";
-import MultiStepForm from "./layouts/multi-step-layout";
-import ProfileSetup from "./pages/onboarding/tenant/profile-setup";
-import VerifyIdentity from "./pages/onboarding/tenant/verify-identity";
-import LookingFor from "./pages/onboarding/tenant/looking-for";
+import { OnboardingLayout } from "./layouts/onboarding-layout";
 import TenantLayout from "./layouts/dashboard/tenant-layout";
 import Explore from "./pages/dashboard/tenant/explore";
 import SignUp from "./pages/auth/sign-up";
 import LandingPage from "./pages/public/landing-page/landing-page";
 import RoleSelection from "./pages/onboarding/role-selection";
-import GetStarted from "./pages/onboarding/landlord/get-started";
-import { PropertyOnboarding } from "./pages/onboarding/landlord/property-onboarding";
 import OnboardingError from "./pages/onboarding/onboarding-error";
 import LandlordLayout from "./layouts/dashboard/landlord-layout";
 import Listings from "./pages/dashboard/landlord/listings";
 import Bookings from "./pages/dashboard/landlord/bookings";
 import Tenants from "./pages/dashboard/landlord/tenants";
-import Payments from "./pages/dashboard/landlord/payments";
 import Analytics from "./pages/dashboard/landlord/analytics";
 import Messages from "./pages/dashboard/landlord/messages";
 import SignIn from "./pages/auth/sign-in";
@@ -46,8 +36,6 @@ import TenantBookingLayout from "./pages/dashboard/tenant/_layouts/booking-layou
 import TenantBookings from "./pages/dashboard/tenant/bookings";
 import TenantBookingRequests from "./pages/dashboard/tenant/booking-requests";
 import TenantMessages from "./pages/dashboard/tenant/messages";
-import TenantDocuments from "./pages/dashboard/tenant/documents";
-import PublicPropertyLayout from "./layouts/public/public-property-layout";
 import About from "./pages/public/about/about";
 import AdminLayout from "./layouts/dashboard/admin-layout";
 import AdminDashboard from "./pages/dashboard/admin/admin-dashboard/admin-dashboard";
@@ -70,6 +58,7 @@ import Login from "./pages/auth/login";
 import TenantSignup from "./pages/onboarding/tenant-signup";
 import TenantPayments from "./pages/dashboard/tenant/payments/payments";
 import PublicPropertyDetail from "./pages/public/public-property-detail/public-property-detail";
+import LandlordPayments from "./pages/dashboard/landlord/payments";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +82,29 @@ function App() {
         {
           path: "properties/:propertyId",
           element: <PublicPropertyDetail />,
+        },
+      ],
+    },
+    // Auth Routes
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/auth",
+      element: <OnboardingLayout />,
+      children: [
+        {
+          path: "sign-up",
+          element: <SignUp />,
+        },
+        {
+          path: "sign-in",
+          element: <SignIn />,
+        },
+        {
+          path: "verify-otp",
+          element: <VerifyOtp />,
         },
       ],
     },
@@ -121,100 +133,39 @@ function App() {
         },
       ],
     },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "property",
-      element: <PublicPropertyLayout />, // <-- Outer Layout
-      children: [
-        {
-          path: ":propertyId",
-          element: <PropertyDetailLayout />, // <-- Inner Layout
-          children: [
-            {
-              path: "",
-              element: <PropertyOverview />,
-            },
-            {
-              path: "description",
-              element: <PropertyDescription />,
-            },
-            {
-              path: "details",
-              element: <PropertyDetails />,
-            },
-            {
-              path: "amenities",
-              element: <PropertyAmenities />,
-            },
-            {
-              path: "location",
-              element: <PropertyLocation />,
-            },
-          ],
-        },
-      ],
-    },
-    // Auth Routes
-    {
-      path: "/auth",
-      element: <OnboardingLayout />,
-      children: [
-        {
-          path: "sign-up",
-          element: <SignUp />,
-        },
-        {
-          path: "sign-in",
-          element: <SignIn />,
-        },
-        {
-          path: "verify-otp",
-          element: <VerifyOtp />,
-        },
-      ],
-    },
-    // Onbaording Routes
-    {
-      element: <OnboardingLayoutLight />,
-      children: [
-        {
-          path: "/onboarding/role-selection",
-          element: <RoleSelection />,
-        },
-        {
-          element: <MultiStepForm />,
-          children: [
-            {
-              path: "/onboarding/tenant/setup-profile",
-              element: <ProfileSetup />,
-            },
-            {
-              path: "/onboarding/tenant/verify-identity",
-              element: <VerifyIdentity />,
-            },
-            {
-              path: "/onboarding/tenant/looking-for",
-              element: <LookingFor />,
-            },
-          ],
-        },
-        {
-          path: "/onboarding/landlord/get-started",
-          element: <GetStarted />,
-        },
-        {
-          path: "/onboarding/landlord/property-onboarding",
-          element: <PropertyOnboarding />,
-        },
-        {
-          path: "/onboarding/*",
-          element: <OnboardingError />,
-        },
-      ],
-    },
+    // {
+    //   path: "property",
+    //   element: <PublicPropertyLayout />, // <-- Outer Layout
+    //   children: [
+    //     {
+    //       path: ":propertyId",
+    //       element: <PropertyDetailLayout />, // <-- Inner Layout
+    //       children: [
+    //         {
+    //           path: "",
+    //           element: <PropertyOverview />,
+    //         },
+    //         {
+    //           path: "description",
+    //           element: <PropertyDescription />,
+    //         },
+    //         {
+    //           path: "details",
+    //           element: <PropertyDetails />,
+    //         },
+    //         {
+    //           path: "amenities",
+    //           element: <PropertyAmenities />,
+    //         },
+    //         {
+    //           path: "location",
+    //           element: <PropertyLocation />,
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
+
     // Tenant Routes
     {
       path: "/dashboard",
@@ -333,10 +284,7 @@ function App() {
               path: "",
               element: <Listings />,
             },
-            {
-              path: "listings",
-              element: <Listings />,
-            },
+
             {
               path: "bookings",
               element: <BookingLayout />,
@@ -361,7 +309,7 @@ function App() {
             },
             {
               path: "payments",
-              element: <Payments />,
+              element: <LandlordPayments />,
             },
             {
               path: "analytics",
@@ -376,7 +324,7 @@ function App() {
               element: <LandlordProfile />,
             },
             {
-              path: "property/:propertyId",
+              path: "properties/:propertyId",
               element: <PropertyDetailLayout />,
               children: [
                 {

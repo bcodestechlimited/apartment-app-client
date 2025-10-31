@@ -1,5 +1,6 @@
 import { propertyService } from "@/api/property.api";
 import { Loader } from "@/components/custom/loader";
+import type { IProperty } from "@/interfaces/property.interface";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, Heart } from "lucide-react";
 import { Link, Outlet, useParams } from "react-router";
@@ -48,32 +49,38 @@ function PropertyDetailLayout() {
       </div>
     );
 
+  console.log({ data });
+
+  const property = (data?.property as IProperty) || {};
+
   return (
     <div>
       <div className="flex gap-2 h-[400px]">
         <div className="w-1/2">
           <img
-            src={data?.pictures[0]}
+            src={property ? property?.pictures[0] : ""}
             alt=""
             className="h-full w-full object-cover rounded"
           />
         </div>
 
         <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
-          {data?.pictures.slice(1, 5).map((picture: string, index: number) => (
-            <img
-              key={index}
-              className="w-full h-full object-cover rounded"
-              src={picture}
-              alt={`Image ${index + 1}`}
-            />
-          ))}
+          {property?.pictures
+            ?.slice(1, 5)
+            .map((picture: string, index: number) => (
+              <img
+                key={index}
+                className="w-full h-full object-cover rounded"
+                src={picture}
+                alt={`Image ${index + 1}`}
+              />
+            ))}
         </div>
       </div>
 
       <div className="flex justify-between py-4">
         <div className="w-3/4 flex gap-4 justify-start font-semibold border-b max-w-fit">
-          {propertyDetailLinks.map((link) => (
+          {propertyDetailLinks?.map((link) => (
             <Link
               key={link.name}
               to={link.href}
@@ -93,7 +100,7 @@ function PropertyDetailLayout() {
         </div>
       </div>
       <div>
-        <Outlet context={{ property: data }} />
+        <Outlet context={{ property: property }} />
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ import {
   Bath,
   Calendar,
   Calendar1,
+  ChevronLeft,
   ExternalLink,
   Heart,
   Home,
@@ -33,6 +34,7 @@ import { useState, type JSX } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import ConfirmBooking from "./_modals/confirm-booking";
 import { toast } from "sonner";
+import OtherApartments from "./_components/other-apartments";
 
 const getAmenityIcon = (amenity: string) => {
   const icons: Record<string, JSX.Element> = {
@@ -93,6 +95,14 @@ export default function PublicPropertyDetail() {
 
   return (
     <div className="max-w-custom py-4">
+      <Button
+        onClick={() => navigate(-1)}
+        variant={"ghost"}
+        className="border my-4 flex gap-1 items-center jusstify-start cursor-pointer"
+      >
+        <ChevronLeft className="text-muted-foreground" />
+        <span className="font-bold text-muted-foreground"> Back</span>
+      </Button>
       <div className="flex gap-2 h-[400px]">
         <div className="w-1/2">
           <img
@@ -138,35 +148,44 @@ export default function PublicPropertyDetail() {
             <p className="text-lg text-muted-foreground">{property.address}</p>
 
             <div>
-              <span>{property?.numberOfBedrooms} bed(s)</span> | <span></span>
+              <span className="font-medium">
+                {property?.numberOfBedrooms} bed(s) |{" "}
+              </span>
+              <span className="font-medium">
+                {property?.numberOfBathrooms} bathroom(s) |{" "}
+              </span>
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            <p className="text-xl font-medium text-start">
+          <div className="flex flex-col gap-2">
+            <p className="text-lg font-semibold text-start">
               Availability & Booking
             </p>
-            <div className="flex items-center gap-1">
-              <Calendar1 />
-              <p>Available From:</p>
-              <p>{formatDate(property?.availabilityDate)}</p>
-            </div>
-            <div className="flex items-center gap-1">
-              <LocateIcon />
-              <p>Location:</p>
-              <p>{property?.address}</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-1">
+                <Calendar1 size={18} />
+                <p>Available From:</p>
+                <p>{formatDate(property?.availabilityDate)}</p>
+              </div>
+              <div className="flex items-center gap-1">
+                <LocateIcon size={18} />
+                <p>Location:</p>
+                <p>{property?.address}</p>
+              </div>
             </div>
           </div>
 
           <Separator />
+
           <div className="text-start">
-            <p className="font-medium text-lg">Description</p>
+            <p className="font-semibold text-lg">Description</p>
             <p>{property.description}</p>
           </div>
 
           <Separator />
-          <div className="text-start">
-            <p className="font-medium text-lg">Amenities</p>
+
+          <div className="text-start flex flex-col gap-2">
+            <p className="font-semibold text-lg">Amenities</p>
             <div className="grid grid-cols-2 w-fit gap-x-8 gap-y-2">
               {property.amenities.map((amenity: string) => (
                 <div className="flex items-center gap-2">
@@ -266,22 +285,22 @@ export default function PublicPropertyDetail() {
 
       <div className="flex flex-col gap-4 py-6">
         <div className="text-start">
-          <p className="text-xl font-medium">Location</p>
+          <p className="text-lg font-medium">Location</p>
           <p>Coming Soon</p>
         </div>
 
         <Separator />
 
         <div className="text-start">
-          <p className="text-xl font-medium">Reviews</p>
+          <p className="text-lg font-semibold">Reviews</p>
           <p>Coming Soon</p>
         </div>
 
-        <Separator />
+        {/* <Separator /> */}
 
-        <div className="text-start">
-          <p className="text-xl font-medium">Other apartments you may like</p>
-          <p>Coming Soon</p>
+        <div className="text-start flex flex-col gap-2 py-2">
+          <p className="text-xl font-semibold">Other apartments you may like</p>
+          <OtherApartments />
         </div>
       </div>
 

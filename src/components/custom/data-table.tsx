@@ -38,16 +38,21 @@ export default function DataTable<T>({
   return (
     <div className="overflow-x-auto">
       <Table>
-        <TableHeader className="[&_tr]:border-b-0">
-          <TableRow className="border-b-0">
+        <TableHeader className="[&_tr]:border-b-0 bg-custom-primary/20 ">
+          <TableRow className="border-b-0 border">
             {columns.map((column, index) => (
-              <TableHead key={index}>{column.header}</TableHead>
+              <TableHead key={index} className="text-custom-primary/80 ">
+                {column.header}
+              </TableHead>
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="[&_tr:last-child]:border">
           {data.map((row, rowIndex) => (
-            <TableRow key={rowIndex} className="border-b-0 border rounded-2xl">
+            <TableRow
+              key={rowIndex}
+              className="border-b-0 border border-custom-primary/20 rounded-2xl"
+            >
               {columns.map((column, colIndex) => {
                 return (
                   <TableCell key={colIndex} className="text-start">

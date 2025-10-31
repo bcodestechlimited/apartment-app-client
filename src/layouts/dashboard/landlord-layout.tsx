@@ -3,8 +3,6 @@ import {
   Users,
   ChevronDown,
   CreditCard,
-  Bell,
-  Search,
   House,
   BookOpen,
   FileChartColumnIncreasing,
@@ -16,7 +14,6 @@ import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
 import { useState, type JSX } from "react";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -47,7 +44,7 @@ interface Route {
 const routes: Route[] = [
   {
     name: "My Listings",
-    path: "/dashboard/landlord/listings",
+    path: "/dashboard/landlord",
     icon: <House className="w-5 h-5" />,
   },
   {
@@ -65,11 +62,11 @@ const routes: Route[] = [
     path: "/dashboard/landlord/payments",
     icon: <CreditCard className="w-5 h-5" />,
   },
-  {
-    name: "Analytics",
-    path: "/dashboard/landlord/analytics",
-    icon: <FileChartColumnIncreasing className="w-5 h-5" />,
-  },
+  // {
+  //   name: "Analytics",
+  //   path: "/dashboard/landlord/analytics",
+  //   icon: <FileChartColumnIncreasing className="w-5 h-5" />,
+  // },
   {
     name: "Messages",
     path: "/dashboard/landlord/messages",
@@ -193,17 +190,8 @@ function TopBar() {
   });
 
   return (
-    <div className="flex justify-between p-4 bg-white  mb-4">
-      <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
-        <Search className="w-5 h-5 text-gray-600 ml-3" />
-        <Input
-          placeholder="Search"
-          className="border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none "
-        />
-      </div>
-
+    <div className="flex justify-end bg-white">
       <div className="flex items-center gap-2">
-        <Bell className="w-6 h-6 text-gray-300 mr-3" />
         <div className="flex items-center cursor-pointer  px-3 py-2   gap-5 transition-colors">
           <Popover>
             <PopoverTrigger asChild>
@@ -260,7 +248,7 @@ export default function LandlordLayout() {
   return (
     <div className="flex min-h-screen">
       <LandlordSideBar />
-      <div className="flex-1 bg-white p-4">
+      <div className="flex-1 flex flex-col gap-2 bg-white p-4">
         <TopBar />
         {/* <div className="w-full max-w-[1440px]"> */}
         <div className="w-full mb-12">

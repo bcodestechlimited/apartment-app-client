@@ -45,44 +45,39 @@ interface Route {
 const routes: Route[] = [
   {
     name: "Explore",
-    path: "/dashboard/explore",
-    icon: <Compass className="w-5 h-5" />,
+    path: "/dashboard",
+    icon: <Compass className="w-4 h-4" />,
     submenu: [
-      {
-        name: "Find Properties",
-        path: "/dashboard/explore/find-properties",
-        // icon: <Compass className="w-5 h-5" />,
-      },
       {
         name: "Saved Properties",
         path: "/dashboard/explore/saved-properties",
-        // icon: <Compass className="w-5 h-5" />,
+        // icon: <Compass className="w-4 h-4" />,
       },
     ],
   },
   {
     name: "Bookings",
     path: "/dashboard/bookings",
-    icon: <BookOpenCheck className="w-5 h-5" />,
+    icon: <BookOpenCheck className="w-4 h-4" />,
     // submenu: [],
   },
   {
     name: "Payments",
     path: "/dashboard/payments",
-    icon: <HandCoins className="w-5 h-5" />,
+    icon: <HandCoins className="w-4 h-4" />,
     // submenu: [],
   },
 
   {
     name: "Messages",
     path: "/dashboard/messages",
-    icon: <Mail className="w-5 h-5" />,
+    icon: <Mail className="w-4 h-4" />,
     // submenu: [],
   },
   {
     name: "Settings",
     path: "/dashboard/settings",
-    icon: <Settings className="w-5 h-5" />,
+    icon: <Settings className="w-4 h-4" />,
     // submenu: [],
   },
 ];
@@ -103,7 +98,7 @@ function TenantSideBar() {
   return (
     <aside
       className={cn(
-        "w-54 h-screen bg-white border-r shadow-md flex flex-col justify-between"
+        "min-w-46 h-screen bg-white border-r shadow-md flex flex-col justify-between"
       )}
     >
       {/* Logo Section */}
@@ -202,36 +197,30 @@ function TopBar() {
   });
 
   return (
-    <div className="flex justify-between p-4 bg-white mb-4">
-      <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
-        <Search className="w-5 h-5 text-gray-600 ml-3" />
-        <Input
-          placeholder="Search"
-          className="border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none "
-        />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Bell className="w-6 h-6 text-gray-300 mr-3" />
-        <div className="flex items-center cursor-pointer  px-3 py-2   gap-5 transition-colors">
+    <div className="grid items-center justify-end p-4 bg-white mb-4">
+      <div className="flex items-center justify-end gap-2">
+        {/* <Bell className="w-6 h-6 text-gray-300 mr-3" /> */}
+        <div className="flex items-center cursor-pointer px-2 gap-5 transition-colors">
           <Popover>
             <PopoverTrigger asChild>
-              <div className="flex items-center gap-2 border px-2 py-2 rounded-full bg-white shadow-sm hover:bg-custom-primary/10 transition-colors">
-                <Avatar>
-                  <AvatarImage
-                    src={user?.avatar || "https://github.com/shadcn.png"}
-                  />
-                  <AvatarFallback className="bg-custom-primary text-white">
-                    {`${user?.firstName?.charAt(0) || "A"}${
-                      user?.lastName?.charAt(0) || "A"
-                    }`}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="text-left">
-                  <p className="text-sm  text-[#000000] text-[14px] font-[600] ">
-                    {`${user?.firstName || "A"} ${user?.lastName || "A"}`}
-                  </p>
-                  <p className="text-xs text-[#93A3AB]">Tenant</p>
+              <div className="flex items-center gap-4 border px-2 py-2 rounded-full bg-white shadow-sm hover:bg-custom-primary/10 transition-colors">
+                <div className="flex items-center gap-2">
+                  <Avatar className="">
+                    <AvatarImage
+                      src={user?.avatar || "https://github.com/shadcn.png"}
+                    />
+                    <AvatarFallback className="bg-custom-primary text-white">
+                      {`${user?.firstName?.charAt(0) || "A"}${
+                        user?.lastName?.charAt(0) || "A"
+                      }`}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="text-left">
+                    <p className="text-xs text-[#000000] font-[600] ">
+                      {`${user?.firstName || "A"} ${user?.lastName || "A"}`}
+                    </p>
+                    <p className="text-xs text-[#93A3AB]">tenant</p>
+                  </div>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-600 ml-2" />
               </div>

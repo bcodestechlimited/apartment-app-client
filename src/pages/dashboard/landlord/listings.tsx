@@ -9,6 +9,7 @@ import { useSearchParams } from "react-router";
 import AddPropertyModal from "./_components/add-property-modal";
 import { motion } from "motion/react";
 import { Loader } from "@/components/custom/loader";
+import { Plus } from "lucide-react";
 
 export default function Listings() {
   const [selected, setSelected] = useState("All");
@@ -40,7 +41,7 @@ export default function Listings() {
     <div className="w-full">
       <div className="flex items-center justify-between mb-4">
         <div className="bg-custom-primary/10 w-fit rounded-full p-2">
-          <ul className="relative flex items-center font-semibold text-xl gap-2">
+          <ul className="relative flex items-center font-semibold text-sm gap-2">
             {categories.map((category) => {
               const isActive = selected === category;
 
@@ -85,9 +86,9 @@ export default function Listings() {
         </div>
         <Button
           onClick={openModal}
-          className="text-lg p-6 cursor-pointer bg-custom-primary hover:bg-custom-primary/90 font-light"
+          className="text-lg px-6 py-5 font-medium cursor-pointer bg-custom-primary hover:bg-custom-primary/90"
         >
-          + Add new property
+          <Plus /> Add new property
         </Button>
         <AddPropertyModal
           // propertyType="co-working space" // example value

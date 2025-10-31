@@ -13,6 +13,7 @@ import { useSearchParams } from "react-router";
 import { propertyService } from "@/api/property.api";
 import type { IProperty } from "@/interfaces/property.interface";
 import { PublicPropertyCard } from "@/components/shared/propertyCard";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function PropertySearch() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,6 +23,13 @@ export default function PropertySearch() {
   const priceRange = searchParams.get("priceRange") || "";
   const bedrooms = searchParams.get("bedrooms") || "";
   const bathrooms = searchParams.get("bathrooms") || "";
+
+  const { user } = useAuthStore();
+
+  const isLandlord = user?.roles?.includes("landlord");
+  const isTenant = user?.roles?.includes("tenant");
+  const isAdmin = user?.roles?.includes("admin");
+  const isAuthenticated = !!user;
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: [
@@ -52,6 +60,13 @@ export default function PropertySearch() {
     setSearchParams(params);
   };
 
+  const handleGetLink = (propertyId: string) => {
+    if (isTenant) return `/dashboard/properties/${propertyId}`;
+    if (isLandlord) return `/dashboard/landlord/properties/${propertyId}`;
+    if (isAdmin) return `/admin/properties/${propertyId}`;
+    return `/properties/${propertyId}`;
+  };
+
   return (
     <div className="max-w-custom py-10">
       <div className="flex justify-between items-center mb-8">
@@ -68,7 +83,7 @@ export default function PropertySearch() {
 
       <div className="flex flex-col md:flex-row gap-8">
         {/* Filters */}
-        <div className="md:w-1/4 border p-5 rounded-2xl shadow-sm h-fit sticky top-8">
+        <div className="md:w-1/4 border p-4 rounded-2xl shadow-sm h-fit sticky top-8">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-medium">Filters</h3>
             <Button
@@ -93,7 +108,7 @@ export default function PropertySearch() {
             <Select
               onValueChange={(val) => handleFilterChange("propertyType", val)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Property Type" />
               </SelectTrigger>
               <SelectContent>
@@ -157,7 +172,7 @@ export default function PropertySearch() {
                   <PublicPropertyCard
                     property={property}
                     key={property._id}
-                    link={`/property/${property._id}`}
+                    link={handleGetLink(property._id)}
                   />
                 ))}
               </div>
