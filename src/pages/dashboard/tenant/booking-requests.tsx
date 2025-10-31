@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { bookingRequestService } from "@/api/bookingRequest.api";
 import DataTable from "@/components/custom/data-table";
 import { Spinner } from "@/components/custom/loader";

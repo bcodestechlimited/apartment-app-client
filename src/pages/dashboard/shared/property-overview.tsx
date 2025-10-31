@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useOutletContext } from "react-router";
 import BookingModal from "../tenant/_components/booking-modal";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useQuery } from "@tanstack/react-query";
+import { propertyRatingService } from "@/api/property-rating.api";
 
 type PropertyDetailProps = {
   property: IProperty;
@@ -21,6 +23,13 @@ export default function PropertyOverview() {
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["tenant-bookings"],
+    queryFn: () => propertyRatingService.getPropertyRatingById(property?._id),
+  });
+
+  console.log("property rating", data);
 
   return (
     <div className="p-4">

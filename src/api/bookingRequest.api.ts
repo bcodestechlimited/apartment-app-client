@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IParams } from "@/interfaces/query.interface";
 import axiosInstance from "@/lib/axios.config";
 import { handleAxiosError } from "@/lib/utils";
@@ -48,7 +49,7 @@ class BookingRequestService {
 
       console.log({ data: response.data?.data });
 
-      return response.data?.data
+      return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to get booking request");
     }
