@@ -42,6 +42,8 @@ export interface IProperty {
   isVerified: boolean;
   isAvailable: boolean;
   requestedBy: string[];
+  averageRating: number;
+  totalRatings: number;
 }
 
 export interface IAddProperty {
