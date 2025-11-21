@@ -59,6 +59,9 @@ import TenantSignup from "./pages/onboarding/tenant-signup";
 import TenantPayments from "./pages/dashboard/tenant/payments/payments";
 import PublicPropertyDetail from "./pages/public/public-property-detail/public-property-detail";
 import LandlordPayments from "./pages/dashboard/landlord/payments";
+import Wallet from "./pages/dashboard/tenant/wallet/Wallet";
+import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerification";
+import LandlordWallet from "./pages/dashboard/landlord/wallet/Wallet";
 
 const queryClient = new QueryClient();
 
@@ -197,6 +200,14 @@ function App() {
               element: <Explore />,
             },
             {
+              path: "wallet",
+              element: <Wallet />,
+            },
+            {
+              path: "paystack/verify",
+              element: <PaymentVerification />,
+            },
+            {
               path: "property/:propertyId",
               element: <PropertyDetailLayout />,
               children: [
@@ -314,6 +325,10 @@ function App() {
             {
               path: "analytics",
               element: <Analytics />,
+            },
+            {
+              path: "wallet",
+              element: <LandlordWallet />,
             },
             {
               path: "messages",

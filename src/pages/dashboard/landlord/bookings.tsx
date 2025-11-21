@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { bookingService } from "@/api/booking.api";
 import DataTable from "@/components/custom/data-table";
 import { Spinner } from "@/components/custom/loader";
@@ -28,7 +29,7 @@ export default function Bookings() {
     },
     {
       header: "Tenant Name",
-      render: (row: any) => row.tenant.firstname || "N/A",
+      render: (row: any) => row.tenant.firstName || "N/A",
     },
     {
       header: "Property",

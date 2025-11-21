@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,12 +45,17 @@ export default function Login() {
   /** ---- Mutations ---- */
   const mutation = useMutation({
     mutationFn: authService.signIn,
-    onSuccess: (data: IUser) => {
-      if (data.roles.includes("admin")) {
-        return navigate("/admin/dashboard");
-      } else if (data.roles.includes("landlord")) {
-        return navigate("/dashboard/landlord");
+    onSuccess: (data: { user: IUser }) => {
+      const { user } = data;
+      if (user && user.roles) {
+        if (user.roles.includes("admin")) {
+          return navigate("/admin/dashboard");
+        } else if (user.roles.includes("landlord")) {
+          console.log("landlord");
+          return navigate("/dashboard/landlord");
+        }
       }
+
       //Tenant
       navigate("/dashboard");
     },
