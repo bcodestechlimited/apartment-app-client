@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DataTable from "@/components/custom/data-table";
 import { Spinner } from "@/components/custom/loader";
 import { formatCurrency, formatDate, formatPrettyDate } from "@/lib/utils";
