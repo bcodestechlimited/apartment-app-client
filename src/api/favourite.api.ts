@@ -28,6 +28,16 @@ class FavouriteService {
       handleAxiosError(error, "Unable to remove favourite");
     }
   }
+  // Get logged-in user's favourites
+  async getUserFavourites() {
+    try {
+      const response = await axiosInstance.get("/save-properties/user");
+      console.log("user favourites api", response.data?.data);
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to get your favourites");
+    }
+  }
 }
 
 export const favouriteService = new FavouriteService();
