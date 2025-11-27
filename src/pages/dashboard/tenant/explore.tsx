@@ -47,6 +47,7 @@ export default function Explore() {
         ...filters,
       }),
   });
+  console.log("explore", data);
 
   return (
     <div className="flex flex-col gap-2">

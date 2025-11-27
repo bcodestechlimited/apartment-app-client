@@ -7,8 +7,9 @@ export interface IUser {
   phoneNumber: string;
   document: { type: string; url: string }[] | null;
   roles: string[];
-  isVerified: boolean;
+  isEmailVerified: boolean;
   isActive: boolean;
+  savedProperties: string[];
 }
 
 export interface IUpdateUser {

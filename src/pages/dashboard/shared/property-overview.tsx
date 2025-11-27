@@ -31,8 +31,8 @@ export default function PropertyOverview() {
       queryFn: () => propertyRatingService.getPropertyRatingById(property?._id),
     }
   );
-  console.log("property rating", propertyRating);
-  console.log("propertyDetails", property);
+  // console.log("property rating", propertyRating);
+  // console.log("propertyDetails", property);
 
   return (
     <div className="p-4">

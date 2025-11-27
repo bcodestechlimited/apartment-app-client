@@ -96,7 +96,7 @@ export const PublicPropertyCard = ({
     numberOfBedrooms,
     numberOfBathrooms,
   } = property;
-
+  console.log(" property", property);
   if (!property) return null;
 
   const href = link || `/property/${property._id}`;
@@ -104,7 +104,7 @@ export const PublicPropertyCard = ({
   return (
     <Link to={href}>
       <div className="relative bg-white rounded-lg overflow-hidden w-full border border-gray-200 h-full ">
-        <img src={pictures[0]} alt="" className="w-full h-48 object-cover" />
+        <img src={pictures?.[0]} alt="" className="w-full h-48 object-cover" />
         <span className="bg-custom-primary text-white text-xs px-2 py-1 absolute top-4 left-0 capitalize rounded-r z-10">
           {label || type}
         </span>
@@ -128,7 +128,8 @@ export const PublicPropertyCard = ({
           </span>
           <p className="font-medium text-xl">{title}</p>
           <p className="font-semibold text-sm">
-            {description.slice(0, 100)}...
+            {/* {description.slice(0, 100)}... */}
+            {description ? description.slice(0, 100) + "..." : ""}
           </p>
 
           <p className="font-bold text-lg">

@@ -1,11 +1,17 @@
+import { authService } from "@/api/auth.api";
+import { favouriteService } from "@/api/favourite.api";
 import { propertyService } from "@/api/property.api";
 import { Loader } from "@/components/custom/loader";
 import type { IProperty } from "@/interfaces/property.interface";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ExternalLink, Heart } from "lucide-react";
 import { Link, Outlet, useParams } from "react-router";
+import { toast } from "sonner";
 
 function PropertyDetailLayout() {
+  const { user } = useAuthStore();
+  console.log("property detail layout user", user);
   const { propertyId } = useParams();
 
   const { data, isLoading, isError } = useQuery({
@@ -14,6 +20,19 @@ function PropertyDetailLayout() {
     retry: !!propertyId,
   });
 
+  const saveFavouriteMutation = useMutation({
+    mutationFn: (propertyId: string) =>
+      favouriteService.createFavourite(propertyId),
+    onSuccess: (res: any) => {
+      toast.success("Property saved to favourites");
+    },
+    onError: (error: any) =>
+      toast.error(error?.message || "Failed to save property"),
+  });
+
+  const isPropertySaved = user?.savedProperties?.some(
+    (savedProperty: string) => savedProperty === propertyId
+  );
   const propertyDetailLinks = [
     {
       name: "Overview",
@@ -91,8 +110,12 @@ function PropertyDetailLayout() {
           ))}
         </div>
         <div className="flex gap-2 w-1/4 justify-end">
-          <span className="flex items-center gap-1">
-            <Heart /> Save
+          <span
+            className="flex items-center gap-1"
+            onClick={() => saveFavouriteMutation.mutate(property._id!)}
+          >
+            {/* <Heart /> Save */}
+            {isPropertySaved ? <Heart color="red" /> : <Heart />}
           </span>
           <span className="flex items-center gap-1">
             <ExternalLink /> Share
