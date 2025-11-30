@@ -9,6 +9,7 @@ import {
   Bell,
   LogOut,
   Settings,
+  Wallet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
@@ -65,6 +66,12 @@ const routes: Route[] = [
     name: "Payments",
     path: "/dashboard/payments",
     icon: <HandCoins className="w-4 h-4" />,
+    // submenu: [],
+  },
+  {
+    name: "Wallet",
+    path: "/dashboard/wallet",
+    icon: <Wallet className="w-4 h-4" />,
     // submenu: [],
   },
 

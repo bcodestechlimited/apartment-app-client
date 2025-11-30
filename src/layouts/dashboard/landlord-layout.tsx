@@ -9,6 +9,7 @@ import {
   Mail,
   PenLine,
   LogOut,
+  Wallet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
@@ -27,6 +28,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { images } from "@/constants/images";
+import LandlordWallet from "@/pages/dashboard/landlord/wallet/Wallet";
 
 interface Submenu {
   name: string;
@@ -61,6 +63,12 @@ const routes: Route[] = [
     name: "Payments",
     path: "/dashboard/landlord/payments",
     icon: <CreditCard className="w-5 h-5" />,
+  },
+  {
+    name: "Wallet",
+    path: "/dashboard/landlord/wallet",
+    icon: <Wallet className="w-4 h-4" />,
+    // submenu: [],
   },
   // {
   //   name: "Analytics",
