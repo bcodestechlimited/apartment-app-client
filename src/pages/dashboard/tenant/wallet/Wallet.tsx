@@ -509,10 +509,20 @@ function Wallet() {
                   </div>
                 </div>
 
-                <DialogFooter className="flex flex-col sm:flex-row gap-2">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="w-full sm:w-auto">
-                      Cancel
+                  <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="w-full sm:w-auto">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      type="submit"
+                      disabled={createTopUpMutation.isPending}
+                      className="w-full sm:w-auto"
+                    >
+                      {createTopUpMutation.isPending
+                        ? "Processing..."
+                        : "Top Up"}
                     </Button>
                   </DialogClose>
                   <Button
@@ -570,10 +580,21 @@ function Wallet() {
                   </div>
                 </div>
 
-                <DialogFooter className="flex flex-col sm:flex-row gap-2">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="w-full sm:w-auto">
-                      Cancel
+                
+                  <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="w-full sm:w-auto">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      type="submit"
+                      disabled={withdrawMutation.isPending}
+                      className="w-full sm:w-auto"
+                    >
+                      {withdrawMutation.isPending
+                        ? "Submitting..."
+                        : "Withdraw"}
                     </Button>
                   </DialogClose>
                   <Button
@@ -677,6 +698,27 @@ function Wallet() {
                     </div>
                   )}
                 </div>
+                  <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="w-full sm:w-auto">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      type="submit"
+                      disabled={updateWalletMutation.isPending}
+                      className="w-full sm:w-auto"
+                    >
+                      {updateWalletMutation.isPending
+                        ? "Updating..."
+                        : "Update"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
 
                 <DialogFooter className="flex flex-col sm:flex-row gap-2">
                   <DialogClose asChild>
