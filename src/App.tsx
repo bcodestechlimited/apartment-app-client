@@ -62,6 +62,8 @@ import LandlordPayments from "./pages/dashboard/landlord/payments";
 import Wallet from "./pages/dashboard/tenant/wallet/Wallet";
 import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerification";
 import LandlordWallet from "./pages/dashboard/landlord/wallet/Wallet";
+import LandlordPaymentVerification from "./pages/dashboard/landlord/wallet/PaymentVerification";
+import SavedProperties from "./pages/dashboard/tenant/saved-properties";
 
 const queryClient = new QueryClient();
 
@@ -180,6 +182,10 @@ function App() {
             {
               path: "",
               element: <Explore />,
+            },
+            {
+              path: "explore/saved-properties",
+              element: <SavedProperties />,
             },
             {
               path: "bookings",
@@ -325,6 +331,10 @@ function App() {
             {
               path: "analytics",
               element: <Analytics />,
+            },
+            {
+              path: "paystack/verify",
+              element: <LandlordPaymentVerification />,
             },
             {
               path: "wallet",

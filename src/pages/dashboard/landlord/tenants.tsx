@@ -328,6 +328,14 @@ export default function Tenants() {
           tenant={selectedTenant}
           isOpen={isProfileModalOpen}
           closeModal={closeProfileModal}
+          openRatingModal={(tenant) => {
+            closeProfileModal();
+            openRatingModal(tenant);
+          }}
+          openReportModal={(tenant) => {
+            closeProfileModal();
+            openReportModal(tenant);
+          }}
         />
       )}
 

@@ -56,13 +56,18 @@ export default function Login() {
         }
       }
 
+      if (user && !user.isEmailVerified) {
+        console.log("email not verified", user);
+        return navigate("/auth/verify-otp");
+      }
+
       //Tenant
       navigate("/dashboard");
     },
     onError: (error: any) => {
       // toast.error(error.message || "Something went wrong");
       setError(error.message || "Something went wrong");
-      console.log(error);
+      console.log("login error", error);
     },
   });
 
