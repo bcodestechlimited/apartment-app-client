@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import VerifyOtp from "./pages/auth/verify-otp";
@@ -64,6 +64,13 @@ import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerifica
 import LandlordWallet from "./pages/dashboard/landlord/wallet/Wallet";
 import LandlordPaymentVerification from "./pages/dashboard/landlord/wallet/PaymentVerification";
 import SavedProperties from "./pages/dashboard/tenant/saved-properties";
+import { TenantPage } from "./pages/dashboard/admin/admin-user-management/_components/tenant-page";
+import { AgentPage } from "./pages/dashboard/admin/admin-user-management/_components/agent-page";
+import { LandlordPage } from "./pages/dashboard/admin/admin-user-management/_components/landlord-page";
+import { TenantDetailPage } from "./pages/dashboard/admin/admin-user-management/pages/tenant-detail-page";
+import { AdminDocumentVerification } from "./pages/dashboard/admin/admin-document-verification/document-verification";
+import { LandlordDetailPage } from "./pages/dashboard/admin/admin-user-management/pages/landlord-detail-page";
+import { AdminPaymentsPage } from "./pages/dashboard/admin/admin-payments/payments";
 
 const queryClient = new QueryClient();
 
@@ -397,6 +404,29 @@ function App() {
             {
               path: "users",
               element: <AdminUserManagement />,
+              children: [
+                {
+                  path: "",
+                  element: <Navigate to="tenants" replace />,
+                },
+                {
+                  path: "tenants",
+                  element: <TenantPage />,
+                },
+
+                {
+                  path: "landlords",
+                  element: <LandlordPage />,
+                },
+                {
+                  path: "agents",
+                  element: <AgentPage />,
+                },
+              ],
+            },
+            {
+              path: "verifications",
+              element: <AdminDocumentVerification />,
             },
             {
               path: "properties",
@@ -411,6 +441,19 @@ function App() {
               element: <AdminMessages />,
             },
             {
+              path: "payments",
+              element: <AdminPaymentsPage />,
+            },
+            {
+              path: "analytics",
+              // element: <AdminAnalytics />,
+            },
+            {
+              path: "users/tenants/:id",
+              element: <TenantDetailPage />,
+            },
+            { path: "users/landlords/:id", element: <LandlordDetailPage /> },
+            {
               path: "*",
               element: <div>Page not found</div>,
             },
@@ -418,6 +461,7 @@ function App() {
         },
       ],
     },
+
     {
       path: "*",
       element: <Admin404 />,

@@ -13,6 +13,7 @@ import {
   CreditCardIcon,
   ShieldAlert,
   ShieldAlertIcon,
+  Headset,
 } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { images } from "@/constants/images";
@@ -84,7 +85,7 @@ const routes: Route[] = [
   {
     name: "Support",
     path: "/admin/support",
-    icon: <Mail className="w-5 h-5" />,
+    icon: <Headset className="w-5 h-5" />,
   },
   {
     name: "Settings",

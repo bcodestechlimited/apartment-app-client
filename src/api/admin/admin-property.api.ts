@@ -11,18 +11,19 @@ class AdminPropertyService {
         params,
       });
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to get properties");
     }
   };
+
   getPropertyById = async (propertyId: string) => {
     try {
       const response = await axiosInstance.get(`/property/${propertyId}`);
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data?.property;
     } catch (error) {
@@ -41,7 +42,7 @@ class AdminPropertyService {
         payload
       );
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data?.property;
     } catch (error) {
@@ -59,7 +60,7 @@ class AdminPropertyService {
         },
       });
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -90,11 +91,26 @@ class AdminPropertyService {
     try {
       const response = await axiosInstance.post(`/booking/request`, payload);
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to book property");
+    }
+  };
+
+  getLandlordPropertiesAdmin = async (landlordId: string, params: IParams) => {
+    try {
+      const response = await axiosInstance.get(
+        `/admin/properties/${landlordId}`,
+        {
+          params,
+        }
+      );
+      // console.log("land-properties-response", response.data.data);
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to get properties");
     }
   };
 }
