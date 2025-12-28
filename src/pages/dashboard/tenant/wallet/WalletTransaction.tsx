@@ -122,7 +122,7 @@ export function WalletTransactionsTable({
       header: "Date",
       render: (row: WalletTransaction) => (
         <span className="text-sm">
-          {row?.date || formatDate(row?.createdAt) || "N/A"}
+          {row?.date || formatDate(row?.createdAt as string) || "N/A"}
         </span>
       ),
     },
@@ -142,7 +142,7 @@ export function WalletTransactionsTable({
       header: "Amount",
       render: (row: WalletTransaction) => (
         <span className="text-sm font-medium">
-          {formatCurrency(row?.amount) || "N/A"}
+          {formatCurrency(row?.amount as number) || "N/A"}
         </span>
       ),
     },

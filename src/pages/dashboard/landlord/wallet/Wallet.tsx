@@ -428,9 +428,9 @@ function LandlordWallet() {
                     </DialogClose>
                     <Button
                       type="submit"
-                      disabled={createTopUpMutation.isLoading}
+                      disabled={createTopUpMutation.isPending}
                     >
-                      {createTopUpMutation.isLoading
+                      {createTopUpMutation.isPending
                         ? "Processing..."
                         : "Top Up"}
                     </Button>
@@ -484,8 +484,8 @@ function LandlordWallet() {
                     <DialogClose asChild>
                       <Button variant="outline">Cancel</Button>
                     </DialogClose>
-                    <Button type="submit" disabled={withdrawMutation.isLoading}>
-                      {withdrawMutation.isLoading
+                    <Button type="submit" disabled={withdrawMutation.isPending}>
+                      {withdrawMutation.isPending
                         ? "Submitting..."
                         : "Withdraw"}
                     </Button>
@@ -588,9 +588,9 @@ function LandlordWallet() {
                     </DialogClose>
                     <Button
                       type="submit"
-                      disabled={updateWalletMutation.isLoading}
+                      disabled={updateWalletMutation.isPending}
                     >
-                      {updateWalletMutation.isLoading
+                      {updateWalletMutation.isPending
                         ? "Updating..."
                         : "Update"}
                     </Button>

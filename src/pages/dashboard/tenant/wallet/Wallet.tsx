@@ -517,10 +517,10 @@ function Wallet() {
                   </DialogClose>
                   <Button
                     type="submit"
-                    disabled={createTopUpMutation.isLoading}
+                    disabled={createTopUpMutation.isPending}
                     className="w-full sm:w-auto"
                   >
-                    {createTopUpMutation.isLoading ? "Processing..." : "Top Up"}
+                    {createTopUpMutation.isPending ? "Processing..." : "Top Up"}
                   </Button>
                 </DialogFooter>
               </form>
@@ -578,10 +578,10 @@ function Wallet() {
                   </DialogClose>
                   <Button
                     type="submit"
-                    disabled={withdrawMutation.isLoading}
+                    disabled={withdrawMutation.isPending}
                     className="w-full sm:w-auto"
                   >
-                    {withdrawMutation.isLoading ? "Submitting..." : "Withdraw"}
+                    {withdrawMutation.isPending ? "Submitting..." : "Withdraw"}
                   </Button>
                 </DialogFooter>
               </form>
@@ -686,10 +686,10 @@ function Wallet() {
                   </DialogClose>
                   <Button
                     type="submit"
-                    disabled={updateWalletMutation.isLoading}
+                    disabled={updateWalletMutation.isPending}
                     className="w-full sm:w-auto"
                   >
-                    {updateWalletMutation.isLoading ? "Updating..." : "Update"}
+                    {updateWalletMutation.isPending ? "Updating..." : "Update"}
                   </Button>
                 </DialogFooter>
               </form>
