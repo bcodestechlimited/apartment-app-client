@@ -43,7 +43,7 @@ const TenantProfile = ({
           </div>
           <div className="flex gap-4">
             <Mail className="w-4" />
-            <p className="text-[#616161]">ashleywalters@.com</p>
+            <p className="text-[#616161]">{tenant.email}</p>
           </div>
 
           <p className="underline text-[#004542] ">View booking history</p>

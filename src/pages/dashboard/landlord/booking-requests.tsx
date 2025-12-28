@@ -36,7 +36,7 @@ export default function BookingRequests() {
     },
     {
       header: "Tenant Name",
-      render: (row: any) => row?.tenant?.firstname || "N/A",
+      render: (row: any) => row?.tenant?.firstName || "N/A",
     },
     {
       header: "Property",
@@ -46,7 +46,8 @@ export default function BookingRequests() {
       header: "Stay Period",
       render: (row: any) => (
         <span>
-          {formatPrettyDate(row?.moveInDate)} - {formatPrettyDate(row?.moveOutDate)}
+          {formatPrettyDate(row?.moveInDate)} -{" "}
+          {formatPrettyDate(row?.moveOutDate)}
         </span>
       ),
     },

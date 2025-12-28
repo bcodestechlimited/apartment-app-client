@@ -693,7 +693,7 @@ function TenantBookings() {
     },
     {
       header: "Tenant Name",
-      render: (row: any) => row.tenant.firstname || "N/A",
+      render: (row: any) => row.tenant.firstName || "N/A",
     },
     {
       header: "Property",
