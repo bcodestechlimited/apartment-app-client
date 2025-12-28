@@ -22,6 +22,7 @@ export const LandlordAuthGuard = () => {
   const location = useLocation();
 
   const { data: user, isLoading, isError } = useAuthUser();
+  console.log("landlord guard user", user);
 
   if (isLoading) {
     return <AuthLoader />;

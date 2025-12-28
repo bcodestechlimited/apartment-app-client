@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
 import { formatCurrency, formatPrettyDate } from "@/lib/utils";
@@ -24,12 +25,14 @@ export default function PropertyOverview() {
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["tenant-bookings"],
-    queryFn: () => propertyRatingService.getPropertyRatingById(property?._id),
-  });
-
-  console.log("property rating", data);
+  const { data: propertyRating, isLoading: isLoadingPropertyRating } = useQuery(
+    {
+      queryKey: ["tenant-bookings"],
+      queryFn: () => propertyRatingService.getPropertyRatingById(property?._id),
+    }
+  );
+  console.log("property rating", propertyRating);
+  console.log("propertyDetails", property);
 
   return (
     <div className="p-4">
@@ -103,7 +106,7 @@ export default function PropertyOverview() {
           </div>
         </div>
 
-        <div className="bg-gray-50 border p-4 rounded w-full flex gap-4 flex-col justify-between">
+        {/* <div className="bg-gray-50 border p-4 rounded w-full flex gap-4 flex-col justify-between">
           <h2 className="text-2xl font-medium">Reviews & Ratings</h2>
           <div className="flex gap-2 text-lg">
             <div className="flex gap-1">
@@ -142,6 +145,85 @@ export default function PropertyOverview() {
           <Button className="w-fit px-6 bg-white text-black border cursor-pointer hover:bg-custom-primary hover:text-white">
             View 16 reviews
           </Button>
+        </div> */}
+
+        <div className="bg-gray-50 border p-4 rounded w-full flex gap-4 flex-col justify-between">
+          <h2 className="text-2xl font-medium">Reviews & Ratings</h2>
+
+          {/* Average Rating + Total Reviews */}
+          {!isLoadingPropertyRating && propertyRating && (
+            <div className="flex gap-2 text-lg items-center">
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Sparkle
+                    key={star}
+                    size={18}
+                    className={
+                      star <= Math.round(property?.averageRating)
+                        ? "text-yellow-500"
+                        : "text-gray-400"
+                    }
+                  />
+                ))}
+              </div>
+              <p className="border-r-2 pr-2 border-gray-600">
+                ({property?.averageRating?.toFixed(1)})
+              </p>
+              <p>{property?.totalRatings} reviews</p>
+            </div>
+          )}
+
+          {/* Individual Reviews */}
+          <div className="flex flex-col gap-3">
+            {propertyRating?.length > 0 ? (
+              propertyRating.map((rating: any) => (
+                <div
+                  key={rating._id}
+                  className="flex items-start gap-2 border-b border-gray-200 pb-2"
+                >
+                  <img
+                    className="w-8 h-8 rounded-full"
+                    src={rating?.tenantId?.avatar}
+                    alt={rating?.tenantId?.firstName || "User"}
+                  />
+                  <div className="flex flex-col">
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Sparkle
+                          key={star}
+                          size={16}
+                          className={
+                            star <= rating.rating
+                              ? "text-yellow-500"
+                              : "text-gray-300"
+                          }
+                        />
+                      ))}
+                    </div>
+                    <p className="text-base italic text-gray-700">
+                      "{rating.comment}"
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      – {rating.tenantId?.firstName || "Anonymous"},{" "}
+                      {new Date(rating.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 italic">No reviews yet.</p>
+            )}
+          </div>
+
+          {/* View All Reviews Button */}
+          {propertyRating?.ratings?.length > 0 && (
+            <Button className="w-fit px-6 bg-white text-black border cursor-pointer hover:bg-custom-primary hover:text-white">
+              View all reviews
+            </Button>
+          )}
         </div>
       </div>
       <BookingModal
