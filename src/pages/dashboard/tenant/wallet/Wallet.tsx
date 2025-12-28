@@ -430,7 +430,6 @@ function Wallet() {
     queryKey: ["wallet"],
     queryFn: () => walletService.getUserWallet(),
   });
-  console.log({ data });
 
   const { data: banks, isLoading: isLoadingBanks } = useQuery({
     queryKey: ["banks"],
@@ -460,7 +459,6 @@ function Wallet() {
     <div className="space-y-8">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-        {/* Left Side - Title and Balance */}
         <div className="flex flex-col gap-4">
           <h1 className="text-3xl font-semibold">Your Wallet</h1>
           <div className="rounded-2xl border border-gray-200 bg-white p-6 w-full md:w-80">
@@ -469,7 +467,7 @@ function Wallet() {
           </div>
         </div>
 
-        {/* Right Side - Action Buttons */}
+        {/* Action Buttons */}
         <div className="flex flex-col gap-3 md:pt-12">
           {/* TOP UP */}
           <Dialog>
@@ -495,8 +493,7 @@ function Wallet() {
                     Add funds to your wallet by entering an amount below.
                   </DialogDescription>
                 </DialogHeader>
-
-                <div className="grid gap-4 mt-2">
+                <div className="grid gap-4 py-4">
                   <div className="grid gap-3">
                     <Label htmlFor="amount">Amount</Label>
                     <Input
@@ -508,27 +505,13 @@ function Wallet() {
                     />
                   </div>
                 </div>
-
-                  <DialogFooter className="flex flex-col sm:flex-row gap-2">
-                    <DialogClose asChild>
-                      <Button variant="outline" className="w-full sm:w-auto">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button
-                      type="submit"
-                      disabled={createTopUpMutation.isPending}
-                      className="w-full sm:w-auto"
-                    >
-                      {createTopUpMutation.isPending
-                        ? "Processing..."
-                        : "Top Up"}
-                    </Button>
+                <DialogFooter className="gap-2">
+                  <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
                   </DialogClose>
                   <Button
                     type="submit"
                     disabled={createTopUpMutation.isPending}
-                    className="w-full sm:w-auto"
                   >
                     {createTopUpMutation.isPending ? "Processing..." : "Top Up"}
                   </Button>
@@ -564,8 +547,7 @@ function Wallet() {
                     Enter the amount you want to withdraw.
                   </DialogDescription>
                 </DialogHeader>
-
-                <div className="grid gap-4 mt-2">
+                <div className="grid gap-4 py-4">
                   <div className="grid gap-3">
                     <Label htmlFor="withdraw">Withdraw Amount</Label>
                     <Input
@@ -579,29 +561,11 @@ function Wallet() {
                     />
                   </div>
                 </div>
-
-                
-                  <DialogFooter className="flex flex-col sm:flex-row gap-2">
-                    <DialogClose asChild>
-                      <Button variant="outline" className="w-full sm:w-auto">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button
-                      type="submit"
-                      disabled={withdrawMutation.isPending}
-                      className="w-full sm:w-auto"
-                    >
-                      {withdrawMutation.isPending
-                        ? "Submitting..."
-                        : "Withdraw"}
-                    </Button>
+                <DialogFooter className="gap-2">
+                  <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
                   </DialogClose>
-                  <Button
-                    type="submit"
-                    disabled={withdrawMutation.isPending}
-                    className="w-full sm:w-auto"
-                  >
+                  <Button type="submit" disabled={withdrawMutation.isPending}>
                     {withdrawMutation.isPending ? "Submitting..." : "Withdraw"}
                   </Button>
                 </DialogFooter>
@@ -629,10 +593,7 @@ function Wallet() {
                     );
                     return;
                   }
-                  updateWalletMutation.mutateAsync({
-                    accountNumber,
-                    bankCode,
-                  });
+                  updateWalletMutation.mutateAsync({ accountNumber, bankCode });
                 }}
               >
                 <DialogHeader>
@@ -641,20 +602,17 @@ function Wallet() {
                     Update your bank account details for withdrawals.
                   </DialogDescription>
                 </DialogHeader>
-
-                <div className="grid gap-4 mt-2">
+                <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
                     <Label>Bank</Label>
                     <Select
                       value={bankCode}
                       onValueChange={(code) => setBankCode(code)}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger>
                         <SelectValue
                           placeholder={
-                            isLoadingBanks
-                              ? "Loading banks..."
-                              : "Select a bank"
+                            isLoadingBanks ? "Loading..." : "Select a bank"
                           }
                         />
                       </SelectTrigger>
@@ -667,69 +625,31 @@ function Wallet() {
                       </SelectContent>
                     </Select>
                   </div>
-
                   <div className="grid gap-2">
                     <Label>Account Number</Label>
                     <Input
-                      type="text"
-                      placeholder="0123456789"
                       maxLength={10}
                       value={accountNumber}
                       onChange={(e) => setAccountNumber(e.target.value)}
                     />
                   </div>
-
-                  {isLoadingAccountDetails && (
-                    <div className="flex items-center justify-center py-2">
-                      <Spinner />
-                    </div>
-                  )}
-
+                  {isLoadingAccountDetails && <Spinner />}
                   {accountDetails && (
-                    <div className="grid gap-1 p-2 bg-gray-50 rounded border">
-                      <p className="text-sm">
-                        <strong>Account Name:</strong>{" "}
+                    <div className="p-2 bg-gray-50 rounded border text-sm">
+                      <p>
+                        <strong>Name:</strong>{" "}
                         {accountDetails?.data?.account_name}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Account Number:</strong>{" "}
-                        {accountDetails?.data?.account_number}
                       </p>
                     </div>
                   )}
                 </div>
-                  <DialogFooter className="flex flex-col sm:flex-row gap-2">
-                    <DialogClose asChild>
-                      <Button variant="outline" className="w-full sm:w-auto">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button
-                      type="submit"
-                      disabled={updateWalletMutation.isPending}
-                      className="w-full sm:w-auto"
-                    >
-                      {updateWalletMutation.isPending
-                        ? "Updating..."
-                        : "Update"}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-
-                <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                <DialogFooter className="gap-2">
                   <DialogClose asChild>
-                    <Button variant="outline" className="w-full sm:w-auto">
-                      Cancel
-                    </Button>
+                    <Button variant="outline">Cancel</Button>
                   </DialogClose>
                   <Button
                     type="submit"
                     disabled={updateWalletMutation.isPending}
-                    className="w-full sm:w-auto"
                   >
                     {updateWalletMutation.isPending ? "Updating..." : "Update"}
                   </Button>
@@ -740,7 +660,7 @@ function Wallet() {
         </div>
       </div>
 
-      {/* Wallet Details Section */}
+      {/* Wallet Details Display */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <h2 className="text-2xl font-semibold mb-6">Wallet Details</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
@@ -759,7 +679,7 @@ function Wallet() {
         </div>
       </div>
 
-      {/* History Section */}
+      {/* History */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <h2 className="text-2xl font-semibold mb-6">History</h2>
         <WalletTransactionsTable transactions={transactions} />
