@@ -13,6 +13,19 @@ export class AdminPaymentsService {
       handleAxiosError(error, "Unable to get payments");
     }
   }
+
+  async processWithdrawal(payload: any) {
+    console.log(" processWithdrawal payload", payload);
+    try {
+      const response = await axiosInstance.post(
+        `/admin/transactions/process-withdrawal`,
+        payload
+      );
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to process withdrawal");
+    }
+  }
 }
 
 export const adminPaymentsService = new AdminPaymentsService();

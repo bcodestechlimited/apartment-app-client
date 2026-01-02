@@ -31,7 +31,7 @@ export function useAdminTenantDetails(tenantId: string | undefined) {
     enabled: !!tenantId,
   });
 
-  console.log("bookingstatsquery", bookingStatsQuery.data);
+  // console.log("bookingstatsquery", bookingStatsQuery.data);
 
   // --- 3. Independent Query: Booking History ---
   const bookingsQuery = useQuery({

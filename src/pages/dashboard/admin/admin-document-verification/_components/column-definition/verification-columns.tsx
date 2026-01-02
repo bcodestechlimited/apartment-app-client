@@ -35,8 +35,11 @@ export const createVerificationColumns = (
   actions: VerificationActions
 ): ColumnDef<Document>[] => [
   {
-    accessorKey: "documentType",
-    header: () => <div className="text-center">Document Type</div>,
+    accessorKey: "name",
+    header: () => <div className="text-center">Document Name</div>,
+    cell: ({ row }) => (
+      <div className="text-center">{row.original?.name || "N/A"}</div>
+    ),
   },
   {
     accessorKey: "user",

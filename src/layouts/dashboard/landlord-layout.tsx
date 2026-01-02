@@ -10,6 +10,7 @@ import {
   PenLine,
   LogOut,
   Wallet,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
@@ -79,6 +80,12 @@ const routes: Route[] = [
     name: "Messages",
     path: "/dashboard/landlord/messages",
     icon: <Mail className="w-5 h-5" />,
+  },
+  {
+    name: "Settings",
+    path: "settings",
+    icon: <Settings className="w-4 h-4" />,
+    // submenu: [],
   },
 ];
 

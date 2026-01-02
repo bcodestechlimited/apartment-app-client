@@ -35,10 +35,6 @@ function TenantBookings() {
     useState(false);
 
   const [openBookingDetail, setOpenBookingDetail] = useState(false);
-  // const [openRatingDialog, setOpenRatingDialog] = useState<{
-  //   open: boolean;
-  //   type: "property" | "landlord" | null;
-  // }>({ open: false, type: null });
 
   const openLandlordRatingModal = (booking: any) => {
     setSelectedBooking(booking);
@@ -51,10 +47,6 @@ function TenantBookings() {
     setIsPropertyRatingModalOpen(true);
   };
   const closePropertyRatingModal = () => setIsPropertyRatingModalOpen(false);
-
-  // Rating state
-  // const [rating, setRating] = useState(0);
-  // const [comment, setComment] = useState("");
 
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 10;
@@ -73,29 +65,6 @@ function TenantBookings() {
     setSelectedBooking(booking);
     setOpenBookingDetail(true);
   };
-
-  // const handleOpenRating = (booking: any, type: "property" | "landlord") => {
-  //   setSelectedBooking(booking);
-  //   setOpenRatingDialog({ open: true, type });
-  //   setRating(0);
-  //   setComment("");
-  // };
-
-  // const handleSubmitRating = () => {
-  //   if (!selectedBooking) return;
-
-  //   const payload = {
-  //     ratedType: openRatingDialog.type,
-  //     rating,
-  //     comment,
-  //     bookingId: selectedBooking._id,
-  //   };
-
-  //   console.log("Submitting rating:", payload);
-  //   // TODO: call ratingService.submitRating(payload);
-
-  //   setOpenRatingDialog({ open: false, type: null });
-  // };
 
   const columns = [
     {

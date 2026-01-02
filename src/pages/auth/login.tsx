@@ -48,17 +48,16 @@ export default function Login() {
     onSuccess: (data: { user: IUser }) => {
       const { user } = data;
       if (user && user.roles) {
+        if (user && !user.isEmailVerified) {
+          console.log("email not verified", user);
+          return navigate("/auth/verify-otp");
+        }
         if (user.roles.includes("admin")) {
-          return navigate("/admin/dashboard");
+          return navigate("/admin");
         } else if (user.roles.includes("landlord")) {
           console.log("landlord");
           return navigate("/dashboard/landlord");
         }
-      }
-
-      if (user && !user.isEmailVerified) {
-        console.log("email not verified", user);
-        return navigate("/auth/verify-otp");
       }
 
       //Tenant
@@ -73,6 +72,7 @@ export default function Login() {
 
   /** ---- Submit Handler ---- */
   const onSubmit = (data: SignInFormInputs) => {
+    console.log("Form data:", data);
     setError(null);
     setAuthCredentials({
       email: data.email,

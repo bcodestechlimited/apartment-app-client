@@ -30,6 +30,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { adminPaymentsService } from "@/api/admin/admin-payments.api";
+import { toast } from "sonner";
 
 // export function AdminPaymentsPage() {
 //   const {
@@ -167,6 +170,7 @@ import { Search } from "lucide-react";
 // ... imports
 
 export function AdminPaymentsPage() {
+  const queryClient = useQueryClient();
   const {
     data,
     isLoading,
@@ -207,6 +211,41 @@ export function AdminPaymentsPage() {
 
   // ... (handleConfirmWithdrawal and metrics)
 
+  const processWithdrawalMutation = useMutation({
+    mutationFn: ({
+      transactionId,
+      action,
+      reason,
+    }: {
+      transactionId: string;
+      action: "approved" | "rejected";
+      reason?: string;
+    }) =>
+      adminPaymentsService.processWithdrawal({ transactionId, action, reason }),
+    onSuccess: (res) => {
+      toast.success(res.message || "Action completed successfully");
+      // Refresh the table data to show the updated status
+      queryClient.invalidateQueries({ queryKey: ["admin-payments"] });
+      setIsModalOpen(false); // Close the modal
+      setSelectedTransaction(null);
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || "Something went wrong");
+    },
+  });
+
+  const handleConfirmWithdrawal = (
+    action: "approved" | "rejected",
+    reason?: string
+  ) => {
+    if (!selectedTransaction?._id) return;
+
+    processWithdrawalMutation.mutate({
+      transactionId: selectedTransaction._id,
+      action,
+      reason,
+    });
+  };
   return (
     <div className="p-6 space-y-6 text-left">
       {/* Metrics Cards UI ... */}
@@ -288,8 +327,8 @@ export function AdminPaymentsPage() {
         transaction={selectedTransaction}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        // onConfirm={handleConfirmWithdrawal}
-        isUpdating={false}
+        onConfirm={handleConfirmWithdrawal}
+        isUpdating={processWithdrawalMutation.isPending}
       />
     </div>
   );

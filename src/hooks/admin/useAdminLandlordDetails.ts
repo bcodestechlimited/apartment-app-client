@@ -8,6 +8,7 @@ import { adminReportService } from "@/api/admin/admin-report.api";
 import { toast } from "sonner";
 import { adminBookingService } from "@/api/admin/admin-booking.api";
 import type { fi } from "date-fns/locale";
+import { adminDocumentsService } from "@/api/admin/admin-documents.api";
 
 export function useAdminLandlordDetails(landlordId: string | undefined) {
   const queryClient = useQueryClient();
@@ -47,6 +48,12 @@ export function useAdminLandlordDetails(landlordId: string | undefined) {
     enabled: !!landlordId,
   });
 
+  const documentQuery = useQuery({
+    queryKey: ["tenant-documents", landlordId],
+    queryFn: () => adminDocumentsService.getDocumentByUserId(landlordId!),
+    enabled: !!landlordId,
+  });
+
   // console.log(" propertiesQuery", propertiesQuery.data);
 
   // 3. Fetch Flags/Reports (Independent)
@@ -78,7 +85,7 @@ export function useAdminLandlordDetails(landlordId: string | undefined) {
     landlord: profileQuery.data,
     paymentMetrics: bookingStatsQuery.data || [],
     isLoadingProfile: profileQuery.isLoading,
-
+    documents: documentQuery.data || [],
     // Properties Table
     properties: propertiesQuery.data?.properties || [],
     propertyPagination: {

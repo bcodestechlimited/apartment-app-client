@@ -45,6 +45,7 @@ import AdminPropertyManagement from "./pages/dashboard/admin/admin-property-mana
 import AdminPropertyDetail from "./pages/dashboard/admin/admin-property-detail/admin-property-detail";
 import AdminMessages from "./pages/dashboard/admin/admin-messages/admin-messages";
 import Settings from "./pages/dashboard/tenant/settings/settings";
+import LandlordSettings from "./pages/dashboard/landlord/settings/settings";
 import PersonalInfo from "./pages/dashboard/tenant/settings/_components/personal-info";
 import Employement from "./pages/dashboard/tenant/settings/_components/employment";
 import Documents from "./pages/dashboard/tenant/settings/_components/documents";
@@ -378,6 +379,28 @@ function App() {
                 {
                   path: "location",
                   element: <PropertyLocation />,
+                },
+              ],
+            },
+            {
+              path: "settings",
+              element: <LandlordSettings />,
+              children: [
+                {
+                  path: "",
+                  element: <PersonalInfo />,
+                },
+                {
+                  path: "documents",
+                  element: <Documents />,
+                },
+                {
+                  path: "notification",
+                  element: <Notification />,
+                },
+                {
+                  path: "*",
+                  element: <div>Page not found</div>,
                 },
               ],
             },

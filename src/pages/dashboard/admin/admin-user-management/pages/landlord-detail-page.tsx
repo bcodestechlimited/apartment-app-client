@@ -10,6 +10,7 @@ import { flagsReportsColumns } from "../_components/column-definition/flag-repor
 import { propertyColumns } from "../_components/column-definition/property-columns";
 import { MetricCard } from "../_components/metrics-card";
 import { formatPrettyDate } from "@/lib/utils";
+import { VerificationDocuments } from "../_components/user-document";
 
 export function LandlordDetailPage() {
   const { id } = useParams();
@@ -17,6 +18,7 @@ export function LandlordDetailPage() {
     landlord,
     paymentMetrics,
     isLoadingProfile,
+    documents,
     properties,
     propertyPagination,
     isFetchingProperties,
@@ -128,42 +130,12 @@ export function LandlordDetailPage() {
       <MetricCard metrics={landlordMetrics} />
 
       {/* --- 5. Verification Documents --- */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-bold">Verification Documents</h3>
-        <div className="flex flex-wrap gap-4">
-          {landlord.documents?.map((doc: any) => (
-            <Card
-              key={doc._id}
-              className="flex items-center justify-between p-3 min-w-[240px] shadow-none border-gray-100"
-            >
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-50 rounded-lg">
-                  <Flag className="h-5 w-5 text-green-600" />
-                </div>
-                <span className="text-sm font-medium capitalize">
-                  {doc.documentType.replace(/_/g, " ")}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="text-blue-600 font-semibold p-0 h-auto"
-                >
-                  View
-                </Button>
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="text-blue-600 font-semibold p-0 h-auto"
-                >
-                  Download
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
+      <section className="space-y-4">
+        <h2 className="text-xl font-bold text-gray-900">
+          Verification Documents
+        </h2>
+        <VerificationDocuments documents={(documents as any[]) || []} />
+      </section>
 
       {/* --- 6. Flags / Reports --- */}
       <div className="space-y-4">

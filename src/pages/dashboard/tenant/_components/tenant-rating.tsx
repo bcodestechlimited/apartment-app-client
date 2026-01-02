@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { landlordRatingService } from "@/api/lanlord-rating.api";
 
@@ -20,11 +20,14 @@ const TenantRating = ({ tenant, isOpen, closeModal }: AddTenantRatingProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const [comment, setComment] = useState<string>("");
 
+  const queryClient = useQueryClient();
+
   const createRatingMutation = useMutation({
     mutationFn: (payload: any) =>
       landlordRatingService.createTenantRating(payload),
     onSuccess: () => {
       toast.success("Rating added successfully!");
+      queryClient.invalidateQueries({ queryKey: ["landlord-tenants"] });
     },
     onError: (error) => {
       toast.error(error.message);

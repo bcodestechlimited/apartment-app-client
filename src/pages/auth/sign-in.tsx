@@ -44,7 +44,7 @@ export default function SignIn() {
     onSuccess: (signInResponse: { user: IUser }) => {
       const { user } = signInResponse;
       if (user?.roles?.includes("admin")) {
-        return navigate("/admin/dashboard");
+        return navigate("/admin");
       } else if (user?.roles?.includes("landlord")) {
         return navigate("/dashboard/landlord");
       } else {
