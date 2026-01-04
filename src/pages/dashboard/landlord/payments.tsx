@@ -6,6 +6,61 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { transactionService } from "@/api/transaction.api";
 
+export const columns = [
+  {
+    header: "Transaction Type",
+    render: (row: any) => (
+      <span className=" capitalize">{row?.transactionType || "N/A"}</span>
+    ),
+  },
+  {
+    header: "Provider",
+    render: (row: any) => (
+      <span className=" capitalize">{row?.provider || "N/A"}</span>
+    ),
+  },
+  {
+    header: "Amount (NGN)",
+    render: (row: any) => (
+      <span className=" capitalize">
+        {formatCurrency(row?.amount) || "N/A"}
+      </span>
+    ),
+  },
+
+  {
+    header: "Reference",
+    render: (row: any) => (
+      <span className=" capitalize">{row?.reference || "N/A"}</span>
+    ),
+  },
+
+  {
+    header: "Status",
+    render: (row: any) => {
+      const status = row?.status?.toLowerCase() || "pending";
+      const classNames: Record<string, string> = {
+        approved:
+          "text-green-500 bg-green-100 px-4 py-1 rounded-full capitalize",
+        pending:
+          "text-yellow-500 bg-yellow-100 px-4 py-1 rounded-full capitalize",
+        declined: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
+        expired: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
+      };
+
+      return <span className={classNames[status]}>{row.status}</span>;
+    },
+  },
+  {
+    header: "Date",
+    render: (row: any) => (
+      <span className=" capitalize">
+        {formatPrettyDate(row?.createdAt) || "N/A"}
+      </span>
+    ),
+  },
+];
+
 export default function LandlordPayments() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -22,61 +77,6 @@ export default function LandlordPayments() {
   });
 
   console.log({ data });
-
-  const columns = [
-    {
-      header: "Transaction Type",
-      render: (row: any) => (
-        <span className=" capitalize">{row?.transactionType || "N/A"}</span>
-      ),
-    },
-    {
-      header: "Provider",
-      render: (row: any) => (
-        <span className=" capitalize">{row?.provider || "N/A"}</span>
-      ),
-    },
-    {
-      header: "Amount (NGN)",
-      render: (row: any) => (
-        <span className=" capitalize">
-          {formatCurrency(row?.amount) || "N/A"}
-        </span>
-      ),
-    },
-
-    {
-      header: "Reference",
-      render: (row: any) => (
-        <span className=" capitalize">{row?.reference || "N/A"}</span>
-      ),
-    },
-
-    {
-      header: "Status",
-      render: (row: any) => {
-        const status = row?.status?.toLowerCase() || "pending";
-        const classNames: Record<string, string> = {
-          approved:
-            "text-green-500 bg-green-100 px-4 py-1 rounded-full capitalize",
-          pending:
-            "text-yellow-500 bg-yellow-100 px-4 py-1 rounded-full capitalize",
-          declined: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
-          expired: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
-        };
-
-        return <span className={classNames[status]}>{row.status}</span>;
-      },
-    },
-    {
-      header: "Date",
-      render: (row: any) => (
-        <span className=" capitalize">
-          {formatPrettyDate(row?.createdAt) || "N/A"}
-        </span>
-      ),
-    },
-  ];
 
   if (isLoading) return <Spinner />;
 

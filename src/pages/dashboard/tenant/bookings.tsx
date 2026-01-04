@@ -73,7 +73,8 @@ function TenantBookings() {
     },
     {
       header: "Tenant Name",
-      render: (row: any) => row.tenant.firstName || "N/A",
+      render: (row: any) =>
+        row.tenant.firstName + " " + row.tenant.lastName || "N/A",
     },
     {
       header: "Property",

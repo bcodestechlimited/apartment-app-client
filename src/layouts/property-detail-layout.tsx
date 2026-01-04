@@ -144,8 +144,10 @@ import { toast } from "sonner";
 
 function PropertyDetailLayout() {
   const { user } = useAuthStore();
+  console.log("property detail layout user", user);
   const { propertyId } = useParams();
   const queryClient = useQueryClient();
+  const canFavourite = user?.roles?.includes("tenant");
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["property", propertyId],
@@ -235,10 +237,12 @@ function PropertyDetailLayout() {
 
         <div className="flex gap-2 w-1/4 justify-end">
           <span
-            className="flex items-center gap-1 cursor-pointer"
+            className={`flex items-center gap-1 ${
+              canFavourite ? "cursor-pointer" : "hidden"
+            }`}
             onClick={toggleFavourite}
           >
-            {isPropertySaved ? <Heart color="red" /> : <Heart />}
+            {isPropertySaved ? <Heart color="red" fill="red" /> : <Heart />}
           </span>
           <span className="flex items-center gap-1">
             <ExternalLink /> Share

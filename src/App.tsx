@@ -53,6 +53,13 @@ import NextOfKin from "./pages/dashboard/tenant/settings/_components/next-of-kin
 import Guarantor from "./pages/dashboard/tenant/settings/_components/guarantor";
 import Notification from "./pages/dashboard/tenant/settings/_components/notification";
 import PropertySearch from "./pages/public/property-search/property-search";
+import LandLordPersonalInfo from "./pages/dashboard/landlord/settings/_components/personal-info";
+import LandLordEmployement from "./pages/dashboard/landlord/settings/_components/employment";
+import LandLordDocuments from "./pages/dashboard/landlord/settings/_components/documents";
+import LandLordNextOfKin from "./pages/dashboard/landlord/settings/_components/next-of-kin";
+import LandLordGuarantor from "./pages/dashboard/landlord/settings/_components/guarantor";
+import LandLordNotification from "./pages/dashboard/landlord/settings/_components/notification";
+
 import PublicLayout from "./pages/public/_layouts/public-layout";
 import LandlordSignup from "./pages/onboarding/landlord-signup";
 import Login from "./pages/auth/login";
@@ -61,7 +68,6 @@ import TenantPayments from "./pages/dashboard/tenant/payments/payments";
 import PublicPropertyDetail from "./pages/public/public-property-detail/public-property-detail";
 import LandlordPayments from "./pages/dashboard/landlord/payments";
 import Wallet from "./pages/dashboard/tenant/wallet/Wallet";
-import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerification";
 import LandlordWallet from "./pages/dashboard/landlord/wallet/Wallet";
 import LandlordPaymentVerification from "./pages/dashboard/landlord/wallet/PaymentVerification";
 import SavedProperties from "./pages/dashboard/tenant/saved-properties";
@@ -72,6 +78,7 @@ import { TenantDetailPage } from "./pages/dashboard/admin/admin-user-management/
 import { AdminDocumentVerification } from "./pages/dashboard/admin/admin-document-verification/document-verification";
 import { LandlordDetailPage } from "./pages/dashboard/admin/admin-user-management/pages/landlord-detail-page";
 import { AdminPaymentsPage } from "./pages/dashboard/admin/admin-payments/payments";
+import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerification";
 
 const queryClient = new QueryClient();
 
@@ -388,7 +395,7 @@ function App() {
               children: [
                 {
                   path: "",
-                  element: <PersonalInfo />,
+                  element: <LandLordPersonalInfo />,
                 },
                 {
                   path: "documents",
@@ -397,6 +404,18 @@ function App() {
                 {
                   path: "notification",
                   element: <Notification />,
+                },
+                {
+                  path: "next-of-kin",
+                  element: <LandLordNextOfKin />,
+                },
+                {
+                  path: "guarantor",
+                  element: <LandLordGuarantor />,
+                },
+                {
+                  path: "employment",
+                  element: <LandLordEmployement />,
                 },
                 {
                   path: "*",

@@ -15,9 +15,9 @@ import { formatPrettyDate } from "@/lib/utils";
 // --- Helper Functions and Styles ---
 
 const statusStyles: Record<VerificationStatus, string> = {
-  Pending: "bg-amber-100 text-amber-700 border border-amber-300",
-  Verified: "bg-green-100 text-green-700 border border-green-300",
-  Rejected: "bg-red-100 text-red-700 border border-red-300",
+  pending: "bg-purple-100 text-purple-700 border border-purple-300",
+  approved: "bg-blue-100 text-blue-700 border border-blue-300",
+  rejected: "bg-red-100 text-red-700 border border-red-300",
 };
 
 export interface VerificationActions {
@@ -98,10 +98,10 @@ export const createVerificationColumns = (
             <DropdownMenuItem onClick={handleView}>
               View Document
             </DropdownMenuItem>
-            {row.original.status !== "Verified" && (
+            {row.original.status !== "approved" && (
               <DropdownMenuItem onClick={handleVerify}>Verify</DropdownMenuItem>
             )}
-            {row.original.status !== "Rejected" && (
+            {row.original.status !== "rejected" && (
               <DropdownMenuItem onClick={handleReject}>Reject</DropdownMenuItem>
             )}
           </DropdownMenuContent>

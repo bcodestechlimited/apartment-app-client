@@ -231,7 +231,8 @@ export default function Tenants() {
   const columns = [
     {
       header: "Tenant Name",
-      render: (row: any) => row?.user?.firstName || "N/A",
+      render: (row: any) =>
+        row?.user?.firstName + " " + row?.user?.lastName || "N/A",
     },
     {
       header: "Verification Status",

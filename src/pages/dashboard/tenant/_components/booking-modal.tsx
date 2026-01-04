@@ -176,6 +176,7 @@ export default function BookingModal({
                   }}
                   disabled={(date) => date < getMinAllowedDate()}
                   className="rounded-md border bg-white z-50"
+                  captionLayout="dropdown"
                 />
               </PopoverContent>
             </Popover>

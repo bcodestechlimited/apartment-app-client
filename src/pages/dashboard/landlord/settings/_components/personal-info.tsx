@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, Loader, Loader2 } from "lucide-react";
+import { CalendarIcon, Loader, Loader2, Upload, X } from "lucide-react";
 
 import {
   Form,
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -32,6 +33,10 @@ import { authService } from "@/api/auth.api";
 import { useEffect, useState } from "react";
 import { CustomAlert } from "@/components/custom/custom-alert";
 import { toast } from "sonner";
+import {
+  NIGERIAN_STATE_CITIES,
+  NIGERIAN_STATES,
+} from "@/constants/nigerian-states";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
@@ -54,10 +59,12 @@ const formSchema = z.object({
   address: z.string().min(3, "Address is required"),
   state: z.string().min(1, "Select a state"),
   city: z.string().min(1, "City is required"),
+  avatar: z.instanceof(File).optional(),
 });
 
 export default function PersonalInfo() {
   const [error, setError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -78,8 +85,11 @@ export default function PersonalInfo() {
       address: "",
       state: "",
       city: "",
+      avatar: undefined,
     },
   });
+
+  const selectedState = form.watch("state");
 
   useEffect(() => {
     if (data?.personalInfo) {
@@ -88,10 +98,15 @@ export default function PersonalInfo() {
       form.setValue("email", data.personalInfo.email);
       form.setValue("phoneNumber", data.personalInfo.phoneNumber);
       form.setValue("gender", data.personalInfo.gender);
-      form.setValue("dob", data.personalInfo.dob);
+      if (data.personalInfo.dob) {
+        form.setValue("dob", new Date(data.personalInfo.dob));
+      }
       form.setValue("address", data.personalInfo.address);
       form.setValue("state", data.personalInfo.state);
       form.setValue("city", data.personalInfo.city);
+      if (data.personalInfo.avatar) {
+        setPreviewUrl(data.personalInfo.avatar);
+      }
     }
   }, [data, form]);
 
@@ -100,7 +115,9 @@ export default function PersonalInfo() {
     onSuccess: (data) => {
       console.log({ data });
       queryClient.invalidateQueries({ queryKey: ["user-personal-info"] });
+      queryClient.invalidateQueries({ queryKey: ["auth-user"] });
       toast.success("Personal info updated successfully!");
+      form.reset(form.getValues());
     },
     onError: (error: any) => {
       // toast.error(error.message || "Something went wrong");
@@ -109,15 +126,37 @@ export default function PersonalInfo() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     setError(null);
-    console.log("Form data:", data);
-    mutation.mutateAsync(data);
+    console.log("Form data:", values);
+
+    const formData = new FormData();
+
+    Object.keys(values).forEach((key) => {
+      const value = values[key as keyof typeof values];
+
+      if (key === "avatar") {
+        if (value instanceof File) {
+          formData.append(key, value);
+        }
+      } else if (value !== undefined && value !== null) {
+        // Handle Date objects
+        if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+    });
+
+    console.log("FormData entries:", Array.from(formData.entries()));
+
+    mutation.mutateAsync(formData as any);
   };
 
   const personalInfo = data?.personalInfo;
 
-  console.log({ personalInfo });
+  // console.log({ personalInfo });
 
   return (
     <div className="max-w-2xl mr-auto space-y-6 py-4">
@@ -126,6 +165,70 @@ export default function PersonalInfo() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
+          {/* Profile Picture */}
+          <FormField
+            control={form.control}
+            name="avatar"
+            render={({ field: { value, onChange, ...fieldProps } }) => (
+              <FormItem className="col-span-2">
+                <FormLabel className="text-muted-foreground font-normal">
+                  Profile Picture
+                </FormLabel>
+                <div className="flex items-center gap-6">
+                  <div className="flex flex-col gap-2">
+                    {previewUrl && (
+                      <div className="relative w-24 h-24">
+                        <img
+                          src={previewUrl}
+                          alt="Avatar preview"
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onChange(undefined);
+                            setPreviewUrl(null);
+                          }}
+                          className="absolute top-0 right-0 bg-red-500 rounded-full p-1 hover:bg-red-600"
+                        >
+                          <X size={16} className="text-white" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <FormControl>
+                    <label className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition">
+                      <div className="flex items-center gap-2">
+                        <Upload size={20} />
+                        <span className="text-sm text-muted-foreground">
+                          Click to upload profile picture
+                        </span>
+                      </div>
+                      <Input
+                        {...fieldProps}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            onChange(file); // Update React Hook Form
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              setPreviewUrl(reader.result as string); // Update UI
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+                  </FormControl>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {/* First Name */}
           <FormField
             control={form.control}
@@ -271,7 +374,7 @@ export default function PersonalInfo() {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="p-0" align="start">
+                  <PopoverContent className=" w-auto p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={field.value as Date}
@@ -279,7 +382,11 @@ export default function PersonalInfo() {
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }
-                      autoFocus
+                      // autoFocus
+                      captionLayout="dropdown"
+                      startMonth={new Date(1900, 0)}
+                      endMonth={new Date()}
+                      className="rounded-md border bg-white z-50"
                     />
                   </PopoverContent>
                 </Popover>
@@ -327,11 +434,14 @@ export default function PersonalInfo() {
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="lagos">Lagos</SelectItem>
-                    <SelectItem value="abuja">Abuja</SelectItem>
-                    <SelectItem value="kano">Kano</SelectItem>
-                    <SelectItem value="rivers">Rivers</SelectItem>
+                  <SelectContent className="max-h-60">
+                    <SelectGroup>
+                      {NIGERIAN_STATES.map((state) => (
+                        <SelectItem key={state} value={String(state)}>
+                          {state}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -348,13 +458,25 @@ export default function PersonalInfo() {
                 <FormLabel className="text-muted-foreground font-normal">
                   City
                 </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter city"
-                    className="rounded-full py-5 px-5"
-                    {...field}
-                  />
-                </FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value ?? ""}
+                >
+                  <FormControl>
+                    <SelectTrigger className="rounded-full w-full py-5 px-5">
+                      <SelectValue placeholder="Select city" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      {NIGERIAN_STATE_CITIES[selectedState]?.map((city) => (
+                        <SelectItem key={city} value={String(city)}>
+                          {city}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { landlordRatingService } from "@/api/lanlord-rating.api";
+import { tenantRatingService } from "@/api/tenant-rating.api";
 
 interface AddTenantRatingProps {
   tenant: any;
@@ -23,8 +24,7 @@ const TenantRating = ({ tenant, isOpen, closeModal }: AddTenantRatingProps) => {
   const queryClient = useQueryClient();
 
   const createRatingMutation = useMutation({
-    mutationFn: (payload: any) =>
-      landlordRatingService.createTenantRating(payload),
+    mutationFn: (payload: any) => tenantRatingService.createRating(payload),
     onSuccess: () => {
       toast.success("Rating added successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-tenants"] });
@@ -87,12 +87,21 @@ const TenantRating = ({ tenant, isOpen, closeModal }: AddTenantRatingProps) => {
 
         {/* Submit button */}
         <div className="flex justify-center">
-          <Button
-            onClick={handleSubmit}
-            className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
-          >
-            Submit
-          </Button>
+          {rating ? (
+            <Button
+              onClick={handleSubmit}
+              className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
+            >
+              Submit
+            </Button>
+          ) : (
+            <Button
+              disabled
+              className="bg-gray-300 text-white px-10 py-2 rounded-md cursor-not-allowed"
+            >
+              Submit
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

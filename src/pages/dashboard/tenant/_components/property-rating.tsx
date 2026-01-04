@@ -90,12 +90,21 @@ const PropertyRating = ({
 
         {/* Submit button */}
         <div className="flex justify-center">
-          <Button
-            onClick={handleSubmit}
-            className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
-          >
-            Submit
-          </Button>
+          {rating ? (
+            <Button
+              onClick={handleSubmit}
+              className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
+            >
+              Submit
+            </Button>
+          ) : (
+            <Button
+              disabled
+              className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
+            >
+              Submit
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

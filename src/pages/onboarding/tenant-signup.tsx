@@ -64,6 +64,7 @@ export default function TenantSignup() {
 
   /** --- Submit Handler --- */
   const onSubmit = (data: SignUpFormInputs) => {
+    // console.log("Form data:", data);
     const { confirmPassword, ...payload } = data;
     setAuthCredentials({ email: data.email, password: data.password });
     mutation.mutateAsync({ ...payload, roles: ["tenant"] });

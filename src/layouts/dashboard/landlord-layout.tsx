@@ -233,12 +233,12 @@ function TopBar() {
             <PopoverContent className="w-50 mr-4">
               <div className="text-sm">
                 <div className="grid gap-2">
-                  <div className="flex items-center justify-start gap-2">
+                  {/* <div className="flex items-center justify-start gap-2">
                     <PenLine size={16} />
                     <Link to="/dashboard/landlord/profile" className="w-full">
                       Edit profile
                     </Link>
-                  </div>
+                  </div> */}
                   <Button
                     disabled={logoutMutation.isPending}
                     onClick={() => logoutMutation.mutateAsync()}

@@ -1,7 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import {
+  Wallet as WalletIcon,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Settings2,
+  Landmark,
+  User,
+  Hash,
+  AlertCircle,
+  Loader2,
+  Plus,
+  ArrowRight,
+} from "lucide-react";
+
 import { walletService } from "@/api/wallet.api";
-import { WalletTransactionsTable } from "./WalletTransaction";
 import { Spinner } from "@/components/custom/loader";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogClose,
@@ -12,8 +33,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -21,9 +40,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
+import { useSearchParams } from "react-router";
+import { transactionService } from "@/api/transaction.api";
+import DataTable from "@/components/custom/data-table";
+import { columns } from "../payments/payments";
 
 function Wallet() {
   const [amount, setAmount] = useState<number>(0);
@@ -32,10 +52,31 @@ function Wallet() {
   const [accountNumber, setAccountNumber] = useState("");
   const queryClient = useQueryClient();
 
+  //payement mutations
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+
+  const { data: payment, isLoading: isLoadingPayment } = useQuery({
+    queryKey: ["transactions", { page, limit }],
+    queryFn: () =>
+      transactionService.getAllUserTransactions({
+        page: 1,
+        limit: 10,
+      }),
+  });
+
+  console.log({ payment });
+
+  // if (isLoadingPayment) return <Spinner />;
+
+  // --- Mutations ---
   const createTopUpMutation = useMutation({
     mutationFn: (amt: any) => walletService.topUpWallet(amt),
     onSuccess: (res: any) => {
       const redirectUrl = res?.authorization_url;
+      console.log({ redirectUrl });
       if (redirectUrl) window.location.href = redirectUrl;
       else toast.error("Unable to start payment. Try again.");
     },
@@ -60,6 +101,7 @@ function Wallet() {
     onError: (error: any) => toast.error(error?.message || "Update failed"),
   });
 
+  // --- Queries ---
   const { data, isLoading } = useQuery({
     queryKey: ["wallet"],
     queryFn: () => walletService.getUserWallet(),
@@ -79,7 +121,12 @@ function Wallet() {
     }
   );
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <div className="h-[60vh] flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
 
   const wallet = data?.wallet ?? {};
   const balance = typeof wallet.balance === "number" ? wallet.balance : 0;
@@ -90,64 +137,108 @@ function Wallet() {
   const formatNaira = (n: number) => `₦${Number(n || 0).toLocaleString()}`;
 
   return (
-    <div className="space-y-8">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-semibold">Your Wallet</h1>
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 w-full md:w-80">
-            <p className="text-sm text-gray-600 mb-1">Available balance</p>
-            <p className="text-4xl font-bold">{formatNaira(balance)}</p>
-          </div>
+    <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto">
+      {/* HEADER SECTION */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-1">
+          {/* <h1 className="text-3xl font-bold tracking-tight text-slate-900">Wallet Overview</h1> */}
+          <p className="text-slate-500">
+            Manage your earnings, top-ups, and payout settings.
+          </p>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col gap-3 md:pt-12">
-          {/* TOP UP */}
+        {/* ACTION BUTTONS GROUP */}
+        <div className="flex flex-wrap gap-3">
+          {/* UPDATE DETAILS */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-teal-800 hover:bg-teal-900 px-8 py-6 rounded-lg text-white w-full md:w-64">
-                Top up wallet
+              <Button
+                variant="outline"
+                className="border-slate-200 text-slate-700 hover:bg-slate-50 gap-2"
+              >
+                <Settings2 className="h-4 w-4" />
+                Payout Settings
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-full sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px]">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (!amount || amount <= 0) {
-                    toast.error("Enter a valid amount");
-                    return;
-                  }
-                  createTopUpMutation.mutateAsync(amount);
+                  updateWalletMutation.mutate({ accountNumber, bankCode });
                 }}
               >
                 <DialogHeader>
-                  <DialogTitle>Top Up Wallet</DialogTitle>
+                  <DialogTitle>Update Payout Details</DialogTitle>
                   <DialogDescription>
-                    Add funds to your wallet by entering an amount below.
+                    Set the account where you'll receive your funds.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-3">
-                    <Label htmlFor="amount">Amount</Label>
+                <div className="py-6 space-y-4">
+                  <div className="space-y-2">
+                    <Label>Select Bank</Label>
+                    <Select value={bankCode} onValueChange={setBankCode}>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder={
+                            isLoadingBanks
+                              ? "Fetching banks..."
+                              : "Choose your bank"
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent className="h-64">
+                        {banks?.banks?.map((bank: any) => (
+                          <SelectItem key={bank.id} value={bank.code}>
+                            {bank.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Account Number</Label>
                     <Input
-                      id="amount"
-                      type="number"
-                      min={1}
-                      onChange={(e) => setAmount(Number(e.target.value))}
-                      value={amount || ""}
+                      maxLength={10}
+                      value={accountNumber}
+                      onChange={(e) => setAccountNumber(e.target.value)}
+                      placeholder="0123456789"
                     />
                   </div>
+                  {isLoadingAccountDetails && (
+                    <div className="flex justify-center py-2">
+                      <Loader2 className="h-5 w-5 animate-spin text-teal-600" />
+                    </div>
+                  )}
+                  {accountDetails?.data && (
+                    <div className="p-3 bg-teal-50 border border-teal-100 rounded-lg flex items-center gap-3">
+                      <div className="h-8 w-8 bg-teal-100 rounded-full flex items-center justify-center text-teal-700 font-bold text-xs uppercase">
+                        {accountDetails.data.account_name.charAt(0)}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-teal-900 leading-none">
+                          {accountDetails.data.account_name}
+                        </p>
+                        <p className="text-[10px] text-teal-600 font-medium uppercase mt-1 tracking-wider">
+                          Verified Account
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <DialogFooter className="gap-2">
                   <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="ghost">Cancel</Button>
                   </DialogClose>
                   <Button
                     type="submit"
-                    disabled={createTopUpMutation.isPending}
+                    className="bg-teal-800"
+                    disabled={
+                      updateWalletMutation.isPending || !accountDetails?.data
+                    }
                   >
-                    {createTopUpMutation.isPending ? "Processing..." : "Top Up"}
+                    {updateWalletMutation.isPending
+                      ? "Saving..."
+                      : "Save Details"}
                   </Button>
                 </DialogFooter>
               </form>
@@ -159,133 +250,109 @@ function Wallet() {
             <DialogTrigger asChild>
               <Button
                 variant="outline"
-                className="border-gray-300 px-8 py-6 rounded-lg w-full md:w-64"
+                className="border-orange-200 text-orange-700 hover:bg-orange-50 gap-2"
               >
+                <ArrowDownLeft className="h-4 w-4" />
                 Withdraw
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-full sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px]">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (!withdrawAmount || withdrawAmount <= 0) {
-                    toast.error("Enter a valid withdrawal amount");
-                    return;
-                  }
-                  withdrawMutation.mutateAsync(withdrawAmount);
+                  if (withdrawAmount > 0)
+                    withdrawMutation.mutate(withdrawAmount);
                 }}
               >
                 <DialogHeader>
                   <DialogTitle>Withdraw Funds</DialogTitle>
                   <DialogDescription>
-                    Enter the amount you want to withdraw.
+                    Payouts are processed to your saved bank account.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-3">
-                    <Label htmlFor="withdraw">Withdraw Amount</Label>
+                <div className="py-6 space-y-4">
+                  <div className="p-3 bg-slate-50 rounded-lg border flex gap-3 text-xs text-slate-600">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    <p>
+                      Funds will be sent to{" "}
+                      <strong>{wallet.bankName || "your bank"}</strong> (
+                      {wallet.bankAccountNumber || "..."})
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="withdraw">Amount to Withdraw</Label>
                     <Input
                       id="withdraw"
                       type="number"
-                      min={1}
+                      className="text-lg py-6"
+                      value={withdrawAmount || ""}
                       onChange={(e) =>
                         setWithdrawAmount(Number(e.target.value))
                       }
-                      value={withdrawAmount || ""}
                     />
+                    <p className="text-xs text-slate-500">
+                      Max available: {formatNaira(balance)}
+                    </p>
                   </div>
                 </div>
-                <DialogFooter className="gap-2">
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                  </DialogClose>
-                  <Button type="submit" disabled={withdrawMutation.isPending}>
-                    {withdrawMutation.isPending ? "Submitting..." : "Withdraw"}
+                <DialogFooter>
+                  <Button
+                    type="submit"
+                    className="w-full bg-orange-600"
+                    disabled={withdrawMutation.isPending || balance < 1}
+                  >
+                    {withdrawMutation.isPending
+                      ? "Processing..."
+                      : "Confirm Withdrawal"}
                   </Button>
                 </DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
 
-          {/* UPDATE DETAILS */}
+          {/* TOP UP */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="border-gray-300 px-8 py-6 rounded-lg w-full md:w-64"
-              >
-                Update details
+              <Button className="bg-teal-800 hover:bg-teal-900 gap-2">
+                <Plus className="h-4 w-4" />
+                Top Up
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-full sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px]">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (!bankCode || accountNumber.length !== 10) {
-                    toast.error(
-                      "Select a bank and enter a 10-digit account number"
-                    );
-                    return;
-                  }
-                  updateWalletMutation.mutateAsync({ accountNumber, bankCode });
+                  if (amount > 0) createTopUpMutation.mutate(amount);
                 }}
               >
                 <DialogHeader>
-                  <DialogTitle>Update Wallet Details</DialogTitle>
+                  <DialogTitle>Top Up Wallet</DialogTitle>
                   <DialogDescription>
-                    Update your bank account details for withdrawals.
+                    Funds will be added via secure payment gateway.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <Label>Bank</Label>
-                    <Select
-                      value={bankCode}
-                      onValueChange={(code) => setBankCode(code)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            isLoadingBanks ? "Loading..." : "Select a bank"
-                          }
-                        />
-                      </SelectTrigger>
-                      <SelectContent className="h-60">
-                        {banks?.banks?.map((bank: any) => (
-                          <SelectItem key={bank.id} value={bank.code}>
-                            {bank.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Account Number</Label>
+                <div className="py-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="amount">Enter Amount (₦)</Label>
                     <Input
-                      maxLength={10}
-                      value={accountNumber}
-                      onChange={(e) => setAccountNumber(e.target.value)}
+                      id="amount"
+                      type="number"
+                      className="text-lg py-6"
+                      placeholder="0.00"
+                      value={amount || ""}
+                      onChange={(e) => setAmount(Number(e.target.value))}
                     />
                   </div>
-                  {isLoadingAccountDetails && <Spinner />}
-                  {accountDetails && (
-                    <div className="p-2 bg-gray-50 rounded border text-sm">
-                      <p>
-                        <strong>Name:</strong>{" "}
-                        {accountDetails?.data?.account_name}
-                      </p>
-                    </div>
-                  )}
                 </div>
-                <DialogFooter className="gap-2">
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                  </DialogClose>
+                <DialogFooter>
                   <Button
                     type="submit"
-                    disabled={updateWalletMutation.isPending}
+                    className="w-full bg-teal-800"
+                    disabled={createTopUpMutation.isPending}
                   >
-                    {updateWalletMutation.isPending ? "Updating..." : "Update"}
+                    {createTopUpMutation.isPending
+                      ? "Connecting..."
+                      : "Proceed to Payment"}
                   </Button>
                 </DialogFooter>
               </form>
@@ -294,30 +361,198 @@ function Wallet() {
         </div>
       </div>
 
-      {/* Wallet Details Display */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="text-2xl font-semibold mb-6">Wallet Details</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
-          <div>
-            <p className="text-gray-600 mb-1">Account Name:</p>
-            <p className="font-medium">{wallet.bankAccountName ?? "—"}</p>
-          </div>
-          <div>
-            <p className="text-gray-600 mb-1">Bank Name:</p>
-            <p className="font-medium">{wallet.bankName ?? "—"}</p>
-          </div>
-          <div>
-            <p className="text-gray-600 mb-1">Account Number:</p>
-            <p className="font-medium">{wallet.bankAccountNumber ?? "—"}</p>
-          </div>
-        </div>
+      {/* TOP SECTION: BALANCE & BANK INFO */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* BALANCE CARD */}
+        <Card className="lg:col-span-1 bg-teal-900 border-none shadow-xl text-white overflow-hidden relative">
+          <div className="absolute top-[-20%] right-[-10%] w-48 h-48 bg-teal-800 rounded-full blur-3xl opacity-50" />
+          <CardContent className="p-8 space-y-6 relative z-10">
+            <div className="flex justify-between items-center">
+              <div className="p-2 bg-teal-800/50 rounded-lg">
+                <WalletIcon className="h-6 w-6 text-teal-300" />
+              </div>
+              <Badge className="bg-teal-800 text-teal-200 border-none uppercase text-[10px] tracking-widest">
+                Active Wallet
+              </Badge>
+            </div>
+            <div className="space-y-1">
+              <p className="text-teal-100/70 text-sm font-medium">
+                Available Balance
+              </p>
+              <h2 className="text-4xl font-bold tracking-tight">
+                {formatNaira(balance)}
+              </h2>
+            </div>
+            <div className="pt-4 flex gap-4 opacity-20">
+              <div className="h-2 w-12 bg-white rounded-full" />
+              <div className="h-2 w-8 bg-white rounded-full" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* BANK DETAILS CARD */}
+        <Card className="lg:col-span-2 border-slate-200 shadow-sm">
+          <CardContent className="p-0">
+            <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-200">
+              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                <Landmark className="h-4 w-4 text-slate-500" />
+                Payout Destination
+              </h3>
+            </div>
+            <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="space-y-1">
+                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                  Account Name
+                </p>
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-slate-300" />
+                  <p className="text-sm font-semibold text-slate-700 capitalize">
+                    {wallet.bankAccountName || "Not set"}
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                  Bank Provider
+                </p>
+                <div className="flex items-center gap-2">
+                  <Landmark className="h-4 w-4 text-slate-300" />
+                  <p className="text-sm font-semibold text-slate-700">
+                    {wallet.bankName || "Not set"}
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                  Account Number
+                </p>
+                <div className="flex items-center gap-2">
+                  <Hash className="h-4 w-4 text-slate-300" />
+                  <p className="text-sm font-mono font-bold text-slate-700">
+                    {wallet.bankAccountNumber || "—"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* History */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="text-2xl font-semibold mb-6">History</h2>
-        <WalletTransactionsTable transactions={transactions} />
-      </div>
+      {/* RECENT TRANSACTIONS SECTION */}
+      {/* <Card className="border-slate-200 shadow-sm">
+        <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-slate-900">
+            Transaction History
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-teal-700 hover:bg-teal-50 gap-1"
+          >
+            View Statement <ArrowRight className="h-3 w-3" />
+          </Button>
+        </div>
+        <CardContent className="p-0">
+          {transactions.length === 0 ? (
+            <div className="p-12 text-center space-y-3">
+              <div className="bg-slate-100 h-12 w-12 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                <WalletIcon className="h-6 w-6" />
+              </div>
+              <p className="text-slate-500 text-sm">
+                No transactions found for this wallet.
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50/50 text-[11px] uppercase tracking-wider text-slate-500 font-bold border-b">
+                    <th className="px-6 py-4">Transaction Type</th>
+                    <th className="px-6 py-4">Amount</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4 text-right">Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {transactions.map((txn: any) => {
+                    const status = (txn.status || "").toLowerCase();
+                    const isDeposit =
+                      txn.transactionType === "deposit" ||
+                      txn.type === "deposit";
+
+                    const badgeStyles: any = {
+                      successful: "bg-green-50 text-green-700 border-green-100",
+                      pending: "bg-amber-50 text-amber-700 border-amber-100",
+                      failed: "bg-red-50 text-red-700 border-red-100",
+                    };
+
+                    return (
+                      <tr
+                        key={txn._id ?? txn.id}
+                        className="hover:bg-slate-50/50 transition-colors group"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`p-2 rounded-lg ${
+                                isDeposit
+                                  ? "bg-teal-50 text-teal-600"
+                                  : "bg-slate-100 text-slate-600"
+                              }`}
+                            >
+                              {isDeposit ? (
+                                <ArrowUpRight className="h-3 w-3" />
+                              ) : (
+                                <ArrowDownLeft className="h-3 w-3" />
+                              )}
+                            </div>
+                            <span className="text-sm font-medium text-slate-700 capitalize">
+                              {txn.type ?? txn.transactionType}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm font-bold text-slate-900">
+                          {isDeposit ? "+" : "-"}
+                          {formatNaira(txn.amount)}
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge
+                            variant="outline"
+                            className={`font-medium capitalize text-[10px] ${
+                              badgeStyles[status] ||
+                              "bg-slate-50 text-slate-600"
+                            }`}
+                          >
+                            {status}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 text-right text-xs text-slate-500 font-medium">
+                          {txn.createdAt
+                            ? new Date(txn.createdAt).toLocaleDateString(
+                                "en-GB",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                }
+                              )
+                            : "--"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card> */}
+
+      <DataTable
+        columns={columns}
+        data={payment?.transactions || []}
+        noDataMessage="No payments available."
+      />
     </div>
   );
 }

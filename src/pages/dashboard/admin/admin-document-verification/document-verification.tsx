@@ -43,7 +43,7 @@ export function AdminDocumentVerification() {
     isFetching,
     currentState,
     setSearch,
-    setDocumentTypeFilter,
+    setStatus,
     setPage,
     setLimit,
     setSortBy,
@@ -128,15 +128,10 @@ export function AdminDocumentVerification() {
   return (
     <div className="p-6 space-y-6 min-h-screen">
       {/* --- Header & Actions --- */}
-      <div className="flex justify-between items-center pt-4">
-        <p className="text-2xl font-bold text-gray-900">
-          Documents for Verification
-        </p>
-        <Button variant="default">View Audit Log</Button>
-      </div>
+
       <MetricCard data={data?.statusCounts!} />
       {/* --- 2. External Search and Filter Controls --- */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center justify-between">
         {/* Search Input */}
         <div className="relative flex items-center w-full max-w-sm">
           <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
@@ -148,26 +143,29 @@ export function AdminDocumentVerification() {
             className="pl-9 w-full rounded-lg border border-gray-200"
           />
         </div>
-        {/* Filter Select */}
-        <div className="w-[180px]">
-          <Select
-            value={currentState.documentType || "All"}
-            onValueChange={(value) =>
-              setDocumentTypeFilter(value === "All" ? "" : value)
-            }
-          >
-            <SelectTrigger className="w-full justify-between border-gray-200">
-              <SelectValue placeholder="Document Type" /> {" "}
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">Document Type: All</SelectItem>
-              {documentTypeOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className=" flex gap-4">
+          {/* Filter Select */}
+          <div className="w-[180px]">
+            <Select
+              value={currentState.verificationStatus || "All"}
+              onValueChange={(value) => setStatus(value === "All" ? "" : value)}
+            >
+              <SelectTrigger className="w-full justify-between border-gray-200">
+                <SelectValue placeholder="Document Type" /> {" "}
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">Status: All</SelectItem>
+                {documentTypeOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Audit logs */}
+          <Button variant="default">View Audit Log</Button>
         </div>
       </div>
       {/* --- 3. Verification Documents Table --- */}

@@ -13,7 +13,6 @@ import {
 import { OccupancyChart } from "./_components/occupancy-chart";
 import { RevenueChart } from "./_components/revenue-chart";
 import { MetricCard } from "./_components/metric-card";
-import type { fi } from "date-fns/locale";
 
 const typeOptions = [
   { label: "All Types", value: "All" },
@@ -21,6 +20,7 @@ const typeOptions = [
   { label: "Co-Working", value: "co-working-space" },
   { label: "Shared", value: "shared-apartment" },
   { label: "Serviced", value: "serviced-apartment" },
+  { label: "Standard", value: "standard-rental" },
 ];
 
 function AdminDashboard() {
