@@ -15,7 +15,14 @@ export default function Listings() {
   const [selected, setSelected] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const categories = ["All", "Shared", "Serviced", "Standard", "Short let"];
+  const categories = [
+    "All",
+    "Shared",
+    "Serviced",
+    "Standard",
+    "Co-working space",
+    "Short let",
+  ];
 
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
@@ -150,7 +157,7 @@ export function PropertiesGrid({
           <LandLordPropertyCard
             property={property}
             key={property._id}
-            link={`/dashboard/landlord/property/${property._id}`}
+            link={`/dashboard/landlord/properties/${property._id}`}
           />
         );
       })}

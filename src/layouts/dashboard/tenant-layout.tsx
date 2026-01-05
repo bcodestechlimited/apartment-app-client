@@ -29,6 +29,20 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { images } from "@/constants/images";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
 interface Submenu {
   name: string;
@@ -89,102 +103,162 @@ const routes: Route[] = [
   },
 ];
 
-function TenantSideBar() {
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
+// function TenantSideBar() {
+//   const [openMenu, setOpenMenu] = useState<string | null>(null);
+//   const location = useLocation();
+
+//   const toggleMenu = (menuName: string) => {
+//     setOpenMenu((prev) => (prev === menuName ? null : menuName));
+//   };
+
+//   const isActive = (path: string) =>
+//     location.pathname.toLowerCase().includes(path.toLowerCase());
+//   const isActiveSubmenu = (path: string) =>
+//     location.pathname.toLowerCase() === path.toLowerCase();
+
+//   return (
+//     <aside
+//       className={cn(
+//         "min-w-46 h-screen bg-white border-r shadow-md flex flex-col justify-between"
+//       )}
+//     >
+//       {/* Logo Section */}
+//       <div className="p-4">
+//         <img
+//           src={images.havenLeaseLogoGreen}
+//           alt="Haven Lease Logo"
+//           className="w-14 h-14 mx-auto"
+//         />
+//       </div>
+
+//       {/* Navigation Links */}
+//       <nav className="flex-1 p-4">
+//         <ul className="space-y-2">
+//           {routes.map((route, index) => (
+//             <li key={index}>
+//               {route.submenu ? (
+//                 <div>
+//                   {/* Parent menu with toggle */}
+//                   <Link
+//                     to={route.path}
+//                     className={cn(
+//                       "flex items-center justify-between w-full font-semibold p-2 hover:bg-gray-100 text-gray-700",
+//                       isActive(route.path) &&
+//                         "bg-gray-200 text-gray-900 border-l-4 border-custom-primary"
+//                     )}
+//                     onClick={() => toggleMenu(route.name)}
+//                   >
+//                     <div className="flex items-center space-x-3">
+//                       {route.icon}
+//                       <span>{route.name}</span>
+//                     </div>
+//                     <ChevronDown
+//                       className={cn(
+//                         "w-4 h-4 transition-transform",
+//                         openMenu === route.name ? "rotate-180" : "rotate-0"
+//                       )}
+//                     />
+//                   </Link>
+
+//                   {/* Submenu */}
+//                   {openMenu === route.name && (
+//                     <ul className="mt-2 text-left space-y-2">
+//                       {route.submenu.map((submenu, subIndex) => (
+//                         <li key={subIndex}>
+//                           <Link
+//                             to={submenu.path}
+//                             className={cn(
+//                               "flex items-center font-semibold text-xs space-x-3 p-2 ml-6 hover:bg-gray-100 text-gray-600",
+//                               isActiveSubmenu(submenu.path) &&
+//                                 "bg-gray-200 text-gray-900 border-l-4 border-black"
+//                             )}
+//                           >
+//                             {/* {submenu.icon} */}
+//                             <span>{submenu.name}</span>
+//                           </Link>
+//                         </li>
+//                       ))}
+//                     </ul>
+//                   )}
+//                 </div>
+//               ) : (
+//                 <Link
+//                   to={route.path}
+//                   className={cn(
+//                     "flex items-center font-semibold space-x-3 p-2 hover:bg-gray-100 text-gray-700",
+//                     isActive(route.path) &&
+//                       "bg-gray-200 text-gray-900 border-l-4 border-black"
+//                   )}
+//                 >
+//                   {route.icon}
+//                   <span>{route.name}</span>
+//                 </Link>
+//               )}
+//             </li>
+//           ))}
+//         </ul>
+//       </nav>
+//     </aside>
+//   );
+// }
+
+function TenantSidebar() {
   const location = useLocation();
 
-  const toggleMenu = (menuName: string) => {
-    setOpenMenu((prev) => (prev === menuName ? null : menuName));
-  };
-
   const isActive = (path: string) =>
-    location.pathname.toLowerCase().includes(path.toLowerCase());
-  const isActiveSubmenu = (path: string) =>
     location.pathname.toLowerCase() === path.toLowerCase();
 
   return (
-    <aside
-      className={cn(
-        "min-w-46 h-screen bg-white border-r shadow-md flex flex-col justify-between"
-      )}
-    >
-      {/* Logo Section */}
-      <div className="p-4">
-        <img
-          src={images.havenLeaseLogoGreen}
-          alt="Haven Lease Logo"
-          className="w-14 h-14 mx-auto"
-        />
-      </div>
+    <Sidebar collapsible="icon" className="">
+      {/* Logo / header */}
+      <SidebarHeader className="border-b pb-1">
+        <div className="flex items-center justify-center py-2">
+          <img
+            src={images.havenLeaseLogoGreen}
+            alt="Haven Lease Logo"
+            className="w-10 h-10"
+          />
+        </div>
+      </SidebarHeader>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          {routes.map((route, index) => (
-            <li key={index}>
-              {route.submenu ? (
-                <div>
-                  {/* Parent menu with toggle */}
-                  <Link
-                    to={route.path}
-                    className={cn(
-                      "flex items-center justify-between w-full font-semibold p-2 hover:bg-gray-100 text-gray-700",
-                      isActive(route.path) &&
-                        "bg-gray-200 text-gray-900 border-l-4 border-custom-primary"
-                    )}
-                    onClick={() => toggleMenu(route.name)}
+      <SidebarContent>
+        <SidebarGroup>
+          {/* <SidebarGroupLabel>Admin</SidebarGroupLabel> */}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {routes.map((route) => (
+                <SidebarMenuItem key={route.path}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(route.path)}
+                    tooltip={route.name} // shown when collapsed
                   >
-                    <div className="flex items-center space-x-3">
-                      {route.icon}
-                      <span>{route.name}</span>
-                    </div>
-                    <ChevronDown
+                    <Link
+                      to={route.path}
                       className={cn(
-                        "w-4 h-4 transition-transform",
-                        openMenu === route.name ? "rotate-180" : "rotate-0"
+                        "flex items-center gap-2",
+                        isActive(route.path) &&
+                          "bg-custom-primary/20 text-custom-primary"
                       )}
-                    />
-                  </Link>
+                    >
+                      {route.icon}
+                      <span className="text-sm">{route.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-                  {/* Submenu */}
-                  {openMenu === route.name && (
-                    <ul className="mt-2 text-left space-y-2">
-                      {route.submenu.map((submenu, subIndex) => (
-                        <li key={subIndex}>
-                          <Link
-                            to={submenu.path}
-                            className={cn(
-                              "flex items-center font-semibold text-xs space-x-3 p-2 ml-6 hover:bg-gray-100 text-gray-600",
-                              isActiveSubmenu(submenu.path) &&
-                                "bg-gray-200 text-gray-900 border-l-4 border-black"
-                            )}
-                          >
-                            {/* {submenu.icon} */}
-                            <span>{submenu.name}</span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  to={route.path}
-                  className={cn(
-                    "flex items-center font-semibold space-x-3 p-2 hover:bg-gray-100 text-gray-700",
-                    isActive(route.path) &&
-                      "bg-gray-200 text-gray-900 border-l-4 border-black"
-                  )}
-                >
-                  {route.icon}
-                  <span>{route.name}</span>
-                </Link>
-              )}
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </aside>
+      <SidebarFooter>
+        {/* Optional footer items (e.g., settings) */}
+      </SidebarFooter>
+
+      {/* Rail shown when collapsed */}
+      <SidebarRail />
+    </Sidebar>
   );
 }
 
@@ -204,7 +278,10 @@ function TopBar() {
   });
 
   return (
-    <div className="grid items-center justify-end p-4 bg-white mb-4">
+    <div className="flex justify-between bg-white items-center  pt-2 pb-2 sticky  top-0 z-20 border-b">
+      <div className="pl-3">
+        <SidebarTrigger />
+      </div>
       <div className="flex items-center justify-end gap-2">
         {/* <Bell className="w-6 h-6 text-gray-300 mr-3" /> */}
         <div className="flex items-center cursor-pointer px-2 gap-5 transition-colors">
@@ -259,19 +336,23 @@ function TopBar() {
   );
 }
 
-export default function TenantLayout() {
+export default function LandlordLayout() {
   useSocketConnection();
 
   return (
-    <div className="flex min-h-screen">
-      <TenantSideBar />
-      <div className="flex-1 bg-white p-4">
-        <TopBar />
-        <div className="w-full max-w-[1440px] mb-12">
-          <Breadcrumb />
-          <Outlet />
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        <TenantSidebar />
+        <div className="flex flex-col flex-1 min-h-screen">
+          <TopBar />
+          <main className="flex-1 p-4">
+            <div className="w-full mb-12">
+              <Breadcrumb />
+              <Outlet />
+            </div>
+          </main>
         </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }

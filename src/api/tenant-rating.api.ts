@@ -3,7 +3,7 @@ import axiosInstance from "@/lib/axios.config";
 import { handleAxiosError } from "@/lib/utils";
 // endpoint that tenant will use to rate landlords
 class TenantRatingService {
-  async createLandlordRating(payload: any) {
+  async createRating(payload: any) {
     try {
       const response = await axiosInstance.post(`/tenant-rating`, payload);
       console.log({ response });

@@ -1,77 +1,114 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { Home, Users, ShieldCheck, Hourglass } from "lucide-react";
+import {
+  ListChecks,
+  Home,
+  Users,
+  Building2,
+  ListPlus,
+  ShieldCheck,
+  Hourglass,
+} from "lucide-react";
+import type { Metric, Property, RevenueCategory } from "../types";
 
-export default function Stats() {
-  const stats = [
-    {
-      title: "Total Listings",
-      value: "1,250",
-      icon: <Home className="w-6 h-6 text-custom-primary" />,
-      description: "All active property listings",
-      className: "text-custom-primary",
-    },
-    {
-      title: "Total Tenants",
-      value: "3,420",
-      icon: <Users className="w-6 h-6 text-custom-primary" />,
-      description: "Registered tenants on the platform",
-      className: "text-yellow-700",
-    },
-    {
-      title: "Verified Landlords",
-      value: "865",
-      icon: <ShieldCheck className="w-6 h-6 text-custom-primary" />,
-      description: "Landlords successfully verified",
-      className: "text-blue-700",
-    },
-    {
-      title: "Pending Verifications",
-      value: "42",
-      icon: <Hourglass className="w-6 h-6 text-custom-primary" />,
-      description: "Landlords awaiting verification",
-      className: "text-purple-700",
-    },
-  ];
+export const metricData: Metric[] = [
+  {
+    title: "Total Listings",
+    value: "1,250",
 
-  return (
-    <div className="">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <Card
-            key={index}
-            className={cn(
-              `shadow-none transition-shadow border border-custom-primary/10 gap-0`,
-              stat.className
-            )}
-          >
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle
-                className={cn(
-                  "text-md font-normal text-gray-600",
-                  stat.className
-                )}
-              >
-                {stat.title}
-              </CardTitle>
-              {/* <div className="p-2 bg-custom-primary/10 rounded-full">
-                {stat.icon}
-              </div> */}
-            </CardHeader>
-            <CardContent className="text-start">
-              <p
-                className={cn(
-                  "text-2xl font-bold text-gray-900",
-                  stat.className
-                )}
-              >
-                {stat.value}
-              </p>
-              {/* <p className="text-xs text-gray-500 mt-1">{stat.description}</p> */}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-}
+    className: "text-custom-primary",
+  },
+  {
+    title: "Total Tenants",
+    value: "3,420",
+    className: "text-yellow-700",
+  },
+  {
+    title: "Verified Landlords",
+    value: "865",
+    className: "text-blue-700",
+  },
+  {
+    title: "Pending Verifications",
+    value: "42",
+    className: "text-purple-700",
+  },
+];
+
+// --- Occupancy Chart Data ---
+export const occupancyData = [
+  { month: "Jan", rate: 800 },
+  { month: "Feb", rate: 750 },
+  { month: "Mar", rate: 900 },
+  { month: "Apr", rate: 1050 },
+  { month: "May", rate: 1300 },
+  { month: "Jun", rate: 950 },
+  { month: "Jul", rate: 1100 },
+  { month: "Aug", rate: 700 },
+  { month: "Sep", rate: 980 },
+  { month: "Oct", rate: 1020 },
+  { month: "Nov", rate: 850 },
+  { month: "Dec", rate: 920 },
+];
+
+// --- Revenue Chart Data ---
+
+export const revenueData: RevenueCategory[] = [
+  { name: "Category A", value: 35, color: "#4F46E5" }, // Indigo/Violet
+  { name: "Category B", value: 30, color: "#EC4899" }, // Pink/Magenta
+  { name: "Category C", value: 20, color: "#FBBF24" }, // Yellow/Amber
+  { name: "Category D", value: 15, color: "#10B981" }, // Green/Teal
+];
+
+// --- Property Table Data ---
+
+export const propertyData: Property[] = [
+  {
+    id: "1",
+    property: "Maple Grove Apartments",
+    location: "Lekki Phase 1, Lagos",
+    landlord: "John Ade",
+    occupancyRate: 0.94,
+    revenue: 4200000,
+    bookings: 128,
+    category: "Serviced",
+  },
+  {
+    id: "2",
+    property: "Harmony Court",
+    location: "Ikeja GRA",
+    landlord: "John Ade",
+    occupancyRate: 0.94,
+    revenue: 4200000,
+    bookings: 128,
+    category: "Shared",
+  },
+  {
+    id: "3",
+    property: "Ocean View Suites",
+    location: "Victoria Island",
+    landlord: "John Ade",
+    occupancyRate: 0.94,
+    revenue: 4200000,
+    bookings: 128,
+    category: "Shared",
+  },
+  {
+    id: "4",
+    property: "Greenfield Residences",
+    location: "Yaba",
+    landlord: "John Ade",
+    occupancyRate: 0.94,
+    revenue: 4200000,
+    bookings: 128,
+    category: "Short let",
+  },
+  {
+    id: "5",
+    property: "Prime Towers",
+    location: "Ikoyi",
+    landlord: "John Ade",
+    occupancyRate: 0.94,
+    revenue: 4200000,
+    bookings: 128,
+    category: "Short let",
+  },
+];

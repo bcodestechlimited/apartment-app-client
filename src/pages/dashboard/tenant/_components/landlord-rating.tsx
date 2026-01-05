@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { tenantRatingService } from "@/api/tenant-rating.api";
+import { landlordRatingService } from "@/api/lanlord-rating.api";
 
 interface AddPropertyRatingProps {
   booking: any;
@@ -27,8 +28,7 @@ const LandlordRating = ({
   console.log({ booking });
 
   const createRatingMutation = useMutation({
-    mutationFn: (payload: any) =>
-      tenantRatingService.createLandlordRating(payload),
+    mutationFn: (payload: any) => landlordRatingService.createRating(payload),
     onSuccess: () => {
       toast.success("Rating added successfully!");
     },
@@ -90,12 +90,21 @@ const LandlordRating = ({
 
         {/* Submit button */}
         <div className="flex justify-center">
-          <Button
-            onClick={handleSubmit}
-            className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
-          >
-            Submit
-          </Button>
+          {rating ? (
+            <Button
+              onClick={handleSubmit}
+              className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
+            >
+              Submit
+            </Button>
+          ) : (
+            <Button
+              disabled
+              className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
+            >
+              Submit
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

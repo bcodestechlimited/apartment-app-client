@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import VerifyOtp from "./pages/auth/verify-otp";
@@ -45,6 +45,7 @@ import AdminPropertyManagement from "./pages/dashboard/admin/admin-property-mana
 import AdminPropertyDetail from "./pages/dashboard/admin/admin-property-detail/admin-property-detail";
 import AdminMessages from "./pages/dashboard/admin/admin-messages/admin-messages";
 import Settings from "./pages/dashboard/tenant/settings/settings";
+import LandlordSettings from "./pages/dashboard/landlord/settings/settings";
 import PersonalInfo from "./pages/dashboard/tenant/settings/_components/personal-info";
 import Employement from "./pages/dashboard/tenant/settings/_components/employment";
 import Documents from "./pages/dashboard/tenant/settings/_components/documents";
@@ -52,6 +53,13 @@ import NextOfKin from "./pages/dashboard/tenant/settings/_components/next-of-kin
 import Guarantor from "./pages/dashboard/tenant/settings/_components/guarantor";
 import Notification from "./pages/dashboard/tenant/settings/_components/notification";
 import PropertySearch from "./pages/public/property-search/property-search";
+import LandLordPersonalInfo from "./pages/dashboard/landlord/settings/_components/personal-info";
+import LandLordEmployement from "./pages/dashboard/landlord/settings/_components/employment";
+import LandLordDocuments from "./pages/dashboard/landlord/settings/_components/documents";
+import LandLordNextOfKin from "./pages/dashboard/landlord/settings/_components/next-of-kin";
+import LandLordGuarantor from "./pages/dashboard/landlord/settings/_components/guarantor";
+import LandLordNotification from "./pages/dashboard/landlord/settings/_components/notification";
+
 import PublicLayout from "./pages/public/_layouts/public-layout";
 import LandlordSignup from "./pages/onboarding/landlord-signup";
 import Login from "./pages/auth/login";
@@ -60,10 +68,17 @@ import TenantPayments from "./pages/dashboard/tenant/payments/payments";
 import PublicPropertyDetail from "./pages/public/public-property-detail/public-property-detail";
 import LandlordPayments from "./pages/dashboard/landlord/payments";
 import Wallet from "./pages/dashboard/tenant/wallet/Wallet";
-import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerification";
 import LandlordWallet from "./pages/dashboard/landlord/wallet/Wallet";
 import LandlordPaymentVerification from "./pages/dashboard/landlord/wallet/PaymentVerification";
 import SavedProperties from "./pages/dashboard/tenant/saved-properties";
+import { TenantPage } from "./pages/dashboard/admin/admin-user-management/_components/tenant-page";
+// import { AgentPage } from "./pages/dashboard/admin/admin-user-management/_components/agent-page";
+import { LandlordPage } from "./pages/dashboard/admin/admin-user-management/_components/landlord-page";
+import { TenantDetailPage } from "./pages/dashboard/admin/admin-user-management/pages/tenant-detail-page";
+import { AdminDocumentVerification } from "./pages/dashboard/admin/admin-document-verification/document-verification";
+import { LandlordDetailPage } from "./pages/dashboard/admin/admin-user-management/pages/landlord-detail-page";
+import { AdminPaymentsPage } from "./pages/dashboard/admin/admin-payments/payments";
+import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerification";
 
 const queryClient = new QueryClient();
 
@@ -375,6 +390,40 @@ function App() {
               ],
             },
             {
+              path: "settings",
+              element: <LandlordSettings />,
+              children: [
+                {
+                  path: "",
+                  element: <LandLordPersonalInfo />,
+                },
+                {
+                  path: "documents",
+                  element: <Documents />,
+                },
+                {
+                  path: "notification",
+                  element: <Notification />,
+                },
+                {
+                  path: "next-of-kin",
+                  element: <LandLordNextOfKin />,
+                },
+                {
+                  path: "guarantor",
+                  element: <LandLordGuarantor />,
+                },
+                {
+                  path: "employment",
+                  element: <LandLordEmployement />,
+                },
+                {
+                  path: "*",
+                  element: <div>Page not found</div>,
+                },
+              ],
+            },
+            {
               path: "*",
               element: <div>Page not found</div>,
             },
@@ -397,6 +446,29 @@ function App() {
             {
               path: "users",
               element: <AdminUserManagement />,
+              children: [
+                {
+                  path: "",
+                  element: <Navigate to="tenants" replace />,
+                },
+                {
+                  path: "tenants",
+                  element: <TenantPage />,
+                },
+
+                {
+                  path: "landlords",
+                  element: <LandlordPage />,
+                },
+                // {
+                //   path: "agents",
+                //   element: <AgentPage />,
+                // },
+              ],
+            },
+            {
+              path: "verifications",
+              element: <AdminDocumentVerification />,
             },
             {
               path: "properties",
@@ -411,6 +483,19 @@ function App() {
               element: <AdminMessages />,
             },
             {
+              path: "payments",
+              element: <AdminPaymentsPage />,
+            },
+            {
+              path: "analytics",
+              // element: <AdminAnalytics />,
+            },
+            {
+              path: "users/tenants/:id",
+              element: <TenantDetailPage />,
+            },
+            { path: "users/landlords/:id", element: <LandlordDetailPage /> },
+            {
               path: "*",
               element: <div>Page not found</div>,
             },
@@ -418,6 +503,7 @@ function App() {
         },
       ],
     },
+
     {
       path: "*",
       element: <Admin404 />,

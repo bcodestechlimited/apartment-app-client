@@ -211,6 +211,7 @@ export default function Tenants() {
   const openReportModal = (tenant: any) => {
     setSelectedTenant(tenant);
     setIsReportModalOpen(true);
+    // console.log("selected tenant", selectedTenant);
   };
   const closeReportModal = () => setIsReportModalOpen(false);
 
@@ -230,7 +231,8 @@ export default function Tenants() {
   const columns = [
     {
       header: "Tenant Name",
-      render: (row: any) => row?.user?.firstName || "N/A",
+      render: (row: any) =>
+        row?.user?.firstName + " " + row?.user?.lastName || "N/A",
     },
     {
       header: "Verification Status",
@@ -286,7 +288,7 @@ export default function Tenants() {
                 <Star /> Rate Tenant
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={openReportModal}>
+              <DropdownMenuItem onClick={() => openReportModal(row?.user)}>
                 <FileWarning /> Report
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -351,6 +353,7 @@ export default function Tenants() {
         <ReportTenant
           isOpen={isReportModalOpen}
           closeModal={closeReportModal}
+          reportedUser={selectedTenant?._id}
         />
       )}
     </div>

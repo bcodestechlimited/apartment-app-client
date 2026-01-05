@@ -14,15 +14,25 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { reportService } from "@/api/report.api";
 
 interface AddTenantReportProps {
   isOpen: boolean;
   closeModal: () => void;
+  reportedUser: string;
 }
 
-const ReportTenant = ({ isOpen, closeModal }: AddTenantReportProps) => {
+const ReportTenant = ({
+  isOpen,
+  closeModal,
+  reportedUser,
+}: AddTenantReportProps) => {
   const [reason, setReason] = useState("");
   const [comment, setComment] = useState("");
+
+  // console.log("reportedUser", reportedUser);
 
   const predefinedReasons = [
     "Defaulting on rent",
@@ -34,12 +44,32 @@ const ReportTenant = ({ isOpen, closeModal }: AddTenantReportProps) => {
     "Other",
   ];
 
-  const handleSubmit = () => {
-    // Add your submit logic
-    console.log({ reason, comment });
+  const createReportMutation = useMutation({
+    mutationFn: ({
+      reportedUserId,
+      payload,
+    }: {
+      reportedUserId: string;
+      payload: any;
+    }) => reportService.createReport(reportedUserId, payload),
+    onSuccess: () => {
+      toast.success("Report added successfully!");
+      closeModal();
+      setReason(""); // Reset state
+      setComment("");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Something went wrong");
+      console.error(error);
+    },
+  });
 
-    // Close modal
-    closeModal();
+  const handleSubmit = () => {
+    // Pass a single object to the mutate function
+    createReportMutation.mutate({
+      reportedUserId: reportedUser,
+      payload: { reason, comment },
+    });
   };
 
   return (
@@ -83,7 +113,9 @@ const ReportTenant = ({ isOpen, closeModal }: AddTenantReportProps) => {
 
         <Button
           className="w-full bg-[#004542] hover:bg-[#00332f]"
-          onClick={handleSubmit}
+          onClick={() => {
+            handleSubmit();
+          }}
           disabled={!reason || (reason === "Other" && comment.trim() === "")}
         >
           Submit Report
