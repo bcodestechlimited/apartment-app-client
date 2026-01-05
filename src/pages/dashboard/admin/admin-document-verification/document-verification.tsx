@@ -40,7 +40,6 @@ export function AdminDocumentVerification() {
   const {
     data,
     isLoading,
-    isFetching,
     currentState,
     setSearch,
     setStatus,
@@ -173,7 +172,7 @@ export function AdminDocumentVerification() {
         <DataTable
           data={documents}
           columns={verificationColumns}
-          isLoading={isLoading || isFetching}
+          isLoading={isLoading }
           pagination={pagination}
           setPage={setPage}
           setPageSize={setLimit}

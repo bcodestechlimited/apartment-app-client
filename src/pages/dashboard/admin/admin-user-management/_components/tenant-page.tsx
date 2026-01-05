@@ -19,7 +19,6 @@ export function TenantPage() {
   const {
     data,
     isLoading,
-    isFetching,
     localSearch,
     setLocalSearch,
     currentState,
@@ -117,7 +116,7 @@ export function TenantPage() {
         <DataTable
           data={tenants}
           columns={tenantColumns}
-          isLoading={isLoading || isFetching}
+          isLoading={isLoading}
           pagination={pagination}
           setPage={setPage}
           setPageSize={setLimit}

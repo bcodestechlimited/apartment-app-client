@@ -18,7 +18,7 @@ export function useAdminProperties() {
   // Local search state for immediate UI feedback before debounce
   const [localSearch, setLocalSearch] = useState(search);
 
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "admin-properties",
       { page, limit, search, propertyType, sortBy },
@@ -68,7 +68,6 @@ export function useAdminProperties() {
   return {
     data,
     isLoading,
-    isFetching,
     localSearch,
     setLocalSearch,
     filters: { propertyType, page, limit },

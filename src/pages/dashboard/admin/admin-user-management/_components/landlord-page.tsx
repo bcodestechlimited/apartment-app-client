@@ -102,7 +102,6 @@ export function LandlordPage() {
   const {
     data,
     isLoading,
-    isFetching,
     localSearch,
     setLocalSearch,
     currentState,
@@ -181,7 +180,7 @@ export function LandlordPage() {
         <DataTable
           data={landlords}
           columns={landlordColumns}
-          isLoading={isLoading || isFetching}
+          isLoading={isLoading}
           pagination={pagination}
           setPage={setPage}
           setPageSize={setLimit}

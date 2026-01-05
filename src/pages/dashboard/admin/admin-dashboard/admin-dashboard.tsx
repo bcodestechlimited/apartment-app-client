@@ -27,7 +27,6 @@ function AdminDashboard() {
   const {
     data,
     isLoading,
-    isFetching,
     localSearch,
     setLocalSearch,
     filters,
@@ -107,7 +106,7 @@ function AdminDashboard() {
           <DataTable
             data={data?.properties || []}
             columns={propertyColumns}
-            isLoading={isLoading || isFetching}
+            isLoading={isLoading}
             pagination={pagination}
             setPage={setPage}
             setPageSize={setLimit}

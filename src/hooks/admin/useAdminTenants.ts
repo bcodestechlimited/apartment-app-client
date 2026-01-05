@@ -21,7 +21,7 @@ export function useAdminTenants() {
   const [localSearch, setLocalSearch] = useState(search);
 
   // 2. Fetch Data
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "admin-tenants",
       { page, limit, search, sortBy, status, isVerified },
@@ -72,7 +72,6 @@ export function useAdminTenants() {
   return {
     data,
     isLoading,
-    isFetching,
     localSearch,
     setLocalSearch,
     currentState: { page, limit, sortBy, status, isVerified },

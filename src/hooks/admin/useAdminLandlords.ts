@@ -17,7 +17,7 @@ export function useAdminLandlords() {
   const [localSearch, setLocalSearch] = useState(search);
 
   // --- 2. Fetch Data ---
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["admin-landlords", { page, limit, search, sortBy, status }],
     queryFn: () =>
       adminUserManagementService.getLandlords({
@@ -58,7 +58,6 @@ export function useAdminLandlords() {
   return {
     data,
     isLoading,
-    isFetching,
     localSearch,
     setLocalSearch,
     currentState: { page, limit, sortBy, status },
