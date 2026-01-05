@@ -164,7 +164,6 @@ export function AdminPaymentsPage() {
           setPage={setPage}
           setPageSize={setLimit}
           onSortChange={() => {}}
-          // --- PASSING META HERE ---
           meta={{
             onProcessWithdrawal: handleProcessClick,
           }}
