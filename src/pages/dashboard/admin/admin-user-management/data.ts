@@ -3,63 +3,63 @@ import type { Booking, Report } from "./types";
 import tentantprofile from "@/assets/images/haven_lease-admin_tenant_profile.png";
 
 export const formatNaira = (value: number) => `₦${value.toLocaleString()}`;
-export const flagsReportsData: Report[] = [
-  {
-    date: "Sept 2, 2025",
-    issue: "Dispute with landlord over rent",
-    reportedBy: "John Ade",
-    status: "Pending",
-    action: "...",
-  },
-  {
-    date: "Sept 2, 2025",
-    issue: "Tenant flagged for late payment",
-    reportedBy: "System: Auto-Flag",
-    status: "Reached",
-    action: "...",
-  },
-  {
-    date: "Sept 2, 2025",
-    issue: "Property damage complaint",
-    reportedBy: "Agent: Adewale Kay",
-    status: "Pending",
-    action: "...",
-  },
-  {
-    date: "Sept 2, 2025",
-    issue: "Tenant requested refund dispute",
-    reportedBy: "Support Team",
-    status: "Reached",
-    action: "...",
-  },
-];
+// export const flagsReportsData: Report[] = [
+//   {
+//     date: "Sept 2, 2025",
+//     issue: "Dispute with landlord over rent",
+//     reportedBy: "John Ade",
+//     status: "Pending",
+//     action: "...",
+//   },
+//   {
+//     date: "Sept 2, 2025",
+//     issue: "Tenant flagged for late payment",
+//     reportedBy: "System: Auto-Flag",
+//     status: "Reached",
+//     action: "...",
+//   },
+//   {
+//     date: "Sept 2, 2025",
+//     issue: "Property damage complaint",
+//     reportedBy: "Agent: Adewale Kay",
+//     status: "Pending",
+//     action: "...",
+//   },
+//   {
+//     date: "Sept 2, 2025",
+//     issue: "Tenant requested refund dispute",
+//     reportedBy: "Support Team",
+//     status: "Reached",
+//     action: "...",
+//   },
+// ];
 
-export const bookingHistoryData: Booking[] = [
-  {
-    property: "Harmony Court",
-    location: "Lekki Phase 1",
-    duration: "3 months",
-    status: "Active",
-    paymentStatus: "Cleared",
-    landlord: "John Ade (Agent)",
-  },
-  {
-    property: "Harmony Court",
-    location: "Lekki Phase 1",
-    duration: "3 months",
-    status: "Pending",
-    paymentStatus: "Refund issued",
-    landlord: "Sarah Okoro (Owner)",
-  },
-  {
-    property: "Harmony Court",
-    location: "Lekki Phase 1",
-    duration: "3 months",
-    status: "Cancelled",
-    paymentStatus: "Overdue",
-    landlord: "Adewale Kay (Agent)",
-  },
-];
+// export const bookingHistoryData: Booking[] = [
+//   {
+//     property: "Harmony Court",
+//     location: "Lekki Phase 1",
+//     duration: "3 months",
+//     status: "Active",
+//     paymentStatus: "Cleared",
+//     landlord: "John Ade (Agent)",
+//   },
+//   {
+//     property: "Harmony Court",
+//     location: "Lekki Phase 1",
+//     duration: "3 months",
+//     status: "Pending",
+//     paymentStatus: "Refund issued",
+//     landlord: "Sarah Okoro (Owner)",
+//   },
+//   {
+//     property: "Harmony Court",
+//     location: "Lekki Phase 1",
+//     duration: "3 months",
+//     status: "Cancelled",
+//     paymentStatus: "Overdue",
+//     landlord: "Adewale Kay (Agent)",
+//   },
+// ];
 
 const mockTenantDetail = {
   name: "Ashley Walters",

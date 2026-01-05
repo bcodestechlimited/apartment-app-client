@@ -6,9 +6,9 @@ import type { ColumnDef } from "@tanstack/react-table";
 export const paymentColumns: ColumnDef<any>[] = [
   {
     accessorKey: "reference",
-    header: "Reference",
+    header: () => <div className=" text-left">Reference</div>,
     cell: ({ row }) => (
-      <div className="flex flex-col">
+      <div className="flex flex-col ">
         <span className="font-mono text-xs uppercase font-bold text-slate-700">
           {row.original.reference || "N/A"}
         </span>
@@ -20,7 +20,7 @@ export const paymentColumns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "user",
-    header: "User/Entity",
+    header: () => <div className=" text-left">User</div>,
     cell: ({ row }) => {
       const user = row.original.user;
       return (
@@ -45,7 +45,7 @@ export const paymentColumns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "transactionType",
-    header: "Type",
+    header: () => <div className=" text-left">Transaction Type</div>,
     cell: ({ row }) => (
       <Badge variant="outline" className="capitalize text-[11px] font-normal">
         {row.original.transactionType}
@@ -54,7 +54,7 @@ export const paymentColumns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: () => <div className=" text-left">Amount (NGN)</div>,
     cell: ({ row }) => (
       <span className="font-bold text-slate-900">
         {formatCurrency(row.original.amount)}
@@ -63,7 +63,7 @@ export const paymentColumns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "status",
-    header: "Payment Status",
+    header: () => <div className=" text-left">Status</div>,
     cell: ({ row }) => {
       const status = row.original.status;
       const variants: Record<string, string> = {
@@ -84,7 +84,7 @@ export const paymentColumns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "adminApproval",
-    header: "Admin Approval",
+    header: () => <div className=" text-left">Admin Approval</div>,
     cell: ({ row }) => {
       const approval = row.original.adminApproval;
       const variants: Record<string, string> = {
@@ -110,7 +110,7 @@ export const paymentColumns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Created Date",
+    header: () => <div className=" text-left">Created Date</div>,
     cell: ({ row }) => (
       <div className="text-xs text-slate-600">
         {formatPrettyDate(row.original.createdAt)}
@@ -143,7 +143,7 @@ export const paymentColumns: ColumnDef<any>[] = [
 
   {
     id: "actions",
-    header: "Action",
+    header: () => <div className=" text-left">Action</div>,
     cell: ({ row, table }) => {
       const { status, transactionType, adminApproval } = row.original;
       const meta = table.options.meta as any; // Accessing the meta passed in DataTable

@@ -4,14 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, ChevronDown } from "lucide-react";
 
-// Assuming you have components for Tabs and TabsList defined with shadcn/ui
 const TabsList = ({ children }: { children: React.ReactNode }) => (
   <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg">
     {children}
   </div>
 );
 
-// Custom NavLink that looks like a shadcn/ui TabsTrigger
 const NavTab = ({
   to,
   children,
@@ -39,21 +37,18 @@ const NavTab = ({
 };
 
 export default function AdminUserManagement() {
-  // Determine which type of user is being viewed to update the search placeholder
   const location = useLocation();
   const pathSegment = location.pathname.split("/").pop() || "users";
   const userType = pathSegment.charAt(0).toUpperCase() + pathSegment.slice(1); // e.g., Tenants
 
   return (
-    <div className="p-6">
-      {/* --- Header & Navigation Row --- */}
+    <div className="p-6 w-full">
       <div className="flex justify-between items-center mb-6">
-        {/* Navigation Tabs (Using NavLink) */}
         <nav>
           <TabsList>
             <NavTab to="tenants">Tenants</NavTab>
             <NavTab to="landlords">Landlords</NavTab>
-            <NavTab to="agents">Agents</NavTab>
+            {/* <NavTab to="agents">Agents</NavTab> */}
           </TabsList>
         </nav>
       </div>

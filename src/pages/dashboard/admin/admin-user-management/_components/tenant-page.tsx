@@ -3,7 +3,7 @@ import { DataTable } from "../../_component/data-table";
 import { tenantColumns } from "./column-definition/tenant-columns";
 import { useAdminTenants } from "@/hooks/admin/useAdminTenants";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Loader, Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,6 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { adminUserManagementService } from "@/api/admin/admin-user-management";
 
 export function TenantPage() {
   const {
@@ -34,6 +37,29 @@ export function TenantPage() {
     pageSize: currentState.limit,
     totalPages: data?.pagination?.totalPages || 1,
     filteredCount: data?.pagination?.filteredCount || 0,
+  };
+
+  const queryClient = useQueryClient();
+
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
+      adminUserManagementService.updateUser(id, data),
+    onSuccess: (res) => {
+      toast.success(res?.message || "User updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin-tenants"] });
+    },
+    onError: (err: any) => toast.error(err.message || "Suspension failed"),
+  });
+
+  const handleVerify = (id: string, currentStatus: boolean) => {
+    updateUserMutation.mutate({
+      id,
+      data: { isDocumentVerified: !currentStatus },
+    });
+  };
+
+  const handleSuspend = (id: string, currentStatus: boolean) => {
+    updateUserMutation.mutate({ id, data: { isActive: !currentStatus } });
   };
 
   return (
@@ -96,6 +122,10 @@ export function TenantPage() {
           setPage={setPage}
           setPageSize={setLimit}
           onSortChange={setSortBy}
+          meta={{
+            onVerify: handleVerify,
+            onSuspend: handleSuspend,
+          }}
         />
       </div>
     </div>

@@ -48,6 +48,18 @@ export class AdminUserManagementService {
       handleAxiosError(error, "Unable to get landlord");
     }
   };
+
+  updateUser = async (userId: string, data: any) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/admin/users/${userId}`,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to update user");
+    }
+  };
 }
 
 export const adminUserManagementService = new AdminUserManagementService();

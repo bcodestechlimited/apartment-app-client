@@ -72,7 +72,7 @@ import LandlordWallet from "./pages/dashboard/landlord/wallet/Wallet";
 import LandlordPaymentVerification from "./pages/dashboard/landlord/wallet/PaymentVerification";
 import SavedProperties from "./pages/dashboard/tenant/saved-properties";
 import { TenantPage } from "./pages/dashboard/admin/admin-user-management/_components/tenant-page";
-import { AgentPage } from "./pages/dashboard/admin/admin-user-management/_components/agent-page";
+// import { AgentPage } from "./pages/dashboard/admin/admin-user-management/_components/agent-page";
 import { LandlordPage } from "./pages/dashboard/admin/admin-user-management/_components/landlord-page";
 import { TenantDetailPage } from "./pages/dashboard/admin/admin-user-management/pages/tenant-detail-page";
 import { AdminDocumentVerification } from "./pages/dashboard/admin/admin-document-verification/document-verification";
@@ -460,10 +460,10 @@ function App() {
                   path: "landlords",
                   element: <LandlordPage />,
                 },
-                {
-                  path: "agents",
-                  element: <AgentPage />,
-                },
+                // {
+                //   path: "agents",
+                //   element: <AgentPage />,
+                // },
               ],
             },
             {

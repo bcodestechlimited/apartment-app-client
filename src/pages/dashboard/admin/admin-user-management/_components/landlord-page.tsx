@@ -86,7 +86,7 @@ import { DataTable } from "../../_component/data-table";
 import { landlordColumns } from "./column-definition/landlord-columns";
 import { useAdminLandlords } from "@/hooks/admin/useAdminLandlords";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Loader, Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -94,6 +94,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { adminUserManagementService } from "@/api/admin/admin-user-management";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function LandlordPage() {
   const {
@@ -116,6 +119,29 @@ export function LandlordPage() {
     pageSize: currentState.limit,
     totalPages: data?.pagination?.totalPages || 1,
     filteredCount: data?.pagination?.filteredCount || 0,
+  };
+
+  const queryClient = useQueryClient();
+
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
+      adminUserManagementService.updateUser(id, data),
+    onSuccess: (res) => {
+      toast.success(res?.message || "User updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin-landlords"] });
+    },
+    onError: (err: any) => toast.error(err.message || "Suspension failed"),
+  });
+
+  const handleVerify = (id: string, currentStatus: boolean) => {
+    updateUserMutation.mutate({
+      id,
+      data: { isDocumentVerified: !currentStatus },
+    });
+  };
+
+  const handleSuspend = (id: string, currentStatus: boolean) => {
+    updateUserMutation.mutate({ id, data: { isActive: !currentStatus } });
   };
 
   return (
@@ -160,6 +186,10 @@ export function LandlordPage() {
           setPage={setPage}
           setPageSize={setLimit}
           onSortChange={setSortBy}
+          meta={{
+            onVerify: handleVerify,
+            onSuspend: handleSuspend,
+          }}
         />
       </div>
     </div>
