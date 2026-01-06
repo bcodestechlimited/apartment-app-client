@@ -443,7 +443,7 @@ function App() {
     },
     //Admin Routes
     {
-      path: "admin",
+      path: "dashboard/admin",
       element: <AdminAuthGuard />,
       children: [
         {

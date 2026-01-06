@@ -5,12 +5,42 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { CustomAlert } from "@/components/custom/custom-alert";
+import { useAuthUser } from "@/hooks/useAuthUser";
+import { useMutation } from "@tanstack/react-query";
+import { authService } from "@/api/auth.api";
 
 export default function RoleSelection() {
   const [error, setError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const { data: user, isLoading, isError } = useAuthUser();
+
+  const updateRoleMutation = useMutation({
+    mutationFn: (selectedRole: string) =>
+      authService.updateUser({ roles: selectedRole ? [selectedRole] : [] }),
+    onSuccess: (data) => {
+      console.log("updated user role", data);
+      console.log("user data after role update", data.user);
+      const user = data.user;
+      if (user && user.roles) {
+        console.log("user roles", user.roles);
+        if (user.roles.includes("landlord")) {
+          console.log("navigate to landlord dashboard");
+          return navigate("/dashboard/landlord");
+        }
+        if (user.roles.includes("tenant")) {
+          return navigate("/dashboard/");
+        }
+
+        if (user.roles.includes("admin")) {
+          navigate("/dashboard/admin");
+        }
+      }
+    },
+  });
+
+  // navigate("/dashboard");
 
   const roles = [
     {
@@ -74,10 +104,21 @@ export default function RoleSelection() {
       <div className="pt-4">
         {error && <CustomAlert variant="destructive" message={error} />}
       </div>
-
-      <Button onClick={handleNext} className="mt-6 cursor-pointer btn-primary">
-        Continue
-      </Button>
+      {user ? (
+        <Button
+          onClick={() => updateRoleMutation.mutateAsync(selectedRole as string)}
+          className="mt-6 cursor-pointer btn-primary"
+        >
+          Continue
+        </Button>
+      ) : (
+        <Button
+          onClick={handleNext}
+          className="mt-6 cursor-pointer btn-primary"
+        >
+          Continue
+        </Button>
+      )}
     </div>
   );
 }
