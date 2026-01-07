@@ -53,7 +53,7 @@ export default function Login() {
           return navigate("/auth/verify-otp");
         }
         if (user.roles.includes("admin")) {
-          return navigate("dashboard/admin");
+          return navigate("/dashboard/admin");
         } else if (user.roles.includes("landlord")) {
           console.log("landlord");
           return navigate("/dashboard/landlord");

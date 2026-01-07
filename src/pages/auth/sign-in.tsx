@@ -12,7 +12,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Spinner } from "@/components/custom/loader";
 import { useAuthActions } from "@/store/useAuthStore";
 import type { IUser } from "@/interfaces/user.interface";
@@ -27,6 +27,11 @@ interface SignInFormInputs {
 export default function SignIn() {
   const navigate = useNavigate();
   const { setAuthCredentials } = useAuthActions();
+  const location = useLocation();
+
+  const previousPath = location.state?.from;
+
+  console.log("previousPath", previousPath);
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +48,20 @@ export default function SignIn() {
     mutationFn: authService.signIn,
     onSuccess: (signInResponse: { user: IUser }) => {
       const { user } = signInResponse;
+
+      if (previousPath) {
+        console.log("Navigating to previous path:", previousPath);
+
+        if (user?.roles?.includes("admin")) {
+          return navigate("/dashboard/admin");
+        } else if (user?.roles?.includes("landlord")) {
+          return navigate(`/dashboard/landlord${previousPath}`);
+        } else {
+          console.log("Navigating to:", `/dashboard${previousPath}`);
+          return navigate(`/dashboard${previousPath}`);
+        }
+      }
+
       if (user?.roles?.includes("admin")) {
         return navigate("/admin");
       } else if (user?.roles?.includes("landlord")) {

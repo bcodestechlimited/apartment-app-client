@@ -81,6 +81,8 @@ import { AdminPaymentsPage } from "./pages/dashboard/admin/admin-payments/paymen
 import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerification";
 import ForgotPassword from "./pages/auth/forgot-password";
 import ResetPassword from "./pages/auth/reset-password";
+import TermsAndConditions from "./pages/public/terms-page/terms";
+import PrivacyPolicy from "./pages/public/privacy-policy-page/privacy";
 
 const queryClient = new QueryClient();
 
@@ -102,8 +104,16 @@ function App() {
           element: <PropertySearch />,
         },
         {
-          path: "properties/:propertyId",
+          path: "property/:propertyId",
           element: <PublicPropertyDetail />,
+        },
+        {
+          path: "terms",
+          element: <TermsAndConditions />,
+        },
+        {
+          path: "privacy-policy",
+          element: <PrivacyPolicy />,
         },
       ],
     },

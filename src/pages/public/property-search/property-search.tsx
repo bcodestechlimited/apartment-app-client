@@ -21,8 +21,11 @@ export default function PropertySearch() {
   const propertyType = searchParams.get("propertyType") || "";
   const city = searchParams.get("city") || "";
   const priceRange = searchParams.get("priceRange") || "";
-  const bedrooms = searchParams.get("bedrooms") || "";
-  const bathrooms = searchParams.get("bathrooms") || "";
+  const numberOfBedrooms = searchParams.get("bedrooms") || "";
+  console.log("numberOfBedrooms", numberOfBedrooms);
+  const numberOfBathrooms = searchParams.get("bathrooms") || "";
+  console.log("numberOfBathrooms", numberOfBathrooms);
+  const search = searchParams.get("search") || "";
 
   const { user } = useAuthStore();
 
@@ -38,8 +41,9 @@ export default function PropertySearch() {
         propertyType,
         city,
         priceRange,
-        bedrooms,
-        bathrooms,
+        numberOfBedrooms,
+        numberOfBathrooms,
+        search,
       },
     ],
     queryFn: () =>
@@ -49,8 +53,9 @@ export default function PropertySearch() {
         propertyType,
         city,
         priceRange,
-        bedrooms,
-        bathrooms,
+        numberOfBedrooms,
+        numberOfBathrooms,
+        search,
       }),
   });
 
@@ -64,7 +69,7 @@ export default function PropertySearch() {
     if (isTenant) return `/dashboard/properties/${propertyId}`;
     if (isLandlord) return `/dashboard/landlord/properties/${propertyId}`;
     if (isAdmin) return `/admin/properties/${propertyId}`;
-    return `/properties/${propertyId}`;
+    return `/property/${propertyId}`;
   };
 
   return (
@@ -73,7 +78,11 @@ export default function PropertySearch() {
         <h2 className="text-2xl font-semibold">Property Search Results</h2>
         <div className="relative w-72">
           <Search className="absolute left-3 top-2 text-gray-400" size={18} />
-          <Input placeholder="Search by name..." className="pl-9 rounded-sm" />
+          <Input
+            onChange={(e) => handleFilterChange("search", e.target.value)}
+            placeholder="Search by name..."
+            className="pl-9 rounded-sm"
+          />
         </div>
       </div>
 
@@ -112,9 +121,19 @@ export default function PropertySearch() {
                 <SelectValue placeholder="Property Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1-bedroom">1 Bedroom</SelectItem>
-                <SelectItem value="2-bedroom">2 Bedroom</SelectItem>
-                <SelectItem value="shared">Shared Apartment</SelectItem>
+                {/* <SelectItem value="all">All</SelectItem> */}
+
+                <SelectItem value="standard-rental">Standard Rental</SelectItem>
+                <SelectItem value="serviced-apartment">
+                  Serviced Apartment
+                </SelectItem>
+                <SelectItem value="shared-apartment">
+                  Shared Apartment
+                </SelectItem>
+                <SelectItem value="co-working-space">
+                  Co-working Space
+                </SelectItem>
+                <SelectItem value="short-let">Short Let</SelectItem>
               </SelectContent>
             </Select>
 
@@ -142,14 +161,14 @@ export default function PropertySearch() {
             <Input
               type="number"
               placeholder="No. of bedrooms"
-              value={bedrooms}
+              value={numberOfBedrooms}
               onChange={(e) => handleFilterChange("bedrooms", e.target.value)}
             />
 
             <Input
               type="number"
               placeholder="No. of bathrooms"
-              value={bathrooms}
+              value={numberOfBathrooms}
               onChange={(e) => handleFilterChange("bathrooms", e.target.value)}
             />
 
@@ -177,6 +196,12 @@ export default function PropertySearch() {
                 ))}
               </div>
             </>
+          )}
+
+          {data?.properties?.length === 0 && !isLoading && (
+            <p className="text-center text-gray-500 mt-20">
+              No properties found matching your criteria.
+            </p>
           )}
         </div>
       </div>

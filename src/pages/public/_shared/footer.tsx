@@ -44,7 +44,7 @@ export default function Footer() {
           <h3 className="text-lg font-semibold mb-4">Explore</h3>
           <ul className="leading-8">
             {[
-              { title: "Find apartment", link: "#" },
+              { title: "Find apartment", link: "/properties" },
               { title: "List apartment", link: "#" },
               { title: "Co-working space", link: "#" },
               { title: "Patners", link: "#" },
@@ -63,8 +63,8 @@ export default function Footer() {
             {[
               { title: "About Us", link: "/about" },
               { title: "Contact Us", link: "#" },
-              { title: "Terms and Conditions", link: "#" },
-              { title: "Privacy Policy", link: "#" },
+              { title: "Terms and Conditions", link: "/terms" },
+              { title: "Privacy Policy", link: "/privacy-policy" },
             ].map(({ title, link }) => (
               <li key={title}>
                 <a href={link} className="text-gray-400 hover:text-white">

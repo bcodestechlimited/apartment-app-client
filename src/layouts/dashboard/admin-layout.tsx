@@ -64,47 +64,47 @@ interface Route {
 const routes: Route[] = [
   {
     name: "Dashboard",
-    path: "/admin",
+    path: "/dashboard/admin",
     icon: <House className="w-5 h-5" />,
   },
   {
     name: "User Management",
-    path: "/admin/users",
+    path: "/dashboard/admin/users",
     icon: <BookOpen className="w-5 h-5" />,
   },
   {
     name: "Property Managment",
-    path: "/admin/properties",
+    path: "/dashboard/admin/properties",
     icon: <Users className="w-5 h-5" />,
   },
   {
     name: "Verification & Compliance",
-    path: "/admin/verifications",
+    path: "/dashboard/admin/verifications",
     icon: <ShieldAlertIcon className="w-5 h-5" />,
   },
   {
     name: "Payments",
-    path: "/admin/payments",
+    path: "/dashboard/admin/payments",
     icon: <CreditCardIcon className="w-5 h-5" />,
   },
   {
     name: "Analytics",
-    path: "/admin/analytics",
+    path: "/dashboard/admin/analytics",
     icon: <FileChartColumnIncreasing className="w-5 h-5" />,
   },
   {
     name: "Messages",
-    path: "/admin/messages",
+    path: "dashboard/admin/messages",
     icon: <Mail className="w-5 h-5" />,
   },
   {
     name: "Support",
-    path: "/admin/support",
+    path: "/dashboard/admin/support",
     icon: <Headset className="w-5 h-5" />,
   },
   {
     name: "Settings",
-    path: "/admin/settings",
+    path: "dashboard/admin/settings",
     icon: <Settings className="w-5 h-5" />,
   },
 ];

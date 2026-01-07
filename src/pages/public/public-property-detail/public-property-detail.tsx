@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import type { IProperty } from "@/interfaces/property.interface";
-import { formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -70,7 +70,9 @@ export default function PublicPropertyDetail() {
   const handleBooking = () => {
     if (!user) {
       toast.error("Please sign in to book a property");
-      navigate("/auth/sign-in");
+
+      localStorage.setItem("propertyId", propertyId || "");
+      navigate("/auth/sign-in", { state: { from: location.pathname } });
       return;
     }
 
@@ -128,17 +130,17 @@ export default function PublicPropertyDetail() {
 
       <div className="flex justify-between py-4">
         <div className="flex items-center gap-2">
-          <Button>Shared Apartment</Button>
+          <Button>{property?.type.replace("-", " ")}</Button>
           <Button>Rent</Button>
         </div>
-        <div className="flex gap-2 w-1/4 justify-end">
+        {/* <div className="flex gap-2 w-1/4 justify-end">
           <span className="flex items-center gap-1">
             <Heart /> Save
           </span>
           <span className="flex items-center gap-1">
             <LucideShare2 /> Share
           </span>
-        </div>
+        </div> */}
       </div>
 
       <div className="grid gap-6 grid-cols-5">
@@ -203,14 +205,16 @@ export default function PublicPropertyDetail() {
 
         <div className=" flex flex-col gap-4 shadow-xl rounded-2xl text-start p-4 col-span-2">
           <p>Price</p>
-          <p>185,000 per month</p>
+          <p>{formatCurrency(property?.price)}</p>
 
           <Separator />
 
-          <div className="flex flex-col gap-2">
-            <p>Booking Duration</p>
+          <div className="flex items-center gap-2">
+            <p>Booking Duration :</p>
 
-            <Select>
+            <Button>{property?.pricingModel}</Button>
+
+            {/* <Select>
               <SelectTrigger className="w-full rounded-full">
                 <SelectValue placeholder="-select-" />
               </SelectTrigger>
@@ -219,21 +223,21 @@ export default function PublicPropertyDetail() {
                 <SelectItem value="monthly">Monthly</SelectItem>
                 <SelectItem value="yearly">Yearly</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
 
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between">
               <p className="font-medium">Rent</p>
-              <p>{property.price}</p>
+              <p>{formatCurrency(property.price)}</p>
             </div>
             <div className="flex items-center justify-between">
               <p className="font-medium">Service Charge</p>
-              <p>{10000}</p>
+              <p>{formatCurrency(10000)}</p>
             </div>
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <p className="font-medium">Caution fee (Refundable)</p>
-              <p>{10000}</p>
+              <p>{formatCurrency(10000)}</p>
             </div>
             <div className="flex items-center justify-between">
               <p className="font-medium">Legal</p>
@@ -245,13 +249,13 @@ export default function PublicPropertyDetail() {
             </div>
             <div className="flex items-center justify-between">
               <p className="font-medium">VAT</p>
-              <p>{property.price}</p>
-            </div>
+              <p>{formatCurrency(10000)}</p>
+            </div> */}
           </div>
           <Separator />
           <div className="flex items-center justify-between">
             <p className="font-medium">Total</p>
-            <p>{property.price}</p>
+            <p>{formatCurrency(property.price + 10000)}</p>
           </div>
 
           <div className="flex items-center gap-2 my-2 px-2 ">
@@ -278,7 +282,7 @@ export default function PublicPropertyDetail() {
             >
               Book Now
             </Button>
-            <Button className="w-full rounded-full">Book an Inspection</Button>
+            {/* <Button className="w-full rounded-full">Book an Inspection</Button> */}
           </div>
         </div>
       </div>
