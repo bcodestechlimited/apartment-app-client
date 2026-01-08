@@ -304,11 +304,11 @@ export default function LandlordSignup() {
               <Checkbox />{" "}
               <p className="text-white text-sm text-start">
                 By signing up now, you agree to our{" "}
-                <Link to="#" className="underline">
+                <Link to="/terms" className="underline">
                   Terms
                 </Link>{" "}
                 and{" "}
-                <Link to="#" className="underline">
+                <Link to="/privacy-policy" className="underline">
                   Privacy Policy
                 </Link>
               </p>

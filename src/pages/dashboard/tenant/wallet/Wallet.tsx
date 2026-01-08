@@ -399,8 +399,8 @@ function Wallet() {
                 Payout Destination
               </h3>
             </div>
-            <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="space-y-1">
+            <div className="p-8 grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 text-left">
+              <div className="space-y-1 ">
                 <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                   Account Name
                 </p>
@@ -411,26 +411,28 @@ function Wallet() {
                   </p>
                 </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  Bank Provider
-                </p>
-                <div className="flex items-center gap-2">
-                  <Landmark className="h-4 w-4 text-slate-300" />
-                  <p className="text-sm font-semibold text-slate-700">
-                    {wallet.bankName || "Not set"}
+              <div className=" flex justify-evenly items-center">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    Bank Provider
                   </p>
+                  <div className="flex items-center gap-2">
+                    <Landmark className="h-4 w-4 text-slate-300" />
+                    <p className="text-sm font-semibold text-slate-700">
+                      {wallet.bankName || "Not set"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  Account Number
-                </p>
-                <div className="flex items-center gap-2">
-                  <Hash className="h-4 w-4 text-slate-300" />
-                  <p className="text-sm font-mono font-bold text-slate-700">
-                    {wallet.bankAccountNumber || "—"}
+                <div className="space-y-1 ">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    Account Number
                   </p>
+                  <div className="flex items-center gap-2">
+                    <Hash className="h-4 w-4 text-slate-300" />
+                    <p className="text-sm font-mono font-bold text-slate-700">
+                      {wallet.bankAccountNumber || "—"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

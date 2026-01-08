@@ -29,7 +29,7 @@ export default function NewListings() {
         <section className="py-10">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">New Listings</h2>
-            <a href="#" className="text-sm hover:underline">
+            <a href="" className="text-sm hover:underline">
               View more →
             </a>
           </div>
@@ -58,7 +58,7 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
       isTenant,
     });
 
-    if (!isAuthenticated) return `/properties/${propertyId}`;
+    if (!isAuthenticated) return `/property/${propertyId}`;
     if (isLandlord) return `/dashboard/landlord/property/${propertyId}`;
     if (isTenant) return `/dashboard/property/${propertyId}`;
     return `/property/${propertyId}`;

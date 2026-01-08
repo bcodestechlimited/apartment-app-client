@@ -10,75 +10,82 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate, Link } from "react-router";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
-import { Link, useNavigate } from "react-router";
-import { Spinner } from "@/components/custom/loader";
-import { useAuthActions } from "@/store/useAuthStore";
-import type { IUser } from "@/interfaces/user.interface";
+import { toast } from "sonner";
 import { CustomAlert } from "@/components/custom/custom-alert";
-import GoogleAuthButton from "@/components/custom/google-auth-button";
-import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
+import { Spinner } from "@/components/custom/loader";
 import { images } from "@/constants/images";
+import { Separator } from "@/components/ui/separator";
 
-interface SignInFormInputs {
+interface ResetPasswordFormInputs {
   email: string;
+  token: string;
   password: string;
+  confirmPassword: string;
 }
 
-export default function Login() {
+export default function ResetPassword() {
   const navigate = useNavigate();
   const { setAuthCredentials } = useAuthActions();
+  const authCredentials = useAuthStore((state) => state.authCredentials);
+  const storedEmail = authCredentials?.email || "";
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<SignInFormInputs>({
+  const form = useForm<ResetPasswordFormInputs>({
     defaultValues: {
-      email: "",
+      email: storedEmail,
+      token: "",
       password: "",
+      confirmPassword: "",
     },
+    mode: "onChange",
   });
 
-  /** ---- Mutations ---- */
   const mutation = useMutation({
-    mutationFn: authService.signIn,
-    onSuccess: (data: { user: IUser }) => {
-      const { user } = data;
-      if (user && user.roles) {
-        if (user && !user.isEmailVerified) {
-          console.log("email not verified", user);
-          return navigate("/auth/verify-otp");
-        }
-        if (user.roles.includes("admin")) {
-          return navigate("/dashboard/admin");
-        } else if (user.roles.includes("landlord")) {
-          console.log("landlord");
-          return navigate("/dashboard/landlord");
-        }
-      }
-
-      //Tenant
-      navigate("/dashboard");
+    mutationFn: authService.resetPassword,
+    onSuccess: () => {
+      toast.success("Password reset successfully!");
+      setAuthCredentials(null);
+      navigate("/login");
     },
     onError: (error: any) => {
-      // toast.error(error.message || "Something went wrong");
-      setError(error.message || "Something went wrong");
-      console.log("login error", error);
+      const errorMessage = error.message || "Failed to reset password";
+      setError(errorMessage);
+      toast.error(errorMessage);
+      console.log(error);
     },
   });
 
-  /** ---- Submit Handler ---- */
-  const onSubmit = (data: SignInFormInputs) => {
-    console.log("Form data:", data);
+  const onSubmit = (data: ResetPasswordFormInputs) => {
     setError(null);
-    setAuthCredentials({
+
+    if (!data.email || data.email.trim() === "") {
+      setError("Email is required");
+      return;
+    }
+
+    if (!data.token || data.token.trim() === "") {
+      setError("Token is required");
+      return;
+    }
+
+    if (data.password !== data.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    mutation.mutateAsync({
       email: data.email,
+      otp: data.token,
       password: data.password,
     });
-    mutation.mutateAsync(data);
   };
 
   return (
@@ -92,15 +99,13 @@ export default function Login() {
           />
         </Link>
         <h2 className="text-white text-lg md:text-2xl font-semibold mb-1 text-center">
-          Welcome Back
+          Reset Password
         </h2>
         <p className="text-sm text-white/80 mb-4 text-center">
-          Login to your account to continue
+          Enter the token sent to your email and create a new password
         </p>
 
-        {/* Google Auth Button */}
-        <GoogleAuthButton />
-        <Separator className="my-4 bg-white/20 data-[orientation=horizontal]:w-[80%] " />
+        <Separator className="my-4 bg-white/20 data-[orientation=horizontal]:w-[80%]" />
 
         {/* ---- ShadCN Form ---- */}
         <Form {...form}>
@@ -133,12 +138,41 @@ export default function Login() {
               )}
             />
 
+            {/* Token Field */}
+            <FormField
+              control={form.control}
+              name="token"
+              rules={{
+                required: "Token is required",
+                minLength: {
+                  value: 1,
+                  message: "Please enter a valid token",
+                },
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Enter the token from your email"
+                      className="bg-white/10 border-white/30 text-white placeholder:text-white/70 w-full border rounded-full py-5 px-5"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-end text-xs" />
+                </FormItem>
+              )}
+            />
+
             {/* Password Field with Eye Toggle */}
             <FormField
               control={form.control}
               name="password"
               rules={{
                 required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
               }}
               render={({ field }) => (
                 <FormItem>
@@ -147,7 +181,7 @@ export default function Login() {
                       <Input
                         {...field}
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
+                        placeholder="Enter your new password"
                         className="bg-white/10 border-white/30 text-white placeholder:text-white/70 w-full border rounded-full py-5 px-5"
                       />
                       <button
@@ -171,20 +205,51 @@ export default function Login() {
               )}
             />
 
+            {/* Confirm Password Field with Eye Toggle */}
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              rules={{
+                required: "Please confirm your password",
+                validate: (value) =>
+                  value === form.getValues("password") ||
+                  "Passwords do not match",
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm your password"
+                        className="bg-white/10 border-white/30 text-white placeholder:text-white/70 w-full border rounded-full py-5 px-5"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword((prev) => !prev)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white focus:outline-none"
+                        aria-label={
+                          showConfirmPassword
+                            ? "Hide password"
+                            : "Show password"
+                        }
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="w-5 h-5 cursor-pointer" />
+                        ) : (
+                          <Eye className="w-5 h-5 cursor-pointer" />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-end text-xs" />
+                </FormItem>
+              )}
+            />
+
             {/* Error Message */}
             {error && <CustomAlert variant="destructive" message={error} />}
-
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-2 my-2 ">
-                <Checkbox /> <p className="text-white text-sm">Remember me</p>
-              </div>
-              <Link
-                className="underline text-sm text-white"
-                to="/forgot-password"
-              >
-                Forgot Password?
-              </Link>
-            </div>
 
             {/* Submit Button */}
             <Button
@@ -194,17 +259,17 @@ export default function Login() {
             >
               {mutation.isPending ? (
                 <span className="flex items-center justify-center">
-                  <Spinner /> Loading...
+                  <Spinner /> Resetting...
                 </span>
               ) : (
-                "Sign In"
+                "Reset Password"
               )}
             </Button>
 
             <p className="text-white">
-              Don't have an account yet?{" "}
-              <Link to="/onboarding" className="underline">
-                Create One now
+              Remember your password?{" "}
+              <Link to="/login" className="underline">
+                Sign in
               </Link>
             </p>
           </form>

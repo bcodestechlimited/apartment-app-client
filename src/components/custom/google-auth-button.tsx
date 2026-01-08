@@ -3,17 +3,27 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import googleIconImage from "@/assets/images/google-icon.png";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { CustomAlert } from "./custom-alert";
 
 export default function GoogleAuthButton() {
   const [error, setError] = useState<string | null>(null);
   const popupRef = useRef<Window | null>(null);
 
+  const location = useLocation();
+
+  let role = "";
+  if (location.pathname.includes("onboarding/tenant")) {
+    role = "tenant";
+  }
+  if (location.pathname.includes("onboarding/landlord")) {
+    role = "landlord";
+  }
+
   const navigate = useNavigate();
 
   const googleMutation = useMutation({
-    mutationFn: authService.loginWithGoogle,
+    mutationFn: (role: string) => authService.loginWithGoogle(role),
     onSuccess: (data) => {
       return (window.location.href = data.redirectURL);
       // Centered popup window logic
@@ -49,7 +59,7 @@ export default function GoogleAuthButton() {
   return (
     <div className="w-full">
       <Button
-        onClick={() => googleMutation.mutateAsync()}
+        onClick={() => googleMutation.mutateAsync(role)}
         disabled={googleMutation.isPending}
         variant="outline"
         className="w-full mb-3 bg-transparent text-gray-300 border-white/40 cursor-pointer rounded-full"
