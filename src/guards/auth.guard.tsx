@@ -21,14 +21,14 @@ export const AuthGuard = () => {
 export const LandlordAuthGuard = () => {
   const location = useLocation();
 
-  const { data: user, isLoading, isError } = useAuthUser();
+  const { data: user, isLoading } = useAuthUser();
   // console.log("landlord guard user", user);
 
   if (isLoading) {
     return <AuthLoader />;
   }
 
-  if (isError || !user) {
+  if (!user) {
     return <Navigate to="/auth/sign-in" state={{ from: location }} replace />;
   }
 
@@ -47,13 +47,13 @@ export const LandlordAuthGuard = () => {
 export const TenantAuthGuard = () => {
   const location = useLocation();
 
-  const { data: user, isLoading, isError } = useAuthUser();
+  const { data: user, isLoading } = useAuthUser();
 
   if (isLoading) {
     return <AuthLoader />;
   }
 
-  if (isError || !user) {
+  if (!user) {
     return <Navigate to="/auth/sign-in" state={{ from: location }} replace />;
   }
 
@@ -72,13 +72,13 @@ export const TenantAuthGuard = () => {
 export const AdminAuthGuard = () => {
   const location = useLocation();
 
-  const { data: user, isLoading, isError } = useAuthUser();
+  const { data: user, isLoading } = useAuthUser();
 
   if (isLoading) {
     return <AuthLoader />;
   }
 
-  if (isError || !user) {
+  if (!user) {
     return <Navigate to="/auth/sign-in" state={{ from: location }} replace />;
   }
 

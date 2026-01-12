@@ -98,9 +98,17 @@ class AuthService {
     }
   };
 
-  loginWithGoogle = async (role: string) => {
+  loginWithGoogle = async ({
+    role,
+    redirect,
+  }: {
+    role?: string;
+    redirect?: string;
+  }) => {
     try {
-      const response = await axiosInstance.get(`/auth/google?role=${role}`);
+      const response = await axiosInstance.get(`/auth/google`, {
+        params: { role, redirect },
+      });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to login with Google");
