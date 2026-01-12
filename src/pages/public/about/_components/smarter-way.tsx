@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import newsletterBg from "@/assets/images/newsletter.png";
+import { Link } from "react-router";
 
 export default function SmarterWay() {
   return (
@@ -23,9 +24,11 @@ export default function SmarterWay() {
           we're here to make it seamless{" "}
         </p>
         <div className="flex gap-4">
-          <Button className="bg-white text-custom-primary hover:bg-gray-100 cursor-pointer">
-            Discover Apartmens
-          </Button>
+          <Link to="/properties">
+            <Button className="bg-white text-custom-primary hover:bg-gray-100 cursor-pointer">
+              Discover Apartmens
+            </Button>
+          </Link>
           <Button className="bg-transparent border border-white hover:bg-transparent cursor-pointer">
             List Apartments
           </Button>

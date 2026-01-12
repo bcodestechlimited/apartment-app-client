@@ -13,6 +13,7 @@ export interface UserState {
   actions: {
     setUser: (user: IUser | null) => Promise<void>;
     setAuthCredentials: (creds: AuthCredentials | null) => void;
+    reset: () => void;
   };
 }
 
@@ -26,6 +27,9 @@ const actions = (
   },
   setAuthCredentials: (creds: AuthCredentials | null) => {
     set({ authCredentials: creds });
+  },
+  reset: () => {
+    set({ user: null, authCredentials: null });
   },
 });
 

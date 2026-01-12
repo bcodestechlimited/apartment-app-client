@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router";
 
 // Helper function to format currency (NGN)
 const formatCurrency = (value: number) => {
@@ -90,14 +91,10 @@ export const landlordColumns: ColumnDef<any>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() =>
-                  (window.location.href = `/admin/users/landlords/${_id}`)
-                }
-              >
-                {/* <Eye className="mr-2 h-4 w-4" /> */}
-                View details
+              <DropdownMenuItem asChild>
+                <Link to={`${_id}`} className="cursor-pointer">
+                  View details
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className={

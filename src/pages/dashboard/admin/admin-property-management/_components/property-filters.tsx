@@ -50,18 +50,20 @@ export default function PropertyFilters() {
       {/* Filter by Property Type */}
       <div className="">
         <Select
-          value={searchParams.get("type") || ""}
-          onValueChange={(value) => handleChange("type", value)}
+          value={searchParams.get("propertyType") || ""}
+          onValueChange={(value) => handleChange("propertyType", value)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Property Type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="apartment">Apartment</SelectItem>
-            <SelectItem value="house">House</SelectItem>
-            <SelectItem value="duplex">Duplex</SelectItem>
-            <SelectItem value="studio">Studio</SelectItem>
+            <SelectItem value="standard-rental">Standard Rental</SelectItem>
+            <SelectItem value="serviced-apartment">
+              Serviced Apartment
+            </SelectItem>
+            <SelectItem value="shared-apartment">Shared Apartment</SelectItem>
+            <SelectItem value="co-working-space">Co-working Space</SelectItem>
+            <SelectItem value="short-let">Short Let</SelectItem>
           </SelectContent>
         </Select>
       </div>

@@ -26,7 +26,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { images } from "@/constants/images";
 import LandlordWallet from "@/pages/dashboard/landlord/wallet/Wallet";
@@ -266,11 +266,13 @@ function TopBar() {
   const navigate = useNavigate();
 
   const { user } = useAuthStore();
+  const { reset } = useAuthActions();
 
   const logoutMutation = useMutation({
     mutationFn: authService.logOut,
     onSuccess: (response) => {
       toast.success(response.message);
+      reset();
       navigate("/", { replace: true });
     },
     onError: (error) => {

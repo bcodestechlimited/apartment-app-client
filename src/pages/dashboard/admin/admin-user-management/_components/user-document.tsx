@@ -108,6 +108,14 @@ export function VerificationDocuments({ documents }: { documents: any[] }) {
   const displayedDocs = documents.slice(0, displayLimit);
   const hasMore = documents.length > displayLimit;
 
+  if (!documents || documents.length === 0) {
+    return (
+      <p className="text-muted-foreground  text-center">
+        No documents uploaded.
+      </p>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

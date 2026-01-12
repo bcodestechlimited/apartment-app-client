@@ -79,6 +79,11 @@ import { AdminDocumentVerification } from "./pages/dashboard/admin/admin-documen
 import { LandlordDetailPage } from "./pages/dashboard/admin/admin-user-management/pages/landlord-detail-page";
 import { AdminPaymentsPage } from "./pages/dashboard/admin/admin-payments/payments";
 import PaymentVerification from "./pages/dashboard/tenant/wallet/PaymentVerification";
+import ForgotPassword from "./pages/auth/forgot-password";
+import ResetPassword from "./pages/auth/reset-password";
+import TermsAndConditions from "./pages/public/terms-page/terms";
+import PrivacyPolicy from "./pages/public/privacy-policy-page/privacy";
+import ContactUs from "./pages/public/contact/contact";
 
 const queryClient = new QueryClient();
 
@@ -96,12 +101,24 @@ function App() {
           element: <About />,
         },
         {
+          path: "contact",
+          element: <ContactUs />,
+        },
+        {
           path: "properties",
           element: <PropertySearch />,
         },
         {
-          path: "properties/:propertyId",
+          path: "property/:propertyId",
           element: <PublicPropertyDetail />,
+        },
+        {
+          path: "terms",
+          element: <TermsAndConditions />,
+        },
+        {
+          path: "privacy-policy",
+          element: <PrivacyPolicy />,
         },
       ],
     },
@@ -109,6 +126,14 @@ function App() {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "forgot-password",
+      element: <ForgotPassword />,
+    },
+    {
+      path: "reset-password",
+      element: <ResetPassword />,
     },
     {
       path: "/auth",
@@ -433,7 +458,7 @@ function App() {
     },
     //Admin Routes
     {
-      path: "admin",
+      path: "dashboard/admin",
       element: <AdminAuthGuard />,
       children: [
         {

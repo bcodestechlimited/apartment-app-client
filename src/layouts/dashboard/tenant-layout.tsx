@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { images } from "@/constants/images";
 import {
@@ -265,11 +265,13 @@ function TenantSidebar() {
 function TopBar() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { reset } = useAuthActions();
 
   const logoutMutation = useMutation({
     mutationFn: authService.logOut,
     onSuccess: (response) => {
       toast.success(response.message);
+      reset();
       navigate("/login", { replace: true });
     },
     onError: (error) => {

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import workspaceImage from "@/assets/images/workspaces.svg";
+import { Link } from "react-router";
 
 export default function BrowseWorkspaces() {
   return (
@@ -18,9 +19,11 @@ export default function BrowseWorkspaces() {
                 spaces designed for freelancers, startups, and remote teams.
               </p>
 
-              <Button className="bg-custom-primary rounded-full px-8 font-light text-xs hover:bg-custom-primary/90 cursor-pointer">
-                Browse workspaces
-              </Button>
+              <Link to="/properties?propertyType=co-working-space">
+                <Button className="bg-custom-primary rounded-full px-8 font-light text-xs hover:bg-custom-primary/90 cursor-pointer">
+                  Browse workspaces
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

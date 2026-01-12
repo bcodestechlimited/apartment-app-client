@@ -34,7 +34,7 @@ function ChatSidebar({ conversations }: { conversations: IConversation[] }) {
       (p) => p._id !== user?._id
     )[0];
 
-    return otherParticipant.firstName;
+    return otherParticipant?.firstName;
   }
 
   return (
@@ -114,7 +114,7 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
       (p) => p._id !== user?._id
     )[0];
 
-    return otherParticipant.firstName + " " + otherParticipant.lastName;
+    return otherParticipant?.firstName + " " + otherParticipant?.lastName;
   }
 
   const handleIsTyping = (event: React.ChangeEvent<HTMLInputElement>) => {

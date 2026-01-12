@@ -5,6 +5,7 @@ import type { IProperty } from "@/interfaces/property.interface";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import { Layers } from "lucide-react";
+import { Link } from "react-router";
 
 export default function NewListings() {
   const { user } = useAuthStore();
@@ -29,9 +30,9 @@ export default function NewListings() {
         <section className="py-10">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">New Listings</h2>
-            <a href="#" className="text-sm hover:underline">
+            <Link to="/properties" className="text-sm hover:underline">
               View more →
-            </a>
+            </Link>
           </div>
           <PropertyGrid
             properties={data?.properties}
@@ -58,7 +59,7 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
       isTenant,
     });
 
-    if (!isAuthenticated) return `/properties/${propertyId}`;
+    if (!isAuthenticated) return `/property/${propertyId}`;
     if (isLandlord) return `/dashboard/landlord/property/${propertyId}`;
     if (isTenant) return `/dashboard/property/${propertyId}`;
     return `/property/${propertyId}`;

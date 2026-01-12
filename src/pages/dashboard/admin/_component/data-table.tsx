@@ -96,10 +96,7 @@ export function DataTable<TData, TValue>({
 
   const TableBodyContent = isLoading ? (
     <TableRow>
-      <TableCell
-        colSpan={columns.length}
-        className="h-24 text-center text-gray-500"
-      >
+      <TableCell colSpan={columns.length} className="h-24 text-center ">
         <Loader2 className="h-6 w-6 animate-spin inline mr-2 text-custom-primary" />{" "}
         Loading data...
       </TableCell>
@@ -126,17 +123,14 @@ export function DataTable<TData, TValue>({
   );
 
   return (
-    <div className="rounded-md border">
+    <div className="">
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader className="bg-gray-50">
+          <TableHeader className="[&_tr]:border-b-0 bg-custom-primary/20">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="border-b-0 border">
                 {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className="text-gray-600 font-semibold text-center"
-                  >
+                  <TableHead key={header.id} className="text-custom-primary/80">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -159,12 +153,16 @@ export function DataTable<TData, TValue>({
             value={String(pagination?.pageSize)}
             onValueChange={handlePageSizeChange}
           >
-            <SelectTrigger className="w-[70px] h-8 text-gray-700">
+            <SelectTrigger className="w-17.5 h-8 text-gray-700 cursor-pointer">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {[5, 10, 20, 50].map((size) => (
-                <SelectItem key={size} value={String(size)}>
+                <SelectItem
+                  key={size}
+                  value={String(size)}
+                  className="cursor-pointer"
+                >
                   {size}
                 </SelectItem>
               ))}
@@ -181,7 +179,7 @@ export function DataTable<TData, TValue>({
           </span>
           <Button
             variant="outline"
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 cursor-pointer"
             onClick={() => setPage(pagination?.pageIndex - 1)}
             disabled={pagination?.pageIndex <= 1 || isLoading}
           >
@@ -189,7 +187,7 @@ export function DataTable<TData, TValue>({
           </Button>
           <Button
             variant="outline"
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p- cursor-pointer"
             onClick={() => setPage(pagination?.pageIndex + 1)}
             disabled={
               pagination?.pageIndex >= pagination?.totalPages || isLoading

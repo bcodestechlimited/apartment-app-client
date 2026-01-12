@@ -12,16 +12,16 @@ export default function AdminPropertyManagement() {
   const page = Number(searchParams.get("page") || 1);
   const limit = Number(searchParams.get("limit") || 10);
   const isVerified = searchParams.get("isVerified");
-  const type = searchParams.get("type");
+  const propertyType = searchParams.get("propertyType");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-properties", [page, limit, isVerified, type]],
+    queryKey: ["admin-properties", [page, limit, isVerified, propertyType]],
     queryFn: () =>
       adminPropertyService.getProperties({
         page,
         limit,
         isVerified: isVerified === null ? undefined : isVerified === "true",
-        type: type || undefined,
+        propertyType: propertyType || undefined,
       }),
   });
 
@@ -59,12 +59,12 @@ function PropertiesGrid({ properties, isLoading }: PropertiesGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-6">
       {properties.map((property: IProperty) => (
         <AdminPropertyCard
           property={property}
           key={property._id}
-          link={`/admin/properties/${property._id}`}
+          link={`/dashboard/admin/properties/${property._id}`}
         />
       ))}
     </div>

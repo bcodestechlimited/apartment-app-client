@@ -1,6 +1,6 @@
 import type { IProperty } from "@/interfaces/property.interface";
 import { formatCurrency } from "@/lib/utils";
-import { Bath, Bed, Ellipsis } from "lucide-react";
+import { Bath, Bed, Ellipsis, RockingChair } from "lucide-react";
 import { Link } from "react-router";
 import {
   DropdownMenu,
@@ -95,6 +95,7 @@ export const PublicPropertyCard = ({
     pictures,
     numberOfBedrooms,
     numberOfBathrooms,
+    seatingCapacity,
   } = property;
   console.log(" property", property);
   if (!property) return null;
@@ -120,11 +121,19 @@ export const PublicPropertyCard = ({
 
         <div className="p-4 text-start flex flex-col gap-1">
           <span>
-            <small className="text-gray-500">
-              {Number(numberOfBedrooms) === 1
-                ? "1 Bedroom"
-                : `${numberOfBedrooms} Bedrooms`}
-            </small>
+            {Number(seatingCapacity) != 1 ? (
+              <small className="text-gray-500">
+                {Number(seatingCapacity) === 1
+                  ? "1 Seating Capacity"
+                  : `${seatingCapacity} Seating Capacity`}
+              </small>
+            ) : (
+              <small className="text-gray-500">
+                {Number(numberOfBedrooms) === 1
+                  ? "1 Bedroom"
+                  : `${numberOfBedrooms} Bedrooms`}
+              </small>
+            )}
           </span>
           <p className="font-medium text-xl">{title}</p>
           <p className="font-semibold text-sm">
@@ -137,12 +146,17 @@ export const PublicPropertyCard = ({
           </p>
 
           <div className="flex gap-4 flex-wrap mt-2">
-            {numberOfBedrooms ? (
+            {Number(seatingCapacity) != 1 ? (
+              <p className="text-sm text-gray-500 flex items-center gap-1">
+                <RockingChair size={18} />
+                {seatingCapacity}
+              </p>
+            ) : (
               <p className="text-sm text-gray-500 flex items-center gap-1">
                 <Bed size={18} />
                 {numberOfBedrooms}
               </p>
-            ) : null}
+            )}
             {numberOfBathrooms ? (
               <p className="text-sm text-gray-500 flex items-center gap-1">
                 <Bath size={18} />
