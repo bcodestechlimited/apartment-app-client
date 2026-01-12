@@ -83,7 +83,7 @@ export function TenantPage() {
             value={currentState.status || "all"}
             onValueChange={(val) => setStatus(val === "all" ? "" : val)} // Reset to empty string if "all"
           >
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-37.5 cursor-pointer">
               <SelectValue placeholder="Payment Status" />
             </SelectTrigger>
             <SelectContent>
@@ -99,7 +99,7 @@ export function TenantPage() {
             value={currentState.isVerified || "all"}
             onValueChange={(val) => setIsVerified(val === "all" ? "" : val)} // Reset to empty string if "all"
           >
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-37.5">
               <SelectValue placeholder="Verification" />
             </SelectTrigger>
             <SelectContent>

@@ -83,7 +83,7 @@ export default function AdminPropertyDetail() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-6">
       {/* Back Button */}
       <div className="flex items-center justify-between">
         <Button

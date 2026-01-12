@@ -5,6 +5,7 @@ import Twitter from "@/assets/images/Twitter - Original.png";
 import LinkedIn from "@/assets/images/LinkedIn - Original.png";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 export default function Footer() {
   return (
@@ -45,14 +46,17 @@ export default function Footer() {
           <ul className="leading-8">
             {[
               { title: "Find apartment", link: "/properties" },
-              { title: "List apartment", link: "#" },
-              { title: "Co-working space", link: "#" },
+              { title: "List apartment", link: "/login" },
+              {
+                title: "Co-working space",
+                link: "/properties?propertyType=co-working-space",
+              },
               { title: "Patners", link: "#" },
             ].map(({ title, link }) => (
               <li key={title}>
-                <a href={link} className="text-gray-400 hover:text-white">
+                <Link to={link} className="text-gray-400 hover:text-white">
                   {title}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -62,7 +66,7 @@ export default function Footer() {
           <ul className="leading-8">
             {[
               { title: "About Us", link: "/about" },
-              { title: "Contact Us", link: "#" },
+              { title: "Contact Us", link: "/contact" },
               { title: "Terms and Conditions", link: "/terms" },
               { title: "Privacy Policy", link: "/privacy-policy" },
             ].map(({ title, link }) => (

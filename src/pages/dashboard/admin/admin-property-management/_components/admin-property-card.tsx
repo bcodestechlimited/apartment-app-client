@@ -24,7 +24,7 @@ export const AdminPropertyCard = ({ property, link }: PropertyCardProps) => {
   return (
     <div
       className={cn(
-        `relative bg-white rounded-lg overflow-hidden w-full border border-gray-200 flex flex-col` // <-- flex column layout
+        `relative bg-white rounded-lg overflow-hidden w-full border border-gray-200 flex flex-col ` // <-- flex column layout
         // {
         //   "border-yellow-500": !isVerified,
         //   "border-green-500": isVerified,
@@ -62,7 +62,7 @@ export const AdminPropertyCard = ({ property, link }: PropertyCardProps) => {
       </div>
 
       {/* Content */}
-      <div className="p-4 text-start flex-1 flex flex-col gap-1">
+      <div className="p-4 text-start flex-1 flex flex-col justify-between  gap-1">
         <span>
           {typeof numberOfBedrooms === "number" && (
             <span>

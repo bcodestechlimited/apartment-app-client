@@ -17,11 +17,14 @@ import AnimatedText from "@/components/animations/animated-text";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export default function Discover() {
   const [selectedState, setSelectedState] =
     useState<(typeof NIGERIAN_STATES)[number]>("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [selectedPricingModel, setSelectedPricingModel] = useState<string>("");
+  const [selectedPropertyType, setSelectedPropertyType] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -75,12 +78,16 @@ export default function Discover() {
                       setSelectedState(value);
                     }}
                   >
-                    <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0 data-[placeholder]:text-white/90">
+                    <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0 data-[placeholder]:text-white/90 cursor-pointer">
                       <SelectValue placeholder="Select your state" />
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
                       {NIGERIAN_STATES.map((state) => (
-                        <SelectItem key={state} value={String(state)}>
+                        <SelectItem
+                          key={state}
+                          value={String(state)}
+                          className="cursor-pointer"
+                        >
                           {state}
                         </SelectItem>
                       ))}
@@ -91,13 +98,22 @@ export default function Discover() {
                 {/* City */}
                 <div className="flex flex-col gap-2 items-center border-r border-gray-400 pr-4">
                   <h3 className="font-bold">City</h3>
-                  <Select>
-                    <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0 data-[placeholder]:text-white/90">
+                  <Select
+                    value={selectedCity}
+                    onValueChange={(value) => {
+                      setSelectedCity(value);
+                    }}
+                  >
+                    <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0 data-[placeholder]:text-white/90 cursor-pointer">
                       <SelectValue placeholder="Select your city" />
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
                       {NIGERIAN_STATE_CITIES[selectedState]?.map((lga) => (
-                        <SelectItem key={lga} value={String(lga)}>
+                        <SelectItem
+                          key={lga}
+                          value={String(lga)}
+                          className="cursor-pointer"
+                        >
                           {lga}
                         </SelectItem>
                       ))}
@@ -108,8 +124,13 @@ export default function Discover() {
                 {/* Property Type */}
                 <div className="flex flex-col gap-2 items-center border-r border-gray-400 pr-4">
                   <h3 className="font-bold">Property Type</h3>
-                  <Select>
-                    <SelectTrigger className="border-0 shadow-none w-full data-[placeholder]:text-white/90">
+                  <Select
+                    value={selectedPropertyType}
+                    onValueChange={(value) => {
+                      setSelectedPropertyType(value);
+                    }}
+                  >
+                    <SelectTrigger className="border-0 shadow-none w-full data-[placeholder]:text-white/90 cursor-pointer">
                       <SelectValue placeholder="Select property type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -117,7 +138,7 @@ export default function Discover() {
                         <SelectItem
                           key={propertyType}
                           value={String(propertyType)}
-                          className="capitalize"
+                          className="capitalize cursor-pointer"
                         >
                           {propertyType.replace("-", " ")}
                         </SelectItem>
@@ -129,8 +150,13 @@ export default function Discover() {
                 {/* Rent Range */}
                 <div className="flex flex-col gap-2 items-center border-gray-300 pr-4">
                   <h3 className="font-bold">Rent Range</h3>
-                  <Select>
-                    <SelectTrigger className="border-0 shadow-none w-full data-[placeholder]:text-white/90">
+                  <Select
+                    value={selectedPricingModel}
+                    onValueChange={(value) => {
+                      setSelectedPricingModel(value);
+                    }}
+                  >
+                    <SelectTrigger className="border-0 shadow-none w-full data-[placeholder]:text-white/90 cursor-pointer">
                       <SelectValue placeholder="Select rent range" />
                     </SelectTrigger>
                     <SelectContent>
@@ -138,7 +164,7 @@ export default function Discover() {
                         <SelectItem
                           key={model}
                           value={String(model)}
-                          className="capitalize"
+                          className="capitalize cursor-pointer"
                         >
                           {model.replace("-", " ")}
                         </SelectItem>
@@ -149,15 +175,14 @@ export default function Discover() {
 
                 {/* Search Button */}
                 <div className="flex justify-center col-span-2 md:col-span-1">
-                  <Button
-                    onClick={() => {
-                      navigate("/properties");
-                    }}
-                    className="w-full md:w-fit !px-6 py-2 bg-custom-primary rounded-full justify-self-center cursor-pointer"
+                  <Link
+                    to={`/properties?propertyType=${selectedPropertyType}&state=${selectedState}&city=${selectedCity}&pricingModel=${selectedPricingModel}`}
                   >
-                    <Search />
-                    Search
-                  </Button>
+                    <Button className="w-full md:w-fit !px-6 py-2 bg-custom-primary rounded-full justify-self-center cursor-pointer">
+                      <Search />
+                      Search
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </AnimationWrapper>
@@ -177,7 +202,7 @@ const tabs = [
 ];
 
 function CategoryTabs() {
-  const [selected, setSelected] = useState(tabs[0]);
+  const [selected, setSelected] = useState();
 
   return (
     <div className="absolute -top-5 left-0 right-0 mx-auto w-[80%]">
@@ -186,12 +211,12 @@ function CategoryTabs() {
           <li
             key={tab}
             className={cn(
-              "relative cursor-pointer px-2 transition-colors duration-300",
+              "relative  px-2 transition-colors duration-300",
               selected === tab
                 ? "text-custom-primary font-medium"
                 : "hover:text-foreground"
             )}
-            onClick={() => setSelected(tab)}
+            // onClick={() => setSelected(tab)}
           >
             {tab}
             {selected === tab && (

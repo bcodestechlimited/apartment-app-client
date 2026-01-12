@@ -87,13 +87,14 @@ function AdminDashboard() {
             <Select
               value={filters.propertyType || "All"}
               onValueChange={(val) => setPropertyType(val === "All" ? "" : val)}
+              
             >
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Category" />
+              <SelectTrigger className="w-48 cursor-pointer">
+                <SelectValue placeholder="Category " />
               </SelectTrigger>
               <SelectContent>
                 {typeOptions.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
+                  <SelectItem key={opt.value} value={opt.value} className="cursor-pointer">
                     {opt.label}
                   </SelectItem>
                 ))}

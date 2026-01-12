@@ -115,8 +115,10 @@ export const tenantColumns: ColumnDef<Tenant>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link to={`/admin/users/tenants/${_id}`}>View details</Link>
+              <DropdownMenuItem>
+                <Link to={`${_id}`} className="cursor-pointer">
+                  View details
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className={

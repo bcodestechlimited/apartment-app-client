@@ -49,8 +49,13 @@ export default function SignIn() {
     onSuccess: (signInResponse: { user: IUser }) => {
       const { user } = signInResponse;
 
-      if (previousPath) {
-        console.log("Navigating to previous path:", previousPath);
+      const targetPath =
+        typeof previousPath === "string"
+          ? previousPath
+          : previousPath?.pathname;
+
+      if (targetPath && targetPath.includes("/dashboard/property/")) {
+        // console.log("Navigating to previous path:", previousPath);
 
         if (user?.roles?.includes("admin")) {
           return navigate("/dashboard/admin");

@@ -19,7 +19,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { images } from "@/constants/images";
 import { cn } from "@/lib/utils";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
 import { authService } from "@/api/auth.api";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -273,11 +273,13 @@ function TopBar() {
   const navigate = useNavigate();
 
   const { user } = useAuthStore();
+  const { reset } = useAuthActions();
 
   const logoutMutation = useMutation({
     mutationFn: authService.logOut,
     onSuccess: (response) => {
       toast.success(response.message);
+      reset();
       navigate("/auth/sign-in", { replace: true });
     },
     onError: (error) => {

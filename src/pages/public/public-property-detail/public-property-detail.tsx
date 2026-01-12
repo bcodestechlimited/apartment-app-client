@@ -149,9 +149,13 @@ export default function PublicPropertyDetail() {
             <p className="text-xl font-medium">{property.title}</p>
             <p className="text-lg text-muted-foreground">{property.address}</p>
 
-            <div>
+            <div className="space-x-2">
               <span className="font-medium">
-                {property?.numberOfBedrooms} bed(s) |{" "}
+                {/* {property?.numberOfBedrooms} bed(s) |{" "} */}
+                {Number(property?.seatingCapacity) != 1
+                  ? `${property?.seatingCapacity} seats`
+                  : `${property?.numberOfBedrooms} bed(s) `}{" "}
+                |
               </span>
               <span className="font-medium">
                 {property?.numberOfBathrooms} bathroom(s) |{" "}
@@ -269,7 +273,7 @@ export default function PublicPropertyDetail() {
             />
             <p className="text-sm text-start">
               By continuing, i agree to the{" "}
-              <Link to="#" className="text-custom-primary hover:underline">
+              <Link to="/terms" className="text-custom-primary hover:underline">
                 Terms & Conditions
               </Link>
             </p>

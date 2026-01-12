@@ -83,6 +83,7 @@ import ForgotPassword from "./pages/auth/forgot-password";
 import ResetPassword from "./pages/auth/reset-password";
 import TermsAndConditions from "./pages/public/terms-page/terms";
 import PrivacyPolicy from "./pages/public/privacy-policy-page/privacy";
+import ContactUs from "./pages/public/contact/contact";
 
 const queryClient = new QueryClient();
 
@@ -98,6 +99,10 @@ function App() {
         {
           path: "about",
           element: <About />,
+        },
+        {
+          path: "contact",
+          element: <ContactUs />,
         },
         {
           path: "properties",

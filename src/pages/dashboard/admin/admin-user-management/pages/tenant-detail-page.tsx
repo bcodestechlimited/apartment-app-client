@@ -133,39 +133,6 @@ export function TenantDetailPage() {
       <MetricCard metrics={tenantMetrics} />
 
       {/* --- 5. Verification Documents --- */}
-      {/* <h2 className="text-xl font-semibold pt-4">Verification Documents</h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {tenant?.documents?.map((doc: any) => (
-          <Card
-            key={doc._id}
-            className="shadow-none flex items-center justify-between p-4 border"
-          >
-            <div className="flex items-center space-x-3">
-              <Flag className="h-5 w-5 text-green-600" />
-              <span className="font-medium capitalize">
-                {doc?.documentType?.replace(/_/g, " ")}
-              </span>
-            </div>
-            <div className="flex space-x-2">
-              <Button
-                variant="link"
-                size="sm"
-                asChild
-                className="text-custom-primary"
-              >
-                <a href={doc?.fileUrl} target="_blank" rel="noreferrer">
-                  View
-                </a>
-              </Button>
-              <Button variant="link" size="sm" className="text-custom-primary">
-                Download
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div> */}
-
-      {/* 3. Verification Documents (Design Frame 1618873083) */}
       <section className="space-y-4">
         <h2 className="text-xl font-bold text-gray-900">
           Verification Documents
