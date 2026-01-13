@@ -10,7 +10,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { useAuthStore } from "@/store/useAuthStore";
 
-export default function RoleSelection() {
+export default function AuthRoleSelection() {
   const [error, setError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
@@ -67,7 +67,8 @@ export default function RoleSelection() {
       return setError("Please select a role");
     }
 
-    navigate(`/onboarding/${selectedRole}`);
+    updateRoleMutation.mutateAsync(selectedRole);
+    return;
   };
 
   return (

@@ -85,6 +85,7 @@ import ResetPassword from "./pages/auth/reset-password";
 import TermsAndConditions from "./pages/public/terms-page/terms";
 import PrivacyPolicy from "./pages/public/privacy-policy-page/privacy";
 import ContactUs from "./pages/public/contact/contact";
+import AuthRoleSelection from "./pages/onboarding/auth-role-selection";
 
 const queryClient = new QueryClient();
 
@@ -167,7 +168,7 @@ function App() {
           children: [
             {
               index: true,
-              element: <RoleSelection />,
+              element: <AuthRoleSelection />,
             },
           ],
         },
