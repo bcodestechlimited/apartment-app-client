@@ -8,21 +8,19 @@ import { CustomAlert } from "@/components/custom/custom-alert";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function RoleSelection() {
   const [error, setError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const { data: user, isLoading, isError } = useAuthUser();
-  console.log("user from role selection", user);
+  const { user } = useAuthStore();
 
   const updateRoleMutation = useMutation({
     mutationFn: (selectedRole: string) =>
       authService.updateUser({ roles: selectedRole ? [selectedRole] : [] }),
     onSuccess: (data) => {
-      console.log("updated user role", data);
-      console.log("user data after role update", data.user);
       const user = data.user;
       if (user && user.roles) {
         console.log("user roles", user.roles);
