@@ -57,7 +57,7 @@ export const landlordColumns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "isDocumentVerified",
-    header: () => <div className="text-left">Status</div>,
+    header: () => <div className="text-left">Verification Status</div>,
     cell: ({ row }) => {
       const isVerified = row.original.isDocumentVerified;
       return (
@@ -66,10 +66,30 @@ export const landlordColumns: ColumnDef<any>[] = [
             className={
               isVerified
                 ? "bg-green-100 text-green-700"
-                : "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
             }
           >
             {isVerified ? "Verified" : "Unverified"}
+          </Badge>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "isActive",
+    header: () => <div className="text-left">Account Status</div>,
+    cell: ({ row }) => {
+      const isActive = row.original.isActive;
+      return (
+        <div className="flex justify-left">
+          <Badge
+            className={
+              isActive
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }
+          >
+            {isActive ? "Active" : "Inactive"}
           </Badge>
         </div>
       );

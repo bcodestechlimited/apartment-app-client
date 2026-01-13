@@ -40,6 +40,7 @@ export default function LandlordSignup() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [hasAgreed, setHasAgreed] = useState(false);
 
   const form = useForm<SignUpFormInputs>({
     defaultValues: {
@@ -301,7 +302,11 @@ export default function LandlordSignup() {
             {error && <CustomAlert variant="destructive" message={error} />}
 
             <div className="flex items-center gap-2 my-2 px-2 ">
-              <Checkbox />{" "}
+              <Checkbox
+                id="terms"
+                checked={hasAgreed}
+                onClick={() => setHasAgreed(!hasAgreed)}
+              />{" "}
               <p className="text-white text-sm text-start">
                 By signing up now, you agree to our{" "}
                 <Link to="/terms" className="underline">
@@ -317,7 +322,9 @@ export default function LandlordSignup() {
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={!form.formState.isValid || mutation.isPending}
+              disabled={
+                !form.formState.isValid || mutation.isPending || !hasAgreed
+              }
               className={cn(
                 "w-full bg-white text-custom-primary cursor-pointer transition col-span-2 rounded-full",
                 {
