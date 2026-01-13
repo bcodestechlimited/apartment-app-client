@@ -110,11 +110,6 @@ class AuthService {
         params: { role, redirect },
       });
 
-      const user = response.data?.data?.user;
-      useAuthStore.getState().actions.setUser(user);
-
-      console.log({ user });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to login with Google");
