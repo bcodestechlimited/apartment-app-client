@@ -31,6 +31,9 @@ export default function SignIn() {
 
   const previousPath = location.state?.from;
 
+  const targetPath =
+    typeof previousPath === "string" ? previousPath : previousPath?.pathname;
+
   console.log("previousPath", previousPath);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -49,12 +52,7 @@ export default function SignIn() {
     onSuccess: (signInResponse: { user: IUser }) => {
       const { user } = signInResponse;
 
-      const targetPath =
-        typeof previousPath === "string"
-          ? previousPath
-          : previousPath?.pathname;
-
-      if (targetPath && targetPath.includes("/dashboard/property/")) {
+      if (targetPath && targetPath.includes("/property/")) {
         // console.log("Navigating to previous path:", previousPath);
 
         if (user?.roles?.includes("admin")) {
@@ -102,7 +100,7 @@ export default function SignIn() {
       </p>
 
       {/* Google Auth Button */}
-      <GoogleAuthButton />
+      <GoogleAuthButton redirect={targetPath} />
       <p className="text-white/60 text-sm mb-3">Or</p>
 
       {/* ---- ShadCN Form ---- */}

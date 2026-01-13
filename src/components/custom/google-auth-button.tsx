@@ -6,7 +6,11 @@ import googleIconImage from "@/assets/images/google-icon.png";
 import { useLocation, useNavigate } from "react-router";
 import { CustomAlert } from "./custom-alert";
 
-export default function GoogleAuthButton() {
+interface GoogleAuthButtonProps {
+  redirect?: string;
+}
+
+export default function GoogleAuthButton({ redirect }: GoogleAuthButtonProps) {
   const [error, setError] = useState<string | null>(null);
   const popupRef = useRef<Window | null>(null);
 
@@ -23,7 +27,8 @@ export default function GoogleAuthButton() {
   const navigate = useNavigate();
 
   const googleMutation = useMutation({
-    mutationFn: (role: string) => authService.loginWithGoogle(role),
+    mutationFn: (params: { role?: string; redirect?: string }) =>
+      authService.loginWithGoogle(params),
     onSuccess: (data) => {
       return (window.location.href = data.redirectURL);
       // Centered popup window logic
@@ -59,7 +64,7 @@ export default function GoogleAuthButton() {
   return (
     <div className="w-full">
       <Button
-        onClick={() => googleMutation.mutateAsync(role)}
+        onClick={() => googleMutation.mutateAsync({ role, redirect })}
         disabled={googleMutation.isPending}
         variant="outline"
         className="w-full mb-3 bg-transparent text-gray-300 border-white/40 cursor-pointer rounded-full"

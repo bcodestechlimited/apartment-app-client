@@ -97,7 +97,7 @@ export const PublicPropertyCard = ({
     numberOfBathrooms,
     seatingCapacity,
   } = property;
-  console.log(" property", property);
+  // console.log(" property", property);
   if (!property) return null;
 
   const href = link || `/property/${property._id}`;
