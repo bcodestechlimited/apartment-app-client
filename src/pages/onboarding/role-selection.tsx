@@ -1,12 +1,12 @@
 import tenantRoleImage from "@/assets/images/tenant-role.png";
 import landlordRoleImage from "@/assets/images/landlord-role.png";
-import { useState } from "react";
+import { use, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { CustomAlert } from "@/components/custom/custom-alert";
 import { useAuthUser } from "@/hooks/useAuthUser";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -16,6 +16,8 @@ export default function RoleSelection() {
 
   const navigate = useNavigate();
   const { user } = useAuthStore();
+
+  // console.log({ data });
 
   const updateRoleMutation = useMutation({
     mutationFn: (selectedRole: string) =>
@@ -59,9 +61,18 @@ export default function RoleSelection() {
     setSelectedRole(role);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    console.log({ selectedRole, user });
+
     if (!selectedRole) {
       return setError("Please select a role");
+    }
+
+    if (user) {
+      console.log("About to call update...");
+
+      updateRoleMutation.mutateAsync(selectedRole);
+      return;
     }
 
     navigate(`/onboarding/${selectedRole}`);
@@ -103,21 +114,13 @@ export default function RoleSelection() {
       <div className="pt-4">
         {error && <CustomAlert variant="destructive" message={error} />}
       </div>
-      {user ? (
-        <Button
-          onClick={() => updateRoleMutation.mutateAsync(selectedRole as string)}
-          className="mt-6 cursor-pointer btn-primary"
-        >
-          Continue
-        </Button>
-      ) : (
-        <Button
-          onClick={handleNext}
-          className="mt-6 cursor-pointer btn-primary"
-        >
-          Continue
-        </Button>
-      )}
+      <Button
+        disabled={!selectedRole || updateRoleMutation.isPending}
+        onClick={handleNext}
+        className="mt-6 cursor-pointer btn-primary"
+      >
+        Continue
+      </Button>
     </div>
   );
 }
