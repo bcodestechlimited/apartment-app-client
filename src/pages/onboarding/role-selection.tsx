@@ -60,8 +60,15 @@ export default function RoleSelection() {
   };
 
   const handleNext = () => {
+    console.log({ selectedRole, user });
+
     if (!selectedRole) {
       return setError("Please select a role");
+    }
+
+    if (user) {
+      updateRoleMutation.mutateAsync(selectedRole);
+      return;
     }
 
     navigate(`/onboarding/${selectedRole}`);
@@ -103,21 +110,13 @@ export default function RoleSelection() {
       <div className="pt-4">
         {error && <CustomAlert variant="destructive" message={error} />}
       </div>
-      {user ? (
-        <Button
-          onClick={() => updateRoleMutation.mutateAsync(selectedRole as string)}
-          className="mt-6 cursor-pointer btn-primary"
-        >
-          Continue
-        </Button>
-      ) : (
-        <Button
-          onClick={handleNext}
-          className="mt-6 cursor-pointer btn-primary"
-        >
-          Continue
-        </Button>
-      )}
+      <Button
+        disabled={!selectedRole || updateRoleMutation.isPending}
+        onClick={handleNext}
+        className="mt-6 cursor-pointer btn-primary"
+      >
+        Continue
+      </Button>
     </div>
   );
 }
