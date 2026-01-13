@@ -15,6 +15,7 @@ export default function RoleSelection() {
 
   const navigate = useNavigate();
   const { data: user, isLoading, isError } = useAuthUser();
+  console.log("user from role selection", user);
 
   const updateRoleMutation = useMutation({
     mutationFn: (selectedRole: string) =>
