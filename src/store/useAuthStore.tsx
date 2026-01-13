@@ -49,7 +49,7 @@ export const useAuthStore = create<UserState>()(
     {
       name: "auth-store",
       // storage: sessionStorage, // 💡 safer than localStorage
-      storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+      // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
       partialize: (state) => ({
         authCredentials: state.authCredentials, // only store credentials (if needed)
       }),

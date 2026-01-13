@@ -28,6 +28,8 @@ class AuthService {
     try {
       const response = await axiosInstance.get(`/auth/logout`);
       console.log({ response });
+      useAuthStore.getState().actions.reset();
+
       return response.data;
     } catch (error) {
       handleAxiosError(error, "Failed to logout");
