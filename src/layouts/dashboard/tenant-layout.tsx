@@ -265,13 +265,13 @@ function TenantSidebar() {
 function TopBar() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { reset } = useAuthActions();
+  // const { reset } = useAuthActions();
 
   const logoutMutation = useMutation({
     mutationFn: authService.logOut,
     onSuccess: (response) => {
       toast.success(response.message);
-      reset();
+      // reset();
       navigate("/login", { replace: true });
     },
     onError: (error) => {
