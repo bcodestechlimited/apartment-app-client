@@ -21,6 +21,7 @@ import SignIn from "./pages/auth/sign-in";
 import LandlordProfile from "./pages/dashboard/landlord/profile";
 import {
   AdminAuthGuard,
+  AuthGuard,
   LandlordAuthGuard,
   TenantAuthGuard,
 } from "./guards/auth.guard";
@@ -159,6 +160,16 @@ function App() {
         {
           index: true,
           element: <RoleSelection />,
+        },
+        {
+          path: "google",
+          element: <AuthGuard />,
+          children: [
+            {
+              index: true,
+              element: <RoleSelection />,
+            },
+          ],
         },
         {
           path: "tenant",
