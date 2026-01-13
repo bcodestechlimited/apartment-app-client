@@ -30,6 +30,8 @@ const statusStyles = {
   Cleared: "bg-green-100 text-green-700 hover:bg-green-100",
   Outstanding: "bg-yellow-100 text-yellow-700 hover:bg-yellow-100",
   Overdue: "bg-red-100 text-red-700 hover:bg-red-100",
+  Active: "bg-green-100 text-green-700 hover:bg-green-100",
+  Inactive: "bg-red-100 text-red-700 hover:bg-red-100",
   Unverified: "bg-red-100 text-red-700 hover:bg-red-100",
 };
 
@@ -63,6 +65,19 @@ export const tenantColumns: ColumnDef<Tenant>[] = [
       const isVerified = row.original.isDocumentVerified;
       const statusLabel = isVerified ? "Verified" : "Unverified";
 
+      return (
+        <div className="text-left">
+          <Badge className={statusStyles[statusLabel]}>{statusLabel}</Badge>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "isActive",
+    header: () => <div className="text-left">Account Status</div>,
+    cell: ({ row }) => {
+      const isActive = row.original.isActive;
+      const statusLabel = isActive ? "Active" : "Inactive";
       return (
         <div className="text-left">
           <Badge className={statusStyles[statusLabel]}>{statusLabel}</Badge>

@@ -78,20 +78,22 @@ export function LandlordDetailPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               {landlord.firstName} {landlord.lastName}
-              {landlord.isDocumentVerified && (
+              {landlord.isDocumentVerified ? (
                 <Check className="h-6 w-6 text-white bg-green-500 rounded-full p-1" />
+              ) : (
+                <Check className="h-6 w-6 text-white bg-red-500 rounded-full p-1" />
               )}
             </h1>
           </div>
         </div>
-        <div className="flex space-x-3">
+        {/* <div className="flex space-x-3">
           <Button className="bg-[#003333] hover:bg-[#002222] text-white px-8">
             <Star className="mr-2 h-4 w-4 fill-white" /> Suspend
           </Button>
           <Button variant="outline" className="border-gray-200 px-8">
             <X className="mr-2 h-4 w-4" /> Reject
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* --- 2. Basic Information --- */}
