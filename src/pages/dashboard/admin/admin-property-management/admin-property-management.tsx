@@ -5,12 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import { adminPropertyService } from "@/api/admin/admin-property.api";
 import { useSearchParams } from "react-router";
 import PropertyFilters from "./_components/property-filters";
+import { Pagination } from "../../shared/_components/pagination";
 
 export default function AdminPropertyManagement() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const page = Number(searchParams.get("page") || 1);
-  const limit = Number(searchParams.get("limit") || 10);
+  const limit = Number(searchParams.get("limit") || 12);
   const isVerified = searchParams.get("isVerified");
   const propertyType = searchParams.get("propertyType");
 
@@ -25,6 +26,15 @@ export default function AdminPropertyManagement() {
       }),
   });
 
+  const pagination = data?.pagination;
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage.toString());
+    setSearchParams(params);
+    // Optional: scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: "auto" });
+  };
+
   console.log({ data });
 
   return (
@@ -34,6 +44,16 @@ export default function AdminPropertyManagement() {
         properties={data?.properties || []}
         isLoading={isLoading}
       />
+      {/* CLEAN PAGINATION COMPONENT */}
+      <div className="">
+        {pagination && (
+          <Pagination
+            currentPage={page}
+            totalPages={pagination.totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </div>
     </div>
   );
 }

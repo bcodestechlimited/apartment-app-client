@@ -41,7 +41,7 @@ export default function Discover() {
               duration={0.8}
               className="text-5xl lg:text-5xl flex items-center justify-center mb-4"
             >
-              <h1 className="font-medium flex flex-col md:flex-row gap-3 items-center tracking-wide transition-all ease-in-out duration-300">
+              <h1 className="font-medium flex flex-col md:flex-col gap-3 items-center tracking-wide transition-all ease-in-out duration-300">
                 THE SMARTER WAY TO RENT{" "}
                 <AnimatedText
                   words={[

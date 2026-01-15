@@ -122,7 +122,7 @@ export default function ForgotPassword() {
 
             <p className="text-white">
               Remember your password?{" "}
-              <Link to="/auth/login" className="underline">
+              <Link to="/auth/sign-in" className="underline">
                 Sign in
               </Link>
             </p>
