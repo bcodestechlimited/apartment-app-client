@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   Wallet as WalletIcon,
-  ArrowUpRight,
   ArrowDownLeft,
   Settings2,
   Landmark,
@@ -13,7 +11,6 @@ import {
   AlertCircle,
   Loader2,
   Plus,
-  ArrowRight,
 } from "lucide-react";
 
 import { walletService } from "@/api/wallet.api";
@@ -46,6 +43,11 @@ import DataTable from "@/components/custom/data-table";
 import { columns } from "../payments/payments";
 
 function Wallet() {
+  // --- Modal States ---
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
+
   const [amount, setAmount] = useState<number>(0);
   const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
   const [bankCode, setBankCode] = useState("");
@@ -53,12 +55,12 @@ function Wallet() {
   const queryClient = useQueryClient();
 
   //payement mutations
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 10;
 
-  const { data: payment, isLoading: isLoadingPayment } = useQuery({
+  const { data: payment } = useQuery({
     queryKey: ["transactions", { page, limit }],
     queryFn: () =>
       transactionService.getAllUserTransactions({
@@ -67,16 +69,12 @@ function Wallet() {
       }),
   });
 
-  console.log({ payment });
-
-  // if (isLoadingPayment) return <Spinner />;
-
   // --- Mutations ---
   const createTopUpMutation = useMutation({
     mutationFn: (amt: any) => walletService.topUpWallet(amt),
     onSuccess: (res: any) => {
+      setIsTopUpOpen(false); // Close modal
       const redirectUrl = res?.authorization_url;
-      console.log({ redirectUrl });
       if (redirectUrl) window.location.href = redirectUrl;
       else toast.error("Unable to start payment. Try again.");
     },
@@ -88,6 +86,9 @@ function Wallet() {
     onSuccess: () => {
       toast.success("Withdrawal request submitted!");
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      setWithdrawAmount(0); // Reset amount
+      setIsWithdrawOpen(false); // Close modal
     },
     onError: (error: any) => toast.error(error?.message || "Withdraw failed"),
   });
@@ -97,6 +98,7 @@ function Wallet() {
     onSuccess: () => {
       toast.success("Wallet details updated");
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
+      setIsSettingsOpen(false); // Close modal
     },
     onError: (error: any) => toast.error(error?.message || "Update failed"),
   });
@@ -130,9 +132,6 @@ function Wallet() {
 
   const wallet = data?.wallet ?? {};
   const balance = typeof wallet.balance === "number" ? wallet.balance : 0;
-  const transactions: any[] = Array.isArray(wallet.transactions)
-    ? wallet.transactions
-    : [];
 
   const formatNaira = (n: number) => `₦${Number(n || 0).toLocaleString()}`;
 
@@ -141,7 +140,6 @@ function Wallet() {
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-1">
-          {/* <h1 className="text-3xl font-bold tracking-tight text-slate-900">Wallet Overview</h1> */}
           <p className="text-slate-500">
             Manage your earnings, top-ups, and payout settings.
           </p>
@@ -150,7 +148,7 @@ function Wallet() {
         {/* ACTION BUTTONS GROUP */}
         <div className="flex flex-wrap gap-3">
           {/* UPDATE DETAILS */}
-          <Dialog>
+          <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
@@ -246,7 +244,7 @@ function Wallet() {
           </Dialog>
 
           {/* WITHDRAW */}
-          <Dialog>
+          <Dialog open={isWithdrawOpen} onOpenChange={setIsWithdrawOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
@@ -311,7 +309,7 @@ function Wallet() {
           </Dialog>
 
           {/* TOP UP */}
-          <Dialog>
+          <Dialog open={isTopUpOpen} onOpenChange={setIsTopUpOpen}>
             <DialogTrigger asChild>
               <Button className="bg-teal-800 hover:bg-teal-900 gap-2">
                 <Plus className="h-4 w-4" />
