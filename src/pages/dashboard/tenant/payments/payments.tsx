@@ -42,11 +42,12 @@ export const columns = [
     render: (row: any) => {
       const status = row?.status?.toLowerCase() || "pending";
       const classNames: Record<string, string> = {
-        approved:
+        success:
           "text-green-500 bg-green-100 px-4 py-1 rounded-full capitalize",
         pending:
           "text-yellow-500 bg-yellow-100 px-4 py-1 rounded-full capitalize",
         declined: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
+        failed: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
         expired: "text-red-500 bg-red-100 px-4 py-1 rounded-full capitalize",
       };
 

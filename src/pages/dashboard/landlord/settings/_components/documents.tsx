@@ -57,6 +57,7 @@ export default function Documents() {
     onSuccess: (data) => {
       console.log({ data });
       queryClient.invalidateQueries({ queryKey: ["user-documents"] });
+      queryClient.invalidateQueries({ queryKey: ["verification-documents"] });
       toast.success("Documents updated successfully!");
       setError(null);
       setPreview(null);
