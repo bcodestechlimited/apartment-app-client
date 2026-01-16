@@ -103,105 +103,6 @@ const routes: Route[] = [
   },
 ];
 
-// function LandlordSideBar() {
-//   const [openMenu, setOpenMenu] = useState<string | null>(null);
-//   const location = useLocation();
-
-//   const toggleMenu = (menuName: string) => {
-//     setOpenMenu((prev) => (prev === menuName ? null : menuName));
-//   };
-
-//   const isActive = (path: string) =>
-//     location.pathname.toLowerCase().includes(path.toLowerCase());
-//   const isActiveSubmenu = (path: string) =>
-//     location.pathname.toLowerCase() === path.toLowerCase();
-
-//   return (
-//     <aside
-//       className={cn(
-//         "min-w-42 max-w-44 h-screen bg-white border-r shadow-md flex flex-col justify-between"
-//       )}
-//     >
-//       {/* Logo Section */}
-//       <div className="p-4">
-//         <img
-//           src={images.havenLeaseLogoGreen}
-//           alt="Haven Lease Logo"
-//           className="w-14 h-14 mx-auto"
-//         />
-//       </div>
-
-//       {/* Navigation Links */}
-//       <nav className="flex-1 p-4 min-w-42 max-w-44">
-//         <ul className="space-y-2">
-//           {routes.map((route, index) => (
-//             <li key={index}>
-//               {route.submenu ? (
-//                 <div>
-//                   {/* Parent menu with toggle */}
-//                   <Link
-//                     to={route.path}
-//                     className={cn(
-//                       "flex items-center justify-between w-full font-semibold p-2 hover:bg-gray-100 text-gray-700",
-//                       isActive(route.path) &&
-//                         "bg-gray-200 text-gray-900 border-l-4 border-custom-primary"
-//                     )}
-//                     onClick={() => toggleMenu(route.name)}
-//                   >
-//                     <div className="flex items-center space-x-3">
-//                       {route.icon}
-//                       <span className="text-sm">{route.name}</span>
-//                     </div>
-//                     <ChevronDown
-//                       className={cn(
-//                         "w-4 h-4 transition-transform",
-//                         openMenu === route.name ? "rotate-180" : "rotate-0"
-//                       )}
-//                     />
-//                   </Link>
-
-//                   {/* Submenu */}
-//                   {openMenu === route.name && (
-//                     <ul className="mt-2 text-left space-y-2">
-//                       {route.submenu.map((submenu, subIndex) => (
-//                         <li key={subIndex}>
-//                           <Link
-//                             to={submenu.path}
-//                             className={cn(
-//                               "flex items-center font-semibold text-xs space-x-3 p-2 ml-6 hover:bg-gray-100 text-gray-600",
-//                               isActiveSubmenu(submenu.path) &&
-//                                 "bg-gray-200 text-gray-900 border-l-4 border-black"
-//                             )}
-//                           >
-//                             {/* {submenu.icon} */}
-//                             <span>{submenu.name}</span>
-//                           </Link>
-//                         </li>
-//                       ))}
-//                     </ul>
-//                   )}
-//                 </div>
-//               ) : (
-//                 <Link
-//                   to={route.path}
-//                   className={cn(
-//                     "flex items-center font-semibold space-x-3 p-2 hover:bg-gray-100 text-gray-700",
-//                     isActive(route.path) &&
-//                       "bg-gray-200 text-gray-900 border-l-4 border-black"
-//                   )}
-//                 >
-//                   {route.icon}
-//                   <span className="text-sm">{route.name}</span>
-//                 </Link>
-//               )}
-//             </li>
-//           ))}
-//         </ul>
-//       </nav>
-//     </aside>
-//   );
-// }
-
 function LandlordSidebar() {
   const location = useLocation();
 
@@ -341,24 +242,6 @@ function TopBar() {
     </div>
   );
 }
-
-// export default function LandlordLayout() {
-//   useSocketConnection();
-
-//   return (
-//     <div className="flex min-h-screen">
-//       <LandlordSidebar />
-//       <div className="flex-1 flex flex-col gap-2 bg-white p-4">
-//         <TopBar />
-//         {/* <div className="w-full max-w-[1440px]"> */}
-//         <div className="w-full mb-12">
-//           <Breadcrumb />
-//           <Outlet />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
 export default function LandlordLayout() {
   useSocketConnection();

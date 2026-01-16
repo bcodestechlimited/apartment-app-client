@@ -10,6 +10,8 @@ import {
   LogOut,
   Settings,
   Wallet,
+  ChevronRight,
+  ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
@@ -39,10 +41,18 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface Submenu {
   name: string;
@@ -202,15 +212,86 @@ const routes: Route[] = [
 //   );
 // }
 
-function TenantSidebar() {
-  const location = useLocation();
+{
+  ("");
+}
 
-  const isActive = (path: string) =>
-    location.pathname.toLowerCase() === path.toLowerCase();
+// function TenantSidebar() {
+//   const location = useLocation();
+
+//   const isActive = (path: string) =>
+//     location.pathname.toLowerCase() === path.toLowerCase();
+
+//   return (
+//     <Sidebar collapsible="icon" className="">
+//       {/* Logo / header */}
+//       <SidebarHeader className="border-b pb-1">
+//         <div className="flex items-center justify-center py-2">
+//           <img
+//             src={images.havenLeaseLogoGreen}
+//             alt="Haven Lease Logo"
+//             className="w-10 h-10"
+//           />
+//         </div>
+//       </SidebarHeader>
+
+//       <SidebarContent>
+//         <SidebarGroup>
+//           {/* <SidebarGroupLabel>Admin</SidebarGroupLabel> */}
+//           <SidebarGroupContent>
+//             <SidebarMenu>
+//               {routes.map((route) => (
+//                 <SidebarMenuItem key={route.path}>
+//                   <SidebarMenuButton
+//                     asChild
+//                     isActive={isActive(route.path)}
+//                     tooltip={route.name} // shown when collapsed
+//                   >
+//                     <Link
+//                       to={route.path}
+//                       className={cn(
+//                         "flex items-center gap-2",
+//                         isActive(route.path) &&
+//                           "bg-custom-primary/20 text-custom-primary"
+//                       )}
+//                     >
+//                       {route.icon}
+//                       <span className="text-sm">{route.name}</span>
+//                     </Link>
+//                   </SidebarMenuButton>
+//                 </SidebarMenuItem>
+//               ))}
+//             </SidebarMenu>
+//           </SidebarGroupContent>
+//         </SidebarGroup>
+//       </SidebarContent>
+
+//       <SidebarFooter>
+//         {/* Optional footer items (e.g., settings) */}
+//       </SidebarFooter>
+
+//       {/* Rail shown when collapsed */}
+//       <SidebarRail />
+//     </Sidebar>
+//   );
+// }
+
+export function TenantSidebar() {
+  const location = useLocation();
+  const pathname = location.pathname.toLowerCase();
+
+  // Helper: Check if exact path matches
+  const isActive = (path: string) => pathname === path.toLowerCase();
+
+  // Helper: Check if we are "inside" a parent route without lighting up everything
+  const isParentActive = (path: string) => {
+    if (path === "/dashboard" && pathname === "/dashboard") return true;
+    // Only return true if the current path starts with the parent path and isn't just the dashboard
+    return path !== "/dashboard" && pathname.startsWith(path.toLowerCase());
+  };
 
   return (
-    <Sidebar collapsible="icon" className="">
-      {/* Logo / header */}
+    <Sidebar collapsible="icon">
       <SidebarHeader className="border-b pb-1">
         <div className="flex items-center justify-center py-2">
           <img
@@ -223,40 +304,89 @@ function TenantSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          {/* <SidebarGroupLabel>Admin</SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
-              {routes.map((route) => (
-                <SidebarMenuItem key={route.path}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive(route.path)}
-                    tooltip={route.name} // shown when collapsed
-                  >
-                    <Link
-                      to={route.path}
-                      className={cn(
-                        "flex items-center gap-2",
-                        isActive(route.path) &&
-                          "bg-custom-primary/20 text-custom-primary"
-                      )}
+              {routes.map((route) => {
+                // CASE 1: Route has a submenu (Nested)
+                if (route.submenu && route.submenu.length > 0) {
+                  const hasActiveChild = route.submenu.some((sub) =>
+                    isActive(sub.path)
+                  );
+
+                  return (
+                    <Collapsible
+                      key={route.path}
+                      asChild
+                      // Open if the parent is active OR one of its children is active
+                      defaultOpen={isActive(route.path) || hasActiveChild}
+                      className="group/collapsible"
                     >
-                      {route.icon}
-                      <span className="text-sm">{route.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton
+                            tooltip={route.name}
+                            // Highlight if exact match OR if a child is active
+                            isActive={isActive(route.path) || hasActiveChild}
+                            asChild
+                          >
+                            {/* Make the parent clickable to go to /dashboard */}
+                            <Link to={route.path}>
+                              {route.icon}
+                              <span>{route.name}</span>
+                              <ChevronUp className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                            </Link>
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {route.submenu.map((subItem) => (
+                              <SidebarMenuSubItem key={subItem.path}>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  isActive={isActive(subItem.path)}
+                                >
+                                  <Link to={subItem.path}>
+                                    <span>{subItem.name}</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                }
+
+                // CASE 2: Standard Route (Flat)
+                return (
+                  <SidebarMenuItem key={route.path}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(route.path)}
+                      tooltip={route.name}
+                    >
+                      <Link
+                        to={route.path}
+                        className={cn(
+                          "flex items-center gap-2",
+                          isActive(route.path) &&
+                            "bg-custom-primary/20 text-custom-primary"
+                        )}
+                      >
+                        {route.icon}
+                        <span className="text-sm">{route.name}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
-      <SidebarFooter>
-        {/* Optional footer items (e.g., settings) */}
-      </SidebarFooter>
-
-      {/* Rail shown when collapsed */}
+      <SidebarFooter />
       <SidebarRail />
     </Sidebar>
   );
@@ -265,13 +395,13 @@ function TenantSidebar() {
 function TopBar() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  // const { reset } = useAuthActions();
+  const { reset } = useAuthActions();
 
   const logoutMutation = useMutation({
     mutationFn: authService.logOut,
     onSuccess: (response) => {
       toast.success(response.message);
-      // reset();
+      reset();
       navigate("/login", { replace: true });
     },
     onError: (error) => {
@@ -338,7 +468,7 @@ function TopBar() {
   );
 }
 
-export default function LandlordLayout() {
+export default function TenantLayout() {
   useSocketConnection();
 
   return (

@@ -87,127 +87,27 @@ const routes: Route[] = [
     path: "/dashboard/admin/payments",
     icon: <CreditCardIcon className="w-5 h-5" />,
   },
-  {
-    name: "Analytics",
-    path: "/dashboard/admin/analytics",
-    icon: <FileChartColumnIncreasing className="w-5 h-5" />,
-  },
-  {
-    name: "Messages",
-    path: "dashboard/admin/messages",
-    icon: <Mail className="w-5 h-5" />,
-  },
-  {
-    name: "Support",
-    path: "/dashboard/admin/support",
-    icon: <Headset className="w-5 h-5" />,
-  },
-  {
-    name: "Settings",
-    path: "dashboard/admin/settings",
-    icon: <Settings className="w-5 h-5" />,
-  },
+  // {
+  //   name: "Analytics",
+  //   path: "/dashboard/admin/analytics",
+  //   icon: <FileChartColumnIncreasing className="w-5 h-5" />,
+  // },
+  // {
+  //   name: "Messages",
+  //   path: "dashboard/admin/messages",
+  //   icon: <Mail className="w-5 h-5" />,
+  // },
+  // {
+  //   name: "Support",
+  //   path: "/dashboard/admin/support",
+  //   icon: <Headset className="w-5 h-5" />,
+  // },
+  // {
+  //   name: "Settings",
+  //   path: "dashboard/admin/settings",
+  //   icon: <Settings className="w-5 h-5" />,
+  // },
 ];
-
-// function AdminSideBar() {
-//   const [openMenu, setOpenMenu] = useState<string | null>(null);
-//   const location = useLocation();
-
-//   const toggleMenu = (menuName: string) => {
-//     setOpenMenu((prev) => (prev === menuName ? null : menuName));
-//   };
-
-//   const isActive = (path: string) =>
-//     location.pathname.toLowerCase().includes(path.toLowerCase());
-//   const isActiveMenu = (path: string) =>
-//     location.pathname.toLowerCase() === path.toLowerCase();
-//   const isActiveSubmenu = (path: string) =>
-//     location.pathname.toLowerCase() === path.toLowerCase();
-//   return (
-//     <aside
-//       className={cn(
-//         "min-w-64 max-w-68 h-screen bg-white border-r shadow-md flex flex-col justify-between"
-//       )}
-//     >
-//       {/* Logo Section */}
-//       <div className="p-2 border-b">
-//         <img
-//           src={images.havenLeaseLogoGreen}
-//           alt="Haven Lease Logo"
-//           className="w-14 h-14 mx-auto"
-//         />
-//       </div>
-
-//       {/* Navigation Links */}
-//       <nav className="flex-1 p-2 min-w-64 max-w-68">
-//         <ul className="space-y-2">
-//           {routes.map((route, index) => (
-//             <li key={index}>
-//               {route.submenu ? (
-//                 <div>
-//                   {/* Parent menu with toggle */}
-//                   <Link
-//                     to={route.path}
-//                     className={cn(
-//                       "flex items-center justify-between w-full font-semibold p-2 hover:bg-custom-primary/20 text-gray-700 transition duration-300 ease-in-out",
-//                       isActive(route.path) &&
-//                         "bg-custom-primary/30 text-custom-primary border-l-4 border-custom-primary"
-//                     )}
-//                     onClick={() => toggleMenu(route.name)}
-//                   >
-//                     <div className="flex items-center space-x-3">
-//                       {route.icon}
-//                       <span className="text-sm">{route.name}</span>
-//                     </div>
-//                     <ChevronDown
-//                       className={cn(
-//                         "w-4 h-4 transition-transform",
-//                         openMenu === route.name ? "rotate-180" : "rotate-0"
-//                       )}
-//                     />
-//                   </Link>
-
-//                   {/* Submenu */}
-//                   {openMenu === route.name && (
-//                     <ul className="mt-2 text-left space-y-2">
-//                       {route.submenu.map((submenu, subIndex) => (
-//                         <li key={subIndex}>
-//                           <Link
-//                             to={submenu.path}
-//                             className={cn(
-//                               "flex items-center font-semibold text-xs space-x-3 p-2 ml-6 hover:bg-custom-primary/20 text-gray-700 transition duration-300 ease-in-out",
-//                               isActiveSubmenu(submenu.path) &&
-//                                 "bg-custom-primary/30 text-custom-primary border-l-4 border-custom-primary"
-//                             )}
-//                           >
-//                             {/* {submenu.icon} */}
-//                             <span>{submenu.name}</span>
-//                           </Link>
-//                         </li>
-//                       ))}
-//                     </ul>
-//                   )}
-//                 </div>
-//               ) : (
-//                 <Link
-//                   to={route.path}
-//                   className={cn(
-//                     "flex items-center font-semibold space-x-3 p-2 hover:bg-custom-primary/20 text-gray-700 transition duration-300 ease-in-out",
-//                     isActiveMenu(route.path) &&
-//                       "bg-custom-primary/30 text-custom-primary border-l-4 border-custom-primary"
-//                   )}
-//                 >
-//                   {route.icon}
-//                   <span className="text-sm">{route.name}</span>
-//                 </Link>
-//               )}
-//             </li>
-//           ))}
-//         </ul>
-//       </nav>
-//     </aside>
-//   );
-// }
 
 function AdminSidebar() {
   const location = useLocation();

@@ -118,6 +118,7 @@ const AddFilterModal = ({
     console.log({ updatedFilters });
 
     onApplyFilters(updatedFilters);
+    closeModal();
   };
 
   const handleClearFilters = () => {

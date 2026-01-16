@@ -53,11 +53,20 @@ export const propertyColumns: ColumnDef<any>[] = [
   {
     accessorKey: "status",
     header: () => <div className="text-center">Status</div>,
-    cell: ({ row }) => (
-      <Badge variant={row.original.isAvailable ? "secondary" : "destructive"}>
-        {row.original.status}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const status = row.original.status;
+      return (
+        <Badge
+          className={`capitalize ${
+            status === "available"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          } `}
+        >
+          {row.original.status}
+        </Badge>
+      );
+    },
   },
   {
     accessorKey: "isVerified",

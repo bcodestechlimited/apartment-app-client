@@ -98,8 +98,10 @@ export default function Footer() {
         </div>
       </div>
       <div className="flex items-center justify-center mt-4">
-        <img src={images.bctLogoWhite} alt="" className=" w-14" />
-        <p className="text-white">Powered By BCT Limited</p>
+        <p className="text-white">Powered By </p>
+        <a href="https://bcodestech.com/">
+          <img src={images.bctLogoWhite} alt="" className=" w-14" />
+        </a>
       </div>
     </footer>
   );

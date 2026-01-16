@@ -141,12 +141,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ExternalLink, Heart } from "lucide-react";
 import { Link, Outlet, useParams } from "react-router";
 import { toast } from "sonner";
-
+import { useShare } from "../hooks/useShare";
 function PropertyDetailLayout() {
   const { user } = useAuthStore();
   console.log("property detail layout user", user);
   const { propertyId } = useParams();
   const queryClient = useQueryClient();
+  const { handleShare } = useShare();
+
   const canFavourite = user?.roles?.includes("tenant");
 
   const { data, isLoading, isError } = useQuery({
@@ -244,8 +246,16 @@ function PropertyDetailLayout() {
           >
             {isPropertySaved ? <Heart color="red" fill="red" /> : <Heart />}
           </span>
-          <span className="flex items-center gap-1">
-            <ExternalLink /> Share
+          <span
+            className="flex items-center gap-1 cursor-pointer hover:text-primary transition-colors"
+            onClick={() =>
+              handleShare({
+                title: property.title,
+                url: window.location.href,
+              })
+            }
+          >
+            <ExternalLink size={18} /> Share
           </span>
         </div>
       </div>

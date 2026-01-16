@@ -11,7 +11,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { Spinner } from "@/components/custom/loader";
 import { useAuthActions } from "@/store/useAuthStore";
@@ -41,6 +41,12 @@ export default function LandlordSignup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [hasAgreed, setHasAgreed] = useState(false);
+  const location = useLocation();
+
+  const previousPath = location.state?.from;
+
+  const targetPath =
+    typeof previousPath === "string" ? previousPath : previousPath?.pathname;
 
   const form = useForm<SignUpFormInputs>({
     defaultValues: {
@@ -93,7 +99,7 @@ export default function LandlordSignup() {
         </p>
 
         {/* Google Auth Button */}
-        <GoogleAuthButton />
+        <GoogleAuthButton redirect={targetPath} />
 
         <Separator className="my-4 bg-white/20 data-[orientation=horizontal]:w-[80%] " />
 
