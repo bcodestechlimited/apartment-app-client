@@ -66,7 +66,7 @@ export default function SignIn() {
       }
 
       if (user?.roles?.includes("admin")) {
-        return navigate("/admin");
+        return navigate("/dashboard/admin");
       } else if (user?.roles?.includes("landlord")) {
         return navigate("/dashboard/landlord");
       } else {
