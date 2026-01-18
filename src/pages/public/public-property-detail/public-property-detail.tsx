@@ -35,6 +35,7 @@ import { Link, useNavigate, useParams } from "react-router";
 import ConfirmBooking from "./_modals/confirm-booking";
 import { toast } from "sonner";
 import OtherApartments from "./_components/other-apartments";
+import PropertyRatings from "@/components/shared/PropertyRating";
 
 const getAmenityIcon = (amenity: string) => {
   const icons: Record<string, JSX.Element> = {
@@ -291,7 +292,7 @@ export default function PublicPropertyDetail() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 py-6">
+      <div className="flex flex-col gap-4 py-6 ">
         <div className="text-start">
           <p className="text-lg font-medium">Location</p>
           <p>Coming Soon</p>
@@ -299,16 +300,20 @@ export default function PublicPropertyDetail() {
 
         <Separator />
 
-        <div className="text-start">
+        {/* <div className="text-start">
           <p className="text-lg font-semibold">Reviews</p>
           <p>Coming Soon</p>
-        </div>
+        </div> */}
 
+        {/* Reviews */}
+        <div className="text-start">
+          <PropertyRatings />
+        </div>
         {/* <Separator /> */}
 
         <div className="text-start flex flex-col gap-2 py-2">
           <p className="text-xl font-semibold">Other apartments you may like</p>
-          <OtherApartments />
+          <OtherApartments currentPropertyId={propertyId} />
         </div>
       </div>
 

@@ -112,14 +112,14 @@ function LandlordSidebar() {
   return (
     <Sidebar collapsible="icon" className="">
       {/* Logo / header */}
-      <SidebarHeader className="border-b pb-5">
-        <div className="flex items-center justify-center py-2">
+      <SidebarHeader className="border-b ">
+        <Link to="/" className="flex items-center justify-center ">
           <img
             src={images.havenLeaseLogoGreen}
             alt="Haven Lease Logo"
-            className="w-10 h-10"
+            className="w-15 h-15"
           />
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
@@ -202,7 +202,7 @@ function TopBar() {
                     src={user?.avatar || "https://github.com/shadcn.png"}
                   />
                   <AvatarFallback>
-                    {`${user?.firstName?.charAt(0) || "A"}${
+                    {`${user?.firstName?.charAt(0) || "A"} ${
                       user?.lastName?.charAt(0) || "A"
                     }`}
                   </AvatarFallback>

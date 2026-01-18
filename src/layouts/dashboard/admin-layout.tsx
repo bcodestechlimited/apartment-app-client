@@ -118,14 +118,14 @@ function AdminSidebar() {
   return (
     <Sidebar collapsible="icon">
       {/* Logo / header */}
-      <SidebarHeader className="border-b">
-        <div className="flex items-center justify-center py-2">
+      <SidebarHeader className="border-b ">
+        <Link to="/" className="flex items-center justify-center ">
           <img
             src={images.havenLeaseLogoGreen}
             alt="Haven Lease Logo"
-            className="w-10 h-10"
+            className="w-15 h-15"
           />
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>

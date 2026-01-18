@@ -401,7 +401,7 @@ function App() {
               element: <LandlordProfile />,
             },
             {
-              path: "properties/:propertyId",
+              path: "property/:propertyId",
               element: <PropertyDetailLayout />,
               children: [
                 {

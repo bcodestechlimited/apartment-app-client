@@ -5,9 +5,20 @@ import Twitter from "@/assets/images/Twitter - Original.png";
 import LinkedIn from "@/assets/images/LinkedIn - Original.png";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Footer() {
+  const navigate = useNavigate();
+
+  let listApartmentUrl = "";
+  const user = useAuthStore((state) => state.user);
+  if (user && user.roles.includes("landlord")) {
+    listApartmentUrl = "/dashboard/landlord";
+  } else if (!user || !user.roles.includes("landlord")) {
+    listApartmentUrl = "/onboarding/landlord";
+  }
+
   return (
     <footer className="bg-[#222222] text-white p-8 ">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -46,7 +57,7 @@ export default function Footer() {
           <ul className="leading-8">
             {[
               { title: "Find apartment", link: "/properties" },
-              { title: "List apartment", link: "/login" },
+              { title: "List apartment", link: listApartmentUrl },
               {
                 title: "Co-working space",
                 link: "/properties?propertyType=co-working-space",
@@ -99,7 +110,7 @@ export default function Footer() {
       </div>
       <div className="flex items-center justify-center mt-4">
         <p className="text-white">Powered By </p>
-        <a href="https://bcodestech.com/">
+        <a href="https://bcodestech.com/" target="blank">
           <img src={images.bctLogoWhite} alt="" className=" w-14" />
         </a>
       </div>

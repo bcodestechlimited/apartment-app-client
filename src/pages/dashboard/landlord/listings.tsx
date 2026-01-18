@@ -157,7 +157,7 @@ export function PropertiesGrid({
           <LandLordPropertyCard
             property={property}
             key={property._id}
-            link={`/dashboard/landlord/properties/${property._id}`}
+            link={`/dashboard/landlord/property/${property._id}`}
           />
         );
       })}

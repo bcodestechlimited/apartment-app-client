@@ -26,12 +26,14 @@ export default function SmarterWay() {
         <div className="flex gap-4">
           <Link to="/properties">
             <Button className="bg-white text-custom-primary hover:bg-gray-100 cursor-pointer">
-              Discover Apartmens
+              Discover Apartments
             </Button>
           </Link>
-          <Button className="bg-transparent border border-white hover:bg-transparent cursor-pointer">
-            List Apartments
-          </Button>
+          <Link to="/">
+            <Button className="bg-transparent border border-white hover:bg-transparent cursor-pointer">
+              List Apartments
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

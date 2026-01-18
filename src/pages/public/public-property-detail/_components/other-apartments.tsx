@@ -5,7 +5,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
-export default function OtherApartments() {
+interface OtherApartmentsProps {
+  currentPropertyId?: string;
+}
+export default function OtherApartments({
+  currentPropertyId,
+}: OtherApartmentsProps) {
   const { user } = useAuthStore();
 
   const isLandlord = user?.roles?.includes("landlord");
@@ -17,7 +22,7 @@ export default function OtherApartments() {
     queryFn: () =>
       propertyService.getProperties({
         page: 1,
-        limit: 3,
+        limit: 4,
       }),
   });
 
@@ -38,14 +43,18 @@ export default function OtherApartments() {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {data?.properties?.map((property: IProperty) => (
-                <PublicPropertyCard
-                  property={property}
-                  key={property._id}
-                  link={handleGetLink(property._id)}
-                
-                />
-              ))}
+              {data?.properties
+                ?.filter(
+                  (property: IProperty) => property._id !== currentPropertyId
+                )
+                .slice(0, 3)
+                .map((property: IProperty) => (
+                  <PublicPropertyCard
+                    property={property}
+                    key={property._id}
+                    link={handleGetLink(property._id)}
+                  />
+                ))}
             </div>
           </>
         )}

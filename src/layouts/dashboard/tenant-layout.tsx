@@ -292,14 +292,14 @@ export function TenantSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b pb-1">
-        <div className="flex items-center justify-center py-2">
+      <SidebarHeader className="border-b ">
+        <Link to="/" className="flex items-center justify-center ">
           <img
             src={images.havenLeaseLogoGreen}
             alt="Haven Lease Logo"
-            className="w-10 h-10"
+            className="w-15 h-15"
           />
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
@@ -410,7 +410,7 @@ function TopBar() {
   });
 
   return (
-    <div className="flex justify-between bg-white items-center  pt-2 pb-2 sticky  top-0 z-20 border-b">
+    <div className="flex justify-between bg-white items-center  pt-3 pb-3.5 sticky  top-0 z-20 border-b">
       <div className="pl-3">
         <SidebarTrigger />
       </div>
