@@ -139,7 +139,7 @@ function LandlordSidebar() {
                       className={cn(
                         "flex items-center gap-2",
                         isActive(route.path) &&
-                          "bg-custom-primary/20 text-custom-primary"
+                          "bg-custom-primary/20 text-custom-primary",
                       )}
                     >
                       {route.icon}
@@ -187,7 +187,7 @@ function TopBar() {
   });
 
   return (
-    <div className="flex justify-between bg-white items-center  pt-2 pb-2 sticky  top-0 z-20 border-b">
+    <div className="flex justify-between bg-white items-center  pt-1.5 sticky  top-0 z-20 border-b">
       <div className="pl-3">
         <SidebarTrigger />
       </div>

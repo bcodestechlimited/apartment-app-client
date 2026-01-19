@@ -86,6 +86,7 @@ import TermsAndConditions from "./pages/public/terms-page/terms";
 import PrivacyPolicy from "./pages/public/privacy-policy-page/privacy";
 import ContactUs from "./pages/public/contact/contact";
 import AuthRoleSelection from "./pages/onboarding/auth-role-selection";
+import AddPropertyPage from "./pages/dashboard/landlord/add-property";
 
 const queryClient = new QueryClient();
 
@@ -352,6 +353,10 @@ function App() {
             {
               path: "",
               element: <Listings />,
+            },
+            {
+              path: "add-property",
+              element: <AddPropertyPage />,
             },
 
             {

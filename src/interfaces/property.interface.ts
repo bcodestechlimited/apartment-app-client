@@ -69,6 +69,7 @@ export interface IAddProperty {
   amenities: string[];
   facilities: string[];
   pictures: File[];
+  otherFees: { name: string; amount: string | number }[];
 }
 export interface IEditProperty {
   // type:

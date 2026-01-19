@@ -5,7 +5,7 @@ import type { IProperty } from "@/interfaces/property.interface";
 import { cn, getActualTypeFromParam } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import AddPropertyModal from "./_components/add-property-modal";
 import { motion } from "motion/react";
 import { Loader } from "@/components/custom/loader";
@@ -80,7 +80,7 @@ export default function Listings() {
                   <li
                     className={cn(
                       "relative z-10 px-6 py-2 font-medium",
-                      isActive ? "text-white" : "text-custom-primary"
+                      isActive ? "text-white" : "text-custom-primary",
                     )}
                     data-category={category}
                   >
@@ -91,17 +91,20 @@ export default function Listings() {
             })}
           </ul>
         </div>
-        <Button
-          onClick={openModal}
-          className="text-lg px-6 py-5 font-medium cursor-pointer bg-custom-primary hover:bg-custom-primary/90"
-        >
-          <Plus /> Add new property
-        </Button>
-        <AddPropertyModal
+        <Link to="add-property">
+          <Button
+            // onClick={openModal}
+            className="text-lg px-6 py-5 font-medium cursor-pointer bg-custom-primary hover:bg-custom-primary/90"
+          >
+            <Plus /> Add new property
+          </Button>
+        </Link>
+
+        {/* <AddPropertyModal
           // propertyType="co-working space" // example value
           isOpen={isModalOpen}
           closeModal={closeModal}
-        />
+        /> */}
       </div>
       <div>
         <PropertiesGrid
