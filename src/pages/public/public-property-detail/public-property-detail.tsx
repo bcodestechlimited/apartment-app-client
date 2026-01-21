@@ -36,6 +36,7 @@ import ConfirmBooking from "./_modals/confirm-booking";
 import { toast } from "sonner";
 import OtherApartments from "./_components/other-apartments";
 import PropertyRatings from "@/components/shared/PropertyRating";
+import { systemSettingsService } from "@/api/admin/system-settings.api";
 
 const getAmenityIcon = (amenity: string) => {
   const icons: Record<string, JSX.Element> = {
@@ -63,6 +64,11 @@ export default function PublicPropertyDetail() {
     queryKey: ["property", propertyId],
     queryFn: () => propertyService.getProperty(propertyId!),
     retry: !!propertyId,
+  });
+
+  const { data: systemSettings } = useQuery({
+    queryKey: ["system-settinsg"],
+    queryFn: () => systemSettingsService.getSettings(),
   });
 
   const openModal = () => setIsOpen(true);
@@ -93,6 +99,11 @@ export default function PublicPropertyDetail() {
     );
 
   const property = (data?.property as IProperty) || {};
+
+  const platformFee =
+    ((systemSettings?.platformFeePercentage || 5) / 100) *
+    (property?.price || 0);
+  const grandTotal = (property?.totalFees || 0) + platformFee;
 
   console.log(property);
 
@@ -209,10 +220,10 @@ export default function PublicPropertyDetail() {
         {/* ================= */}
 
         <div className=" flex flex-col gap-4 shadow-xl rounded-2xl text-start p-4 col-span-2">
-          <p>Price</p>
-          <p>{formatCurrency(property?.price)}</p>
+          {/* <p>Price</p>
+          <p>{formatCurrency(property?.totalFees)}</p>
 
-          <Separator />
+          <Separator /> */}
 
           <div className="flex items-center gap-2">
             <p>Booking Duration :</p>
@@ -236,31 +247,24 @@ export default function PublicPropertyDetail() {
               <p className="font-medium">Rent</p>
               <p>{formatCurrency(property.price)}</p>
             </div>
-            <div className="flex items-center justify-between">
-              <p className="font-medium">Service Charge</p>
-              <p>{formatCurrency(10000)}</p>
+            {property?.otherFees?.map((fee, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center text-sm   pb-1"
+              >
+                <span className="text-left capitalize">{fee.name}:</span>
+                <span className="text-left">{formatCurrency(fee.amount)}</span>
+              </div>
+            ))}
+            <div className="flex justify-between items-center text-sm text-gray-600">
+              <span>Platform Fee:</span>
+              <span>{formatCurrency(platformFee)}</span>
             </div>
-            {/* <div className="flex items-center justify-between">
-              <p className="font-medium">Caution fee (Refundable)</p>
-              <p>{formatCurrency(10000)}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="font-medium">Legal</p>
-              <p>{property.price}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="font-medium">Agent Fee</p>
-              <p>{property.price}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="font-medium">VAT</p>
-              <p>{formatCurrency(10000)}</p>
-            </div> */}
           </div>
           <Separator />
           <div className="flex items-center justify-between">
             <p className="font-medium">Total</p>
-            <p>{formatCurrency(property.price + 10000)}</p>
+            <p>{formatCurrency(grandTotal)}</p>
           </div>
 
           <div className="flex items-center gap-2 my-2 px-2 ">

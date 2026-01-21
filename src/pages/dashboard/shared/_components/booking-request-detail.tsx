@@ -11,9 +11,10 @@ import { Separator } from "@/components/ui/separator";
 import { House, MessageSquareText } from "lucide-react";
 import { formatCurrency, formatPrettyDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { bookingRequestService } from "@/api/bookingRequest.api";
 import { toast } from "sonner";
+import { systemSettingsService } from "@/api/admin/system-settings.api";
 
 interface ModalProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const LanlordBookingRequestDetail = ({
     mutationFn: (data: any) =>
       bookingRequestService.updateLandlordBookingRequests(
         bookingRequest._id,
-        data
+        data,
       ),
     onSuccess: async () => {
       toast.success("Booking request updated successfully!");
@@ -49,6 +50,11 @@ export const LanlordBookingRequestDetail = ({
     },
   });
 
+  const { data } = useQuery({
+    queryKey: ["system-settinsg"],
+    queryFn: () => systemSettingsService.getSettings(),
+  });
+
   const handleAccept = () => {
     bookingRequestMutation.mutate({ status: "approved" });
   };
@@ -56,6 +62,20 @@ export const LanlordBookingRequestDetail = ({
   const handleDecline = () => {
     bookingRequestMutation.mutateAsync({ status: "declined" });
   };
+
+  const otherFeesTotal =
+    bookingRequest?.property?.otherFees?.reduce(
+      (acc, curr) => acc + (curr.amount as number),
+      0,
+    ) || 0;
+
+  // 2. Grand Total is just Price + Calculated Fees
+  const platformFee =
+    ((data?.platformFeePercentage || 5) / 100) *
+    (bookingRequest?.property?.price || 0);
+
+  // const feesTotal = otherFeesTotal + platformFee;
+  const grandTotal = (bookingRequest?.property?.totalFees || 0) + platformFee;
 
   if (!isOpen) return null;
 
@@ -94,16 +114,35 @@ export const LanlordBookingRequestDetail = ({
           <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
-              <strong>Price:</strong> {formatCurrency(bookingRequest.netPrice)}
+              <strong>Total:</strong> {formatCurrency(grandTotal)}
             </p>
           </div>
 
-          <div className="rounded w-full flex gap-4 items-start">
+          {/* <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
               <strong>Service Charge:</strong>{" "}
               {formatCurrency(bookingRequest.serviceChargeAmount)}
             </p>
+          </div> */}
+          <div className="flex flex-col gap-1 ml-8 border-l-2 pl-3 py-1">
+            <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
+              <span>Basic rent:</span>
+              <span>{formatCurrency(bookingRequest.property.price)}</span>
+            </div>
+            {bookingRequest?.property.otherFees.map((fee, idx) => (
+              <div
+                key={idx}
+                className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground"
+              >
+                <span className="capitalize">{fee.name}:</span>
+                <span>{formatCurrency(fee.amount)}</span>
+              </div>
+            ))}
+            <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
+              <span>Platform Fee:</span>
+              <span>{formatCurrency(platformFee)}</span>
+            </div>
           </div>
 
           <div className="rounded w-full flex gap-4 items-start">
@@ -188,9 +227,28 @@ ModalProps) => {
     },
   });
 
+  const { data } = useQuery({
+    queryKey: ["system-settinsg"],
+    queryFn: () => systemSettingsService.getSettings(),
+  });
+
   const handleGeneratePaymentLink = () => {
     payForBookingRequestMutation.mutateAsync();
   };
+
+  const otherFeesTotal =
+    bookingRequest?.property?.otherFees?.reduce(
+      (acc, curr) => acc + (curr.amount as number),
+      0,
+    ) || 0;
+
+  // 2. Grand Total is just Price + Calculated Fees
+  const platformFee =
+    ((data?.platformFeePercentage || 5) / 100) *
+    (bookingRequest?.property?.price || 0);
+
+  const feesTotal = otherFeesTotal + platformFee;
+  const grandTotal = (bookingRequest?.property?.totalFees || 0) + platformFee;
 
   if (!isOpen) return null;
 
@@ -250,23 +308,35 @@ ModalProps) => {
           <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
-              <strong>Price:</strong>{" "}
-              {formatCurrency(bookingRequest.property.price)}
+              <strong>Total:</strong> {formatCurrency(grandTotal)}
             </p>
           </div>
-          <div className="rounded w-full flex gap-4 items-start">
+
+          {/* <div className="rounded w-full flex gap-4 items-start">
             <House size={22} />
             <p>
               <strong>Service Charge:</strong>{" "}
               {formatCurrency(bookingRequest.serviceChargeAmount)}
             </p>
-          </div>
-
-          <div className="rounded w-full flex gap-4 items-start">
-            <House size={22} />
-            <p>
-              <strong>Total:</strong> {formatCurrency(bookingRequest.netPrice)}
-            </p>
+          </div> */}
+          <div className="flex flex-col gap-1 ml-8 border-l-2 pl-3 py-1">
+            <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
+              <span>Basic rent:</span>
+              <span>{formatCurrency(bookingRequest.property.price)}</span>
+            </div>
+            {bookingRequest?.property.otherFees.map((fee, idx) => (
+              <div
+                key={idx}
+                className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground"
+              >
+                <span className="capitalize">{fee.name}:</span>
+                <span>{formatCurrency(fee.amount)}</span>
+              </div>
+            ))}
+            <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
+              <span>Platform Fee:</span>
+              <span>{formatCurrency(platformFee)}</span>
+            </div>
           </div>
         </div>
 

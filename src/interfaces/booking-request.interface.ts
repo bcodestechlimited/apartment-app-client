@@ -9,7 +9,7 @@ export interface IBookingRequest {
   moveInDate: string;
   startDate: Date;
   endDate: Date;
-  totalPrice: number;
+  price: number;
   netPrice: number; // Price after discounts or fees
   serviceChargeAmount: number; // Additional fees for the booking
   paymentDue?: Date;

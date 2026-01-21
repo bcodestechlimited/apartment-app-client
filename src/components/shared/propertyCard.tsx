@@ -23,7 +23,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const {
     title,
     type,
-    price,
+    totalFees,
     pictures,
     numberOfBedrooms,
     numberOfBathrooms,
@@ -59,7 +59,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         <h3 className="font-semibold">{title}</h3>
         {/* <p className="text-gray-600">{type}</p> */}
         <p className="font-bold text-lg">
-          {price ? formatCurrency(price) : ""}
+          {totalFees ? formatCurrency(totalFees) : ""}
         </p>
 
         <div className="flex gap-4 flex-wrap mt-2">
@@ -91,7 +91,7 @@ export const PublicPropertyCard = ({
     title,
     description,
     type,
-    price,
+    totalFees,
     pictures,
     numberOfBedrooms,
     numberOfBathrooms,
@@ -142,7 +142,7 @@ export const PublicPropertyCard = ({
           </p>
 
           <p className="font-bold text-lg">
-            {price ? formatCurrency(price) : ""}
+            {totalFees ? formatCurrency(totalFees) : ""}
           </p>
 
           <div className="flex gap-4 flex-wrap mt-2">
@@ -180,7 +180,7 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
     title,
     description,
     type,
-    price,
+    totalFees,
     pictures,
     numberOfBedrooms,
     numberOfBathrooms,
@@ -224,7 +224,7 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
             </p>
 
             <p className="font-bold text-lg">
-              {price ? formatCurrency(price) : ""}
+              {totalFees ? formatCurrency(totalFees) : ""}
             </p>
 
             <div className="flex items-center justify-between">

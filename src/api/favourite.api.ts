@@ -9,7 +9,7 @@ class FavouriteService {
       const response = await axiosInstance.post(`/save-properties`, {
         propertyId,
       });
-      console.log("create favourite api", response.data?.data);
+      // console.log("create favourite api", response.data?.data);
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to favourite property");
@@ -20,7 +20,7 @@ class FavouriteService {
   async deleteFavourite(propertyId: string) {
     try {
       const response = await axiosInstance.delete(
-        `/save-properties/remove/${propertyId}`
+        `/save-properties/remove/${propertyId}`,
       );
       console.log("delete favourite api", response.data?.data);
       return response.data?.data;

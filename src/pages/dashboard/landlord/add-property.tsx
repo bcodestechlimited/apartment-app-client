@@ -62,6 +62,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card"; // Optional: Use Card for style
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function AddPropertyPage() {
   const navigate = useNavigate(); // Hook for navigation
@@ -76,6 +77,7 @@ export default function AddPropertyPage() {
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(
     undefined,
   );
+  const [isEnsuite, setIsEnsuite] = useState(false);
 
   const form = useForm<IAddProperty>({
     defaultValues: {
@@ -87,6 +89,7 @@ export default function AddPropertyPage() {
       lga: "",
       availabilityDate: "",
       price: undefined,
+      totalFees: undefined,
       pricingModel: "",
       amenities: [],
       facilities: [],
@@ -94,7 +97,8 @@ export default function AddPropertyPage() {
       numberOfBathrooms: "",
       seatingCapacity: "",
       pictures: [],
-      otherFees: [], // Initialize empty fees
+      otherFees: [],
+      isEnsuite: false,
     },
   });
 
@@ -145,6 +149,14 @@ export default function AddPropertyPage() {
       return;
     }
 
+    const basePrice = Number(data.price) || 0;
+    const feesSum =
+      data.otherFees?.reduce(
+        (acc, fee) => acc + (Number(fee.amount) || 0),
+        0,
+      ) || 0;
+    const totalFees = basePrice + feesSum;
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
@@ -153,10 +165,12 @@ export default function AddPropertyPage() {
     formData.append("lga", data.lga);
     formData.append("availabilityDate", data.availabilityDate);
     formData.append("price", String(data.price));
+    formData.append("totalFees", String(totalFees));
     formData.append("pricingModel", data.pricingModel.toLowerCase());
     formData.append("amenities", JSON.stringify(selectedAmenities));
     formData.append("facilities", JSON.stringify(selectedFacilities));
     formData.append("type", data.type.replace(" ", "-").toLowerCase());
+    formData.append("isEnsuite", String(data.isEnsuite));
 
     if (data.otherFees && data.otherFees.length > 0) {
       formData.append("otherFees", JSON.stringify(data.otherFees));
@@ -624,82 +638,140 @@ export default function AddPropertyPage() {
                   />
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Bedrooms */}
+                    <FormField
+                      control={form.control}
+                      name="numberOfBedRooms"
+                      rules={{ required: "Bedrooms required" }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label className="font-bold">Bedrooms</Label>
+                          <Select
+                            onValueChange={(val) => {
+                              field.onChange(val);
+                              setSelectedRooms(val);
+
+                              // Helper Logic: If "Ensuite" is checked, we assume AT LEAST this many bathrooms
+                              if (form.getValues("isEnsuite")) {
+                                const currentBathrooms = Number(
+                                  form.getValues("numberOfBathrooms") || 0,
+                                );
+                                // Only auto-update if the current bathroom count is LESS than the new bedroom count
+                                if (currentBathrooms < Number(val)) {
+                                  form.setValue("numberOfBathrooms", val);
+                                  setSelectedBathrooms(val);
+                                }
+                              }
+                            }}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {/* Increased range to 8 */}
+                              {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                                <SelectItem
+                                  key={num}
+                                  value={String(num)}
+                                  className="cursor-pointer"
+                                >
+                                  {num}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Bathrooms */}
+                    <FormField
+                      control={form.control}
+                      name="numberOfBathrooms"
+                      rules={{ required: "Bathrooms required" }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label className="font-bold">Bathrooms</Label>
+                          <Select
+                            onValueChange={(val) => {
+                              field.onChange(val);
+                              setSelectedBathrooms(val);
+                            }}
+                            // REMOVED: disabled={form.watch("isEnsuite")}
+                            // This allows the user to add extra toilets even if ensuite is checked
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {/* Increased range to 8 to accommodate guest toilets */}
+                              {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                                <SelectItem
+                                  key={num}
+                                  value={String(num)}
+                                  className="cursor-pointer"
+                                >
+                                  {num}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Ensuite Checkbox  */}
                   <FormField
                     control={form.control}
-                    name="numberOfBedRooms"
-                    rules={{ required: "Bedrooms required" }}
+                    name="isEnsuite"
                     render={({ field }) => (
-                      <FormItem>
-                        <Label className="font-bold">Bedrooms</Label>
-                        <Select
-                          onValueChange={(val) => {
-                            field.onChange(val);
-                            setSelectedRooms(val);
-                          }}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="cursor-pointer">
-                              <SelectValue placeholder="Select" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <SelectItem
-                                key={num}
-                                value={String(num)}
-                                className="cursor-pointer"
-                              >
-                                {num}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="numberOfBathrooms"
-                    rules={{ required: "Bathrooms required" }}
-                    render={({ field }) => (
-                      <FormItem>
-                        <Label className="font-bold">Bathrooms</Label>
-                        <Select
-                          onValueChange={(val) => {
-                            field.onChange(val);
-                            setSelectedBathrooms(val);
-                          }}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="cursor-pointer">
-                              <SelectValue placeholder="Select" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                              <SelectItem
-                                key={num}
-                                value={String(num)}
-                                className="cursor-pointer"
-                              >
-                                {num}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            className="border-custom-primary data-[state=checked]:bg-custom-primary data-[state=checked]:border-custom-primary cursor-pointer mt-1"
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked);
+
+                              if (checked && selectedRooms) {
+                                form.setValue(
+                                  "numberOfBathrooms",
+                                  selectedRooms,
+                                );
+                                setSelectedBathrooms(selectedRooms);
+                              }
+                            }}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <Label className="font-bold cursor-pointer">
+                            All Rooms Ensuite?
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Checking this sets the <b>minimum</b> bathrooms
+                            equal to bedrooms. You can increase the bathroom
+                            count manually if there is a visitor's toilet.
+                          </p>
+                        </div>
                       </FormItem>
                     )}
                   />
                 </div>
               )}
 
-              {/* Amenities & Facilities MultiSelects */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 ">
+              {/* Amenities & Facilities MultiSelects... */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <FormField
                   control={form.control}
                   name="amenities"
@@ -727,7 +799,6 @@ export default function AddPropertyPage() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="facilities"

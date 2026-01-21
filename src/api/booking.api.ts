@@ -29,7 +29,7 @@ class BookingService {
     try {
       const response = await axiosInstance.get(`/property/${propertyId}`);
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data?.property;
     } catch (error) {
@@ -37,14 +37,14 @@ class BookingService {
     }
   };
   getBookings = async (params: IParams) => {
-    console.log({ params });
+    // console.log({ params });
 
     try {
       const response = await axiosInstance.get(`/property`, {
         params,
       });
 
-      console.log({ response });
+      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {

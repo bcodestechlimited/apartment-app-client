@@ -87,11 +87,13 @@ import PrivacyPolicy from "./pages/public/privacy-policy-page/privacy";
 import ContactUs from "./pages/public/contact/contact";
 import AuthRoleSelection from "./pages/onboarding/auth-role-selection";
 import AddPropertyPage from "./pages/dashboard/landlord/add-property";
+import { PropertyDispatcher } from "./pages/shared/property-dispatcher";
 
 const queryClient = new QueryClient();
 
 function App() {
   const router = createBrowserRouter([
+    // Public Routes
     {
       element: <PublicLayout />,
       children: [
@@ -138,6 +140,7 @@ function App() {
       path: "reset-password",
       element: <ResetPassword />,
     },
+    // Onboarding Routes
     {
       path: "/auth",
       element: <OnboardingLayout />,
@@ -156,6 +159,7 @@ function App() {
         },
       ],
     },
+    // Onboarding Routes
     {
       path: "onboarding",
       children: [
@@ -544,6 +548,11 @@ function App() {
           ],
         },
       ],
+    },
+
+    {
+      path: "view/property/:id",
+      element: <PropertyDispatcher />,
     },
 
     {

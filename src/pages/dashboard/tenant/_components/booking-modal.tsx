@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -28,6 +28,7 @@ import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import { bookingRequestService } from "@/api/bookingRequest.api";
+import { systemSettingsService } from "@/api/admin/system-settings.api";
 
 interface ModalProps {
   isOpen: boolean;
@@ -54,6 +55,11 @@ export default function BookingModal({
   });
 
   const queryClient = useQueryClient();
+
+  const { data } = useQuery({
+    queryKey: ["system-settinsg"],
+    queryFn: () => systemSettingsService.getSettings(),
+  });
 
   const propertyMutation = useMutation({
     mutationFn: ({
@@ -108,6 +114,20 @@ export default function BookingModal({
     return today > availability ? today : availability;
   };
 
+  // 1. Calculate ONLY dynamic fees. (Removed the hardcoded 10000)
+  const otherFeesTotal =
+    property?.otherFees?.reduce(
+      (acc, curr) => acc + (curr.amount as number),
+      0,
+    ) || 0;
+
+  // 2. Grand Total is just Price + Calculated Fees
+  const platformFee =
+    ((data?.platformFeePercentage || 5) / 100) * (property?.price || 0);
+
+  const feesTotal = otherFeesTotal + platformFee;
+  const grandTotal = (property?.totalFees || 0) + platformFee;
+
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent
@@ -122,27 +142,47 @@ export default function BookingModal({
 
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
-            <House />
-            <p>{property.description}</p>
+            <House className="text-muted-foreground" />
+            <p className="font-medium">{property.description}</p>
           </div>
 
           <div className="flex gap-2">
-            <MapPin />
+            <MapPin className="text-muted-foreground" />
             <p>{property.address}</p>
           </div>
 
-          <div className="flex gap-2">
-            <CreditCard />
-            <p>{formatCurrency(property.price)}</p>
+          <div className="flex gap-2 items-center">
+            <CreditCard className="text-muted-foreground" />
+            <p className="font-semibold">
+              Rent: {formatCurrency(property.price)}
+            </p>
+          </div>
+
+          {/* 3. Dynamic Fee List - Replaces any static text */}
+
+          <div className="flex flex-col gap-1 ml-8 border-l-2 pl-3 py-1">
+            {property.otherFees.map((fee, idx) => (
+              <div
+                key={idx}
+                className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground"
+              >
+                <span className="capitalize">{fee.name}:</span>
+                <span>{formatCurrency(fee.amount)}</span>
+              </div>
+            ))}
+            <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
+              <span>Platform Fee:</span>
+              <span>{formatCurrency(platformFee)}</span>
+            </div>
           </div>
 
           <div className="flex gap-2">
-            <Calendar1 />
-            <p>{property.pricingModel}</p>
+            <Calendar1 className="text-muted-foreground" />
+            <p className="capitalize">{property.pricingModel}</p>
           </div>
 
           {/* Date Picker */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 pt-2">
             <Label className="text-start font-bold">
               Preferred Move-in Date
             </Label>
@@ -182,32 +222,48 @@ export default function BookingModal({
             </Popover>
           </div>
 
-          <div className="flex gap-2">
-            <p className="font-semibold">Available From:</p>
-            <p>{formatPrettyDate(property.availabilityDate)}</p>
+          <div className="flex gap-2 items-center text-sm text-muted-foreground">
+            <p>Available From:</p>
+            <p className="font-medium text-foreground">
+              {formatPrettyDate(property.availabilityDate)}
+            </p>
           </div>
         </div>
 
         <DialogFooter className="border-t mt-4 pt-4">
           <div className="flex flex-col gap-4 w-full">
-            <div className="flex w-full gap-6 py-4">
+            <div className="flex w-full justify-between items-center py-2 bg-slate-50 p-4 rounded-lg">
               <div>
-                <p>Total amount to be paid</p>
-                <p className="font-semibold text-xl">
-                  {formatCurrency(property.price + 10000)}
+                <p className="text-sm text-muted-foreground">
+                  Total Initial Payment
+                </p>
+                {/* 4. Grand Total Display */}
+                <p className="font-bold text-2xl text-primary">
+                  {formatCurrency(grandTotal)}
                 </p>
               </div>
+              {feesTotal > 0 && (
+                <div className="text-right text-xs text-muted-foreground">
+                  <p>Includes rent</p>
+                  <p>+ {formatCurrency(feesTotal)} fees</p>
+                </div>
+              )}
             </div>
 
             <p className="font-medium text-lg">Message</p>
 
             <div className="bg-gray-50 border p-4 rounded flex gap-4 items-start">
-              <MessageSquareText size={44} />
-              <p>
+              <MessageSquareText
+                size={24}
+                className="text-muted-foreground mt-1"
+              />
+              <p className="text-sm">
                 Hi! I'm interested in this property and available to move in by{" "}
-                {moveInDate.dateString
-                  ? formatPrettyDate(moveInDate.dateString)
-                  : "—"}
+                <span className="font-semibold">
+                  {moveInDate.date
+                    ? formatPrettyDate(moveInDate.dateString)
+                    : "[Select Date]"}
+                </span>
                 . Looking forward to hearing from you!
               </p>
             </div>
