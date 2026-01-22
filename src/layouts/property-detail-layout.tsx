@@ -90,7 +90,7 @@ function PropertyDetailLayout() {
         </div>
 
         <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
-          {property?.pictures?.slice(1, 5).map((picture, idx) => (
+          {property?.pictures?.slice(1, 5)?.map((picture, idx) => (
             <img
               key={idx}
               className="w-full h-full object-cover rounded"
