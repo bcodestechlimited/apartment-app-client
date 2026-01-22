@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const handleAxiosError = (
   error: any,
-  alternateMessage?: string
+  alternateMessage?: string,
 ): string => {
   // console.log({ error: error.response?.data?.errors });
 
@@ -20,7 +20,7 @@ export const handleAxiosError = (
 
   if (error instanceof AxiosError && error.response?.status === 422) {
     throw new Error(
-      error.response?.data?.errors[0].message || alternateMessage
+      error.response?.data?.errors[0].message || alternateMessage,
     );
   }
   if (error instanceof AxiosError) {
@@ -119,3 +119,7 @@ export async function downloadFile(url: string, fileName: string) {
     window.open(url, "_blank");
   }
 }
+
+export const getUniversalPropertyUrl = (propertyId: string) => {
+  return `${window.location.origin}/view/property/${propertyId}`;
+};

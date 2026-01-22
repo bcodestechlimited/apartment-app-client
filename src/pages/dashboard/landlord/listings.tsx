@@ -5,11 +5,12 @@ import type { IProperty } from "@/interfaces/property.interface";
 import { cn, getActualTypeFromParam } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import AddPropertyModal from "./_components/add-property-modal";
 import { motion } from "motion/react";
 import { Loader } from "@/components/custom/loader";
 import { Plus } from "lucide-react";
+import { systemSettingsService } from "@/api/admin/system-settings.api";
 
 export default function Listings() {
   const [selected, setSelected] = useState("All");
@@ -37,6 +38,11 @@ export default function Listings() {
         limit: 10,
         type,
       }),
+  });
+
+  const { data: settings } = useQuery({
+    queryKey: ["system-settings"],
+    queryFn: () => systemSettingsService.getSettings(),
   });
 
   const openModal = () => setIsModalOpen(true);
@@ -80,7 +86,7 @@ export default function Listings() {
                   <li
                     className={cn(
                       "relative z-10 px-6 py-2 font-medium",
-                      isActive ? "text-white" : "text-custom-primary"
+                      isActive ? "text-white" : "text-custom-primary",
                     )}
                     data-category={category}
                   >
@@ -91,23 +97,27 @@ export default function Listings() {
             })}
           </ul>
         </div>
-        <Button
-          onClick={openModal}
-          className="text-lg px-6 py-5 font-medium cursor-pointer bg-custom-primary hover:bg-custom-primary/90"
-        >
-          <Plus /> Add new property
-        </Button>
-        <AddPropertyModal
+        <Link to="add-property">
+          <Button
+            // onClick={openModal}
+            className="text-lg px-6 py-5 font-medium cursor-pointer bg-custom-primary hover:bg-custom-primary/90"
+          >
+            <Plus /> Add new property
+          </Button>
+        </Link>
+
+        {/* <AddPropertyModal
           // propertyType="co-working space" // example value
           isOpen={isModalOpen}
           closeModal={closeModal}
-        />
+        /> */}
       </div>
       <div>
         <PropertiesGrid
           isLoading={isLoading}
           properties={data?.properties || []}
           type={type || "all"}
+          settings={settings}
         />
       </div>
     </div>
@@ -116,6 +126,9 @@ export default function Listings() {
 
 interface PropertiesGridProps {
   properties: IProperty[];
+  settings: {
+    platformFeePercentage: number;
+  };
   isLoading: boolean;
   type: string;
 }
@@ -124,6 +137,7 @@ export function PropertiesGrid({
   properties,
   isLoading,
   type,
+  settings,
 }: PropertiesGridProps) {
   if (isLoading) return <Loader />;
 
@@ -156,6 +170,7 @@ export function PropertiesGrid({
         return (
           <LandLordPropertyCard
             property={property}
+            settings={settings}
             key={property._id}
             link={`/dashboard/landlord/properties/${property._id}`}
           />

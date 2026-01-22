@@ -1,18 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Search } from "lucide-react";
-
-// --- Custom Imports ---
-import { DataTable } from "../_component/data-table"; // Assumed to be the TanStack/Pagination version
+import { DataTable } from "../_component/data-table";
 import { documentTypeOptions, type Document } from "./data";
 import { MetricCard } from "./_components/metricCard";
 import { useVerificationDocuments } from "@/hooks/admin/useVerificationDocuments";
-// Import the column creator function and interface
 import {
   createVerificationColumns,
   type VerificationActions,
 } from "./_components/column-definition/verification-columns";
-
-// --- Shadcn Imports ---
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +28,6 @@ import type { Metric } from "../admin-dashboard/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminDocumentsService } from "@/api/admin/admin-documents.api";
 import { toast } from "sonner";
-import type { fi } from "date-fns/locale";
 
 export function AdminDocumentVerification() {
   // 1. Hook and Data Management
@@ -172,7 +166,7 @@ export function AdminDocumentVerification() {
         <DataTable
           data={documents}
           columns={verificationColumns}
-          isLoading={isLoading }
+          isLoading={isLoading}
           pagination={pagination}
           setPage={setPage}
           setPageSize={setLimit}

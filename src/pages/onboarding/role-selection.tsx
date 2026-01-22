@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { CustomAlert } from "@/components/custom/custom-alert";
-import { useAuthUser } from "@/hooks/useAuthUser";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -15,32 +14,6 @@ export default function RoleSelection() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   const navigate = useNavigate();
-
-  // console.log({ data });
-
-  const updateRoleMutation = useMutation({
-    mutationFn: (selectedRole: string) =>
-      authService.updateUser({ roles: selectedRole ? [selectedRole] : [] }),
-    onSuccess: (data) => {
-      const user = data.user;
-      if (user && user.roles) {
-        console.log("user roles", user.roles);
-        if (user.roles.includes("landlord")) {
-          console.log("navigate to landlord dashboard");
-          return navigate("/dashboard/landlord");
-        }
-        if (user.roles.includes("tenant")) {
-          return navigate("/dashboard/");
-        }
-
-        if (user.roles.includes("admin")) {
-          navigate("/dashboard/admin");
-        }
-      }
-    },
-  });
-
-  // navigate("/dashboard");
 
   const roles = [
     {
@@ -107,7 +80,7 @@ export default function RoleSelection() {
         {error && <CustomAlert variant="destructive" message={error} />}
       </div>
       <Button
-        disabled={!selectedRole || updateRoleMutation.isPending}
+        disabled={!selectedRole}
         onClick={handleNext}
         className="mt-6 cursor-pointer btn-primary"
       >

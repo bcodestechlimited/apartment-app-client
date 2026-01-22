@@ -19,8 +19,8 @@ export interface UserState {
 
 const actions = (
   set: (
-    state: Partial<UserState> | ((state: UserState) => Partial<UserState>)
-  ) => void
+    state: Partial<UserState> | ((state: UserState) => Partial<UserState>),
+  ) => void,
 ) => ({
   setUser: async (user: IUser | null) => {
     set({ user });
@@ -51,10 +51,11 @@ export const useAuthStore = create<UserState>()(
       // storage: sessionStorage, // 💡 safer than localStorage
       // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
       partialize: (state) => ({
-        authCredentials: state.authCredentials, // only store credentials (if needed)
+        authCredentials: state.authCredentials,
+        // only store credentials (if needed)
       }),
-    }
-  )
+    },
+  ),
 );
 
 export const useAuthActions = () => {

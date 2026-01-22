@@ -5,6 +5,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import {
   NIGERIAN_STATES,
@@ -14,17 +27,20 @@ import { useState } from "react";
 import { pricingModels, propertyTypes } from "@/interfaces/property.interface";
 import AnimationWrapper from "@/components/animations/animation-wrapper";
 import AnimatedText from "@/components/animations/animated-text";
-import { Search } from "lucide-react";
+import { Search, Check, ChevronsUpDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router";
 
 export default function Discover() {
-  const [selectedState, setSelectedState] =
-    useState<(typeof NIGERIAN_STATES)[number]>("");
+  const [selectedState, setSelectedState] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [selectedPricingModel, setSelectedPricingModel] = useState<string>("");
   const [selectedPropertyType, setSelectedPropertyType] = useState<string>("");
+
+  // Combobox open states
+  const [openState, setOpenState] = useState(false);
+  const [openCity, setOpenCity] = useState(false);
 
   const navigate = useNavigate();
 
@@ -62,7 +78,7 @@ export default function Discover() {
               </p>
             </AnimationWrapper>
 
-            {/* Filter Bar - staggered animation for each filter option */}
+            {/* Filter Bar */}
             <AnimationWrapper
               delay={0.5}
               stagger={0.15}
@@ -70,58 +86,113 @@ export default function Discover() {
             >
               <div className="grid grid-cols-2 md:grid-cols-5 items-center gap-2 text-sm w-full">
                 <CategoryTabs />
-                {/* State */}
-                <div className="flex flex-col gap-2 items-center md:items-start border-r border-gray-400 pr-4">
+
+                {/* --- STATE COMBOBOX --- */}
+                <div className="flex flex-col gap-2 items-center  border-r border-gray-400 pr-4 w-full">
                   <h3 className="font-bold px-4">State</h3>
-                  <Select
-                    onValueChange={(value) => {
-                      setSelectedState(value);
-                    }}
-                  >
-                    <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0 data-[placeholder]:text-white/90 cursor-pointer">
-                      <SelectValue placeholder="Select your state" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60">
-                      {NIGERIAN_STATES.map((state) => (
-                        <SelectItem
-                          key={state}
-                          value={String(state)}
-                          className="cursor-pointer"
-                        >
-                          {state}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover open={openState} onOpenChange={setOpenState}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        role="combobox"
+                        aria-expanded={openState}
+                        className="w-full justify-between hover:bg-transparent hover:text-white text-white/90 font-normal px-4 cursor-pointer"
+                      >
+                        {selectedState ? selectedState : "Select your state"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search state..." />
+                        <CommandList>
+                          <CommandEmpty>No state found.</CommandEmpty>
+                          <CommandGroup>
+                            {NIGERIAN_STATES.map((state) => (
+                              <CommandItem
+                                key={state}
+                                value={state}
+                                onSelect={(currentValue) => {
+                                  // We use 'state' here to ensure correct casing
+                                  setSelectedState(state);
+                                  setSelectedCity(""); // Reset city when state changes
+                                  setOpenState(false);
+                                }}
+                                className="text-sm cursor-pointer"
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    selectedState === state
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
+                                {state}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
-                {/* City */}
-                <div className="flex flex-col gap-2 items-center border-r border-gray-400 pr-4">
+                {/* --- CITY COMBOBOX --- */}
+                <div className="flex flex-col gap-2 items-center border-r border-gray-400 pr-4 w-full">
                   <h3 className="font-bold">City</h3>
-                  <Select
-                    value={selectedCity}
-                    onValueChange={(value) => {
-                      setSelectedCity(value);
-                    }}
-                  >
-                    <SelectTrigger className="border-0 shadow-none w-full focus:ring-0 focus:border-0 focus-visible:ring-0 data-[placeholder]:text-white/90 cursor-pointer">
-                      <SelectValue placeholder="Select your city" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60">
-                      {NIGERIAN_STATE_CITIES[selectedState]?.map((lga) => (
-                        <SelectItem
-                          key={lga}
-                          value={String(lga)}
-                          className="cursor-pointer"
-                        >
-                          {lga}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover open={openCity} onOpenChange={setOpenCity}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        role="combobox"
+                        aria-expanded={openCity}
+                        disabled={!selectedState} // Disable if no state selected
+                        className="w-full justify-between hover:bg-transparent hover:text-white text-white/90 font-normal  cursor-pointer"
+                      >
+                        {selectedCity ? selectedCity : "Select your city"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search city..." />
+                        <CommandList>
+                          <CommandEmpty>No city found.</CommandEmpty>
+                          <CommandGroup>
+                            {selectedState &&
+                              NIGERIAN_STATE_CITIES[selectedState]?.map(
+                                (city) => (
+                                  <CommandItem
+                                    key={city}
+                                    value={city}
+                                    onSelect={(currentValue) => {
+                                      // We use 'city' here to ensure correct casing
+                                      setSelectedCity(city);
+                                      setOpenCity(false);
+                                    }}
+                                    className="text-sm cursor-pointer"
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        selectedCity === city
+                                          ? "opacity-100"
+                                          : "opacity-0",
+                                      )}
+                                    />
+                                    {city}
+                                  </CommandItem>
+                                ),
+                              )}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
-                {/* Property Type */}
+                {/* Property Type (Kept as Select) */}
                 <div className="flex flex-col gap-2 items-center border-r border-gray-400 pr-4">
                   <h3 className="font-bold">Property Type</h3>
                   <Select
@@ -130,8 +201,8 @@ export default function Discover() {
                       setSelectedPropertyType(value);
                     }}
                   >
-                    <SelectTrigger className="border-0 shadow-none w-full data-[placeholder]:text-white/90 cursor-pointer">
-                      <SelectValue placeholder="Select property type" />
+                    <SelectTrigger className="border-0 shadow-none w-full data-[placeholder]:text-white/90 cursor-pointer focus:ring-0">
+                      <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
                       {propertyTypes.map((propertyType) => (
@@ -147,7 +218,7 @@ export default function Discover() {
                   </Select>
                 </div>
 
-                {/* Rent Range */}
+                {/* Rent Range (Kept as Select) */}
                 <div className="flex flex-col gap-2 items-center border-gray-300 pr-4">
                   <h3 className="font-bold">Rent Range</h3>
                   <Select
@@ -156,8 +227,8 @@ export default function Discover() {
                       setSelectedPricingModel(value);
                     }}
                   >
-                    <SelectTrigger className="border-0 shadow-none w-full data-[placeholder]:text-white/90 cursor-pointer">
-                      <SelectValue placeholder="Select rent range" />
+                    <SelectTrigger className="border-0 shadow-none w-full data-[placeholder]:text-white/90 cursor-pointer focus:ring-0">
+                      <SelectValue placeholder="Select range" />
                     </SelectTrigger>
                     <SelectContent>
                       {pricingModels.map((model) => (
@@ -179,7 +250,7 @@ export default function Discover() {
                     to={`/properties?propertyType=${selectedPropertyType}&state=${selectedState}&city=${selectedCity}&pricingModel=${selectedPricingModel}`}
                   >
                     <Button className="w-full md:w-fit !px-6 py-2 bg-custom-primary rounded-full justify-self-center cursor-pointer">
-                      <Search />
+                      <Search className="w-4 h-4 mr-2" />
                       Search
                     </Button>
                   </Link>
@@ -214,7 +285,7 @@ function CategoryTabs() {
               "relative  px-2 transition-colors duration-300",
               selected === tab
                 ? "text-custom-primary font-medium"
-                : "hover:text-foreground"
+                : "hover:text-foreground",
             )}
             // onClick={() => setSelected(tab)}
           >

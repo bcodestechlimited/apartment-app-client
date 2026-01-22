@@ -112,14 +112,14 @@ function LandlordSidebar() {
   return (
     <Sidebar collapsible="icon" className="">
       {/* Logo / header */}
-      <SidebarHeader className="border-b pb-5">
-        <div className="flex items-center justify-center py-2">
+      <SidebarHeader className="border-b ">
+        <Link to="/" className="flex items-center justify-center ">
           <img
             src={images.havenLeaseLogoGreen}
             alt="Haven Lease Logo"
-            className="w-10 h-10"
+            className="w-15 h-15"
           />
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
@@ -139,7 +139,7 @@ function LandlordSidebar() {
                       className={cn(
                         "flex items-center gap-2",
                         isActive(route.path) &&
-                          "bg-custom-primary/20 text-custom-primary"
+                          "bg-custom-primary/20 text-custom-primary",
                       )}
                     >
                       {route.icon}
@@ -187,7 +187,7 @@ function TopBar() {
   });
 
   return (
-    <div className="flex justify-between bg-white items-center  pt-2 pb-2 sticky  top-0 z-20 border-b">
+    <div className="flex justify-between bg-white items-center  pt-1.5 sticky  top-0 z-20 border-b">
       <div className="pl-3">
         <SidebarTrigger />
       </div>
@@ -202,7 +202,7 @@ function TopBar() {
                     src={user?.avatar || "https://github.com/shadcn.png"}
                   />
                   <AvatarFallback>
-                    {`${user?.firstName?.charAt(0) || "A"}${
+                    {`${user?.firstName?.charAt(0) || "A"} ${
                       user?.lastName?.charAt(0) || "A"
                     }`}
                   </AvatarFallback>

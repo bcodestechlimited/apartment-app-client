@@ -28,6 +28,8 @@ export interface IProperty {
   state: string;
   lga: string;
   price: number;
+  otherFees: { name: string; amount: number | string }[];
+  totalFees: number;
   type: string;
   description: string;
   availabilityDate: string;
@@ -35,6 +37,7 @@ export interface IProperty {
   pricingModel?: string;
   numberOfBedrooms?: number;
   numberOfBathrooms?: number;
+  isEnsuite?: boolean;
   seatingCapacity?: string;
   amenities: string[];
   facilities: string[];
@@ -61,14 +64,17 @@ export interface IAddProperty {
   state: string;
   lga: string;
   price: number;
+  totalFees: number;
   availabilityDate: string;
   numberOfBedRooms?: string;
   numberOfBathrooms?: string;
+  isEnsuite?: boolean;
   seatingCapacity?: string;
   pricingModel: string;
   amenities: string[];
   facilities: string[];
   pictures: File[];
+  otherFees: { name: string; amount: string | number }[];
 }
 export interface IEditProperty {
   // type:
@@ -82,15 +88,18 @@ export interface IEditProperty {
   description: string;
   type: string;
   price: number;
+  totalFees?: number | string; // Added total fees
   availabilityDate: Date | string | undefined;
   address: string;
   state: string;
   lga: string;
   numberOfBedRooms: string;
   numberOfBathrooms: string;
+  isEnsuite?: boolean; // Added isEnsuite status
   pricingModel: string;
   amenities: string[];
   facilities: string[];
+  otherFees?: { name: string; amount: string | number }[]; // Added other fees array
   // pictures: File[];
   existingPictures: string[];
   newPictures: File[];

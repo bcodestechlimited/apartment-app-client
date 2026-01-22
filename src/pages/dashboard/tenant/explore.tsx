@@ -9,6 +9,7 @@ import { useSearchParams } from "react-router";
 import AddFilterModal from "./_components/add-filter-modal";
 import { useState } from "react";
 import { getQueryFilters } from "@/lib/helpers";
+import { systemSettingsService } from "@/api/admin/system-settings.api";
 
 type FilterData = Record<string, string | number | undefined | null>;
 
@@ -47,6 +48,12 @@ export default function Explore() {
         ...filters,
       }),
   });
+
+  const { data: settings } = useQuery({
+    queryKey: ["system-settings"],
+    queryFn: () => systemSettingsService.getSettings(),
+  });
+
   console.log("explore", data);
 
   return (
@@ -66,6 +73,7 @@ export default function Explore() {
       <PropertiesGrid
         isLoading={isLoading}
         properties={data?.properties || []}
+        settings={settings}
       />
     </div>
   );
@@ -74,9 +82,14 @@ export default function Explore() {
 interface PropertiesGridProps {
   properties: IProperty[];
   isLoading: boolean;
+  settings: { platformFeePercentage: number };
 }
 
-export function PropertiesGrid({ properties, isLoading }: PropertiesGridProps) {
+export function PropertiesGrid({
+  properties,
+  isLoading,
+  settings,
+}: PropertiesGridProps) {
   if (isLoading) return <Loader />;
 
   if (!properties.length || properties.length < 1) {
@@ -93,7 +106,8 @@ export function PropertiesGrid({ properties, isLoading }: PropertiesGridProps) {
         <PublicPropertyCard
           property={property}
           key={property._id}
-          link={`/dashboard/property/${property._id}`}
+          link={`/dashboard/properties/${property._id}`}
+          settings={settings}
         />
       ))}
     </div>

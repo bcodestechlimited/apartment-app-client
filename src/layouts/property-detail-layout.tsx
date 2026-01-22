@@ -1,136 +1,3 @@
-// import { authService } from "@/api/auth.api";
-// import { favouriteService } from "@/api/favourite.api";
-// import { propertyService } from "@/api/property.api";
-// import { Loader } from "@/components/custom/loader";
-// import type { IProperty } from "@/interfaces/property.interface";
-// import { useAuthStore } from "@/store/useAuthStore";
-// import { useMutation, useQuery } from "@tanstack/react-query";
-// import { ExternalLink, Heart } from "lucide-react";
-// import { Link, Outlet, useParams } from "react-router";
-// import { toast } from "sonner";
-
-// function PropertyDetailLayout() {
-//   const { user } = useAuthStore();
-//   console.log("property detail layout user", user);
-//   const { propertyId } = useParams();
-
-//   const { data, isLoading, isError } = useQuery({
-//     queryKey: ["property", propertyId],
-//     queryFn: () => propertyService.getProperty(propertyId!),
-//     retry: !!propertyId,
-//   });
-
-//   const saveFavouriteMutation = useMutation({
-//     mutationFn: (propertyId: string) =>
-//       favouriteService.createFavourite(propertyId),
-//     onSuccess: (res: any) => {
-//       toast.success("Property saved to favourites");
-//     },
-//     onError: (error: any) =>
-//       toast.error(error?.message || "Failed to save property"),
-//   });
-
-//   const isPropertySaved = user?.savedProperties?.some(
-//     (savedProperty: string) => savedProperty === propertyId
-//   );
-//   const propertyDetailLinks = [
-//     {
-//       name: "Overview",
-//       href: ``,
-//     },
-//     {
-//       name: "Description",
-//       href: `description`,
-//     },
-//     // {
-//     //   name: "Details",
-//     //   href: `details`,
-//     // },
-//     {
-//       name: "Amenities",
-//       href: `amenities`,
-//     },
-//     {
-//       name: "Location",
-//       href: `location`,
-//     },
-//   ];
-
-//   if (isLoading) return <Loader />;
-
-//   if (isError) return <div>Something went wrong</div>;
-
-//   if (!data)
-//     return (
-//       <div>
-//         <p>Property not found</p>
-//         <Link to="/">Go back to home</Link>
-//       </div>
-//     );
-
-//   console.log({ data });
-
-//   const property = (data?.property as IProperty) || {};
-
-//   return (
-//     <div>
-//       <div className="flex gap-2 h-[400px]">
-//         <div className="w-1/2">
-//           <img
-//             src={property ? property?.pictures[0] : ""}
-//             alt=""
-//             className="h-full w-full object-cover rounded"
-//           />
-//         </div>
-
-//         <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
-//           {property?.pictures
-//             ?.slice(1, 5)
-//             .map((picture: string, index: number) => (
-//               <img
-//                 key={index}
-//                 className="w-full h-full object-cover rounded"
-//                 src={picture}
-//                 alt={`Image ${index + 1}`}
-//               />
-//             ))}
-//         </div>
-//       </div>
-
-//       <div className="flex justify-between py-4">
-//         <div className="w-3/4 flex gap-4 justify-start font-semibold border-b max-w-fit">
-//           {propertyDetailLinks?.map((link) => (
-//             <Link
-//               key={link.name}
-//               to={link.href}
-//               className="border-b-2 border-red-40 py-2 px-4"
-//             >
-//               {link.name}
-//             </Link>
-//           ))}
-//         </div>
-//         <div className="flex gap-2 w-1/4 justify-end">
-//           <span
-//             className="flex items-center gap-1"
-//             onClick={() => saveFavouriteMutation.mutate(property._id!)}
-//           >
-//             {/* <Heart /> Save */}
-//             {isPropertySaved ? <Heart color="red" /> : <Heart />}
-//           </span>
-//           <span className="flex items-center gap-1">
-//             <ExternalLink /> Share
-//           </span>
-//         </div>
-//       </div>
-//       <div>
-//         <Outlet context={{ property: property }} />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default PropertyDetailLayout;
-
 import { authService } from "@/api/auth.api";
 import { favouriteService } from "@/api/favourite.api";
 import { propertyService } from "@/api/property.api";
@@ -142,9 +9,10 @@ import { ExternalLink, Heart } from "lucide-react";
 import { Link, Outlet, useParams } from "react-router";
 import { toast } from "sonner";
 import { useShare } from "../hooks/useShare";
+import { getUniversalPropertyUrl } from "@/lib/utils";
 function PropertyDetailLayout() {
   const { user } = useAuthStore();
-  console.log("property detail layout user", user);
+  // console.log("property detail layout user", user);
   const { propertyId } = useParams();
   const queryClient = useQueryClient();
   const { handleShare } = useShare();
@@ -184,6 +52,18 @@ function PropertyDetailLayout() {
     } else {
       saveFavouriteMutation.mutate(propertyId!);
     }
+  };
+
+  const onShareClick = () => {
+    if (!propertyId) return;
+
+    const universalUrl = getUniversalPropertyUrl(propertyId);
+
+    handleShare({
+      title: property.title,
+      text: `Check out ${property.title} on our platform!`,
+      url: universalUrl,
+    });
   };
 
   if (isLoading) return <Loader />;
@@ -248,12 +128,7 @@ function PropertyDetailLayout() {
           </span>
           <span
             className="flex items-center gap-1 cursor-pointer hover:text-primary transition-colors"
-            onClick={() =>
-              handleShare({
-                title: property.title,
-                url: window.location.href,
-              })
-            }
+            onClick={() => onShareClick()}
           >
             <ExternalLink size={18} /> Share
           </span>

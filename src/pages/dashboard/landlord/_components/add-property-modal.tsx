@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { propertyService } from "@/api/property.api";
@@ -42,7 +42,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CalendarIcon, CircleAlert } from "lucide-react";
+import { CalendarIcon, CircleAlert, Plus, Trash2 } from "lucide-react";
 import {
   NIGERIAN_STATE_CITIES,
   NIGERIAN_STATES,
@@ -71,11 +71,11 @@ export default function AddPropertyModal({
   const [selectedRooms, setSelectedRooms] = useState<string | null>(null);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
   const [selectedBathrooms, setSelectedBathrooms] = useState<string | null>(
-    null
+    null,
   );
 
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(
-    undefined
+    undefined,
   );
 
   const form = useForm<IAddProperty>({
@@ -96,7 +96,13 @@ export default function AddPropertyModal({
       numberOfBathrooms: "",
       seatingCapacity: "",
       pictures: [],
+      otherFees: [],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "otherFees",
   });
 
   const pictures = form.watch("pictures") || [];
@@ -171,6 +177,10 @@ export default function AddPropertyModal({
     for (let i = 0; i < data.pictures.length; i++) {
       formData.append("pictures", data.pictures[i]);
     }
+    if (data.otherFees && data.otherFees.length > 0) {
+      formData.append("otherFees", JSON.stringify(data.otherFees));
+    }
+    console.log("Form data:", formData);
 
     propertyMutation.mutateAsync(formData);
   };
@@ -309,7 +319,7 @@ export default function AddPropertyModal({
                         {...field}
                         onChange={(e) =>
                           field.onChange(
-                            e.target.value === "" ? "" : e.target.value
+                            e.target.value === "" ? "" : e.target.value,
                           )
                         }
                       />
@@ -489,6 +499,87 @@ export default function AddPropertyModal({
                   </FormItem>
                 )}
               />
+            </div>
+
+            {/* ... After Pricing Model FormField ... */}
+
+            {/* Other Fees Section */}
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-between items-center">
+                <Label className="text-start font-bold">Other Fees</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-8 gap-2 cursor-pointer"
+                  onClick={() => append({ name: "", amount: "" })}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Fee
+                </Button>
+              </div>
+
+              {fields.length > 0 && (
+                <div className="flex flex-col gap-3 p-3 border rounded-md bg-slate-50">
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="flex gap-3 items-end">
+                      {/* Fee Name */}
+                      <FormField
+                        control={form.control}
+                        name={`otherFees.${index}.name`}
+                        rules={{ required: "Fee name is required" }}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <Label className="text-xs text-muted-foreground">
+                              Fee Name
+                            </Label>
+                            <FormControl>
+                              <Input
+                                placeholder="e.g. Caution Fee"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-xs" />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Fee Amount */}
+                      <FormField
+                        control={form.control}
+                        name={`otherFees.${index}.amount`}
+                        rules={{ required: "Amount is required" }}
+                        render={({ field }) => (
+                          <FormItem className="w-[120px]">
+                            <Label className="text-xs text-muted-foreground">
+                              Amount
+                            </Label>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="0.00"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-xs" />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Remove Button */}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="mb-[2px] text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => remove(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Key Features */}

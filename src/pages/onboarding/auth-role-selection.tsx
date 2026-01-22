@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { CustomAlert } from "@/components/custom/custom-alert";
-import { useAuthUser } from "@/hooks/useAuthUser";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { useAuthStore } from "@/store/useAuthStore";

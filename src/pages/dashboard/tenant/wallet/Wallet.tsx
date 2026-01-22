@@ -120,7 +120,7 @@ function Wallet() {
       queryFn: () => walletService.verifyAccountNumber(bankCode, accountNumber),
       enabled: accountNumber.length === 10 && !!bankCode,
       retry: false,
-    }
+    },
   );
 
   if (isLoading)
@@ -136,7 +136,7 @@ function Wallet() {
   const formatNaira = (n: number) => `₦${Number(n || 0).toLocaleString()}`;
 
   return (
-    <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto">
+    <div className=" space-y-8 ">
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-1">

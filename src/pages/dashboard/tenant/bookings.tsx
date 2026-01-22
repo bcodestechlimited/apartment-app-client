@@ -9,11 +9,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { formatDate, formatPrettyDate } from "@/lib/utils";
+import { formatCurrency, formatDate, formatPrettyDate } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { useState } from "react";
-import { Ellipsis, ScanEye, Star } from "lucide-react";
+import { Ellipsis, House, ScanEye, Star } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import PropertyRating from "./_components/property-rating";
 import LandlordRating from "./_components/landlord-rating";
+import { se } from "date-fns/locale";
 
 function TenantBookings() {
   const [searchParams] = useSearchParams();
@@ -189,8 +190,35 @@ function TenantBookings() {
                 {formatPrettyDate(selectedBooking.moveInDate)} –{" "}
                 {formatPrettyDate(selectedBooking.moveOutDate)}
               </div>
-              <div>
+              {/* <div>
                 <strong>Amount:</strong> ₦{selectedBooking.netPrice}
+              </div> */}
+              <div className="rounded w-full flex gap-4 items-start">
+                <House size={22} />
+                <p>
+                  <strong>Total:</strong>{" "}
+                  {formatCurrency(selectedBooking?.netPrice || 0)}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-1 ml-8 border-l-2 pl-3 py-1">
+                <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
+                  <span>Basic rent:</span>
+                  <span>{formatCurrency(selectedBooking?.basePrice)}</span>
+                </div>
+                {selectedBooking?.otherFees.map((fee: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground"
+                  >
+                    <span className="capitalize">{fee.name}:</span>
+                    <span>{formatCurrency(fee.amount)}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
+                  <span>Platform Fee:</span>
+                  <span>{formatCurrency(selectedBooking?.platformFee)}</span>
+                </div>
               </div>
               <div>
                 <strong>Status:</strong>{" "}

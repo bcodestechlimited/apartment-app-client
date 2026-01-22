@@ -10,10 +10,25 @@ import { Link } from "react-router";
 export default function NewListings() {
   const { user } = useAuthStore();
 
-  const isLandord =
-    user && user?.roles?.includes("landlord")
-      ? "/dashboard/landlord/"
-      : "/dashboard";
+  const isLandlord = user?.roles?.includes("landlord");
+  const isTenant = user?.roles?.includes("tenant");
+  const isAdmin = user?.roles?.includes("admin");
+  const isAuthenticated = !!user;
+
+  const getPropertyLink = () => {
+    console.log({
+      isAuthenticated: !isAuthenticated,
+      isLandlord,
+      isTenant,
+      isAdmin,
+    });
+
+    if (!isAuthenticated) return `/properties`;
+    if (isLandlord) return `/dashboard/landlord/properties`;
+    if (isTenant) return `/dashboard/properties`;
+    if (isAdmin) return `/dashboard/admin/properties`;
+    return `/properties`;
+  };
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["properties"],
@@ -30,7 +45,7 @@ export default function NewListings() {
         <section className="py-10">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">New Listings</h2>
-            <Link to="/properties" className="text-sm hover:underline">
+            <Link to={getPropertyLink()} className="text-sm hover:underline">
               View more →
             </Link>
           </div>
@@ -50,6 +65,7 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
 
   const isLandlord = user?.roles?.includes("landlord");
   const isTenant = user?.roles?.includes("tenant");
+  const isAdmin = user?.roles?.includes("admin");
   const isAuthenticated = !!user;
 
   const getPropertyLink = (propertyId: string) => {
@@ -57,12 +73,14 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
       isAuthenticated: !isAuthenticated,
       isLandlord,
       isTenant,
+      isAdmin,
     });
 
-    if (!isAuthenticated) return `/property/${propertyId}`;
-    if (isLandlord) return `/dashboard/landlord/property/${propertyId}`;
-    if (isTenant) return `/dashboard/property/${propertyId}`;
-    return `/property/${propertyId}`;
+    if (!isAuthenticated) return `/properties/${propertyId}`;
+    if (isLandlord) return `/dashboard/landlord/properties/${propertyId}`;
+    if (isTenant) return `/dashboard/properties/${propertyId}`;
+    if (isAdmin) return `/dashboard/admin/properties/${propertyId}`;
+    return `/properties/${propertyId}`;
   };
 
   if (isLoading) return <PropertySkeletonGrid />;

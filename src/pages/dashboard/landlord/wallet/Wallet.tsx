@@ -1,4 +1,3 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { useState } from "react";
 // import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 // import { toast } from "sonner";
@@ -40,41 +39,24 @@
 //   SelectTrigger,
 //   SelectValue,
 // } from "@/components/ui/select";
-// import { useSearchParams } from "react-router";
-// import { transactionService } from "@/api/transaction.api";
-// import DataTable from "@/components/custom/data-table";
-// import { columns } from "../payments";
 
 // function Wallet() {
+//   // --- Modal States ---
+//   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+//   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+//   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
+
 //   const [amount, setAmount] = useState<number>(0);
 //   const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
 //   const [bankCode, setBankCode] = useState("");
 //   const [accountNumber, setAccountNumber] = useState("");
 //   const queryClient = useQueryClient();
 
-//   //payement mutations
-//   const [searchParams, setSearchParams] = useSearchParams();
-
-//   const page = Number(searchParams.get("page")) || 1;
-//   const limit = Number(searchParams.get("limit")) || 10;
-
-//   const { data: payment, isLoading: isLoadingPayment } = useQuery({
-//     queryKey: ["transactions", { page, limit }],
-//     queryFn: () =>
-//       transactionService.getAllUserTransactions({
-//         page: 1,
-//         limit: 10,
-//       }),
-//   });
-
-//   console.log({ payment });
-
-//   // if (isLoadingPayment) return <Spinner />;
-
 //   // --- Mutations ---
 //   const createTopUpMutation = useMutation({
 //     mutationFn: (amt: any) => walletService.topUpWallet(amt),
 //     onSuccess: (res: any) => {
+//       setIsTopUpOpen(false); // Close modal
 //       const redirectUrl = res?.authorization_url;
 //       console.log({ redirectUrl });
 //       if (redirectUrl) window.location.href = redirectUrl;
@@ -88,6 +70,10 @@
 //     onSuccess: () => {
 //       toast.success("Withdrawal request submitted!");
 //       queryClient.invalidateQueries({ queryKey: ["wallet"] });
+//       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+
+//       setWithdrawAmount(0);
+//       setIsWithdrawOpen(false); // Close modal
 //     },
 //     onError: (error: any) => toast.error(error?.message || "Withdraw failed"),
 //   });
@@ -97,6 +83,7 @@
 //     onSuccess: () => {
 //       toast.success("Wallet details updated");
 //       queryClient.invalidateQueries({ queryKey: ["wallet"] });
+//       setIsSettingsOpen(false); // Close modal
 //     },
 //     onError: (error: any) => toast.error(error?.message || "Update failed"),
 //   });
@@ -150,7 +137,7 @@
 //         {/* ACTION BUTTONS GROUP */}
 //         <div className="flex flex-wrap gap-3">
 //           {/* UPDATE DETAILS */}
-//           <Dialog>
+//           <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
 //             <DialogTrigger asChild>
 //               <Button
 //                 variant="outline"
@@ -246,7 +233,7 @@
 //           </Dialog>
 
 //           {/* WITHDRAW */}
-//           <Dialog>
+//           <Dialog open={isWithdrawOpen} onOpenChange={setIsWithdrawOpen}>
 //             <DialogTrigger asChild>
 //               <Button
 //                 variant="outline"
@@ -311,7 +298,7 @@
 //           </Dialog>
 
 //           {/* TOP UP */}
-//           <Dialog>
+//           <Dialog open={isTopUpOpen} onOpenChange={setIsTopUpOpen}>
 //             <DialogTrigger asChild>
 //               <Button className="bg-teal-800 hover:bg-teal-900 gap-2">
 //                 <Plus className="h-4 w-4" />
@@ -399,8 +386,8 @@
 //                 Payout Destination
 //               </h3>
 //             </div>
-//             <div className="p-8 grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 text-left">
-//               <div className="space-y-1 ">
+//             <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+//               <div className="space-y-1">
 //                 <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
 //                   Account Name
 //                 </p>
@@ -411,28 +398,26 @@
 //                   </p>
 //                 </div>
 //               </div>
-//               <div className=" flex justify-evenly items-center">
-//                 <div className="space-y-1">
-//                   <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-//                     Bank Provider
+//               <div className="space-y-1">
+//                 <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+//                   Bank Provider
+//                 </p>
+//                 <div className="flex items-center gap-2">
+//                   <Landmark className="h-4 w-4 text-slate-300" />
+//                   <p className="text-sm font-semibold text-slate-700">
+//                     {wallet.bankName || "Not set"}
 //                   </p>
-//                   <div className="flex items-center gap-2">
-//                     <Landmark className="h-4 w-4 text-slate-300" />
-//                     <p className="text-sm font-semibold text-slate-700">
-//                       {wallet.bankName || "Not set"}
-//                     </p>
-//                   </div>
 //                 </div>
-//                 <div className="space-y-1 ">
-//                   <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-//                     Account Number
+//               </div>
+//               <div className="space-y-1">
+//                 <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+//                   Account Number
+//                 </p>
+//                 <div className="flex items-center gap-2">
+//                   <Hash className="h-4 w-4 text-slate-300" />
+//                   <p className="text-sm font-mono font-bold text-slate-700">
+//                     {wallet.bankAccountNumber || "—"}
 //                   </p>
-//                   <div className="flex items-center gap-2">
-//                     <Hash className="h-4 w-4 text-slate-300" />
-//                     <p className="text-sm font-mono font-bold text-slate-700">
-//                       {wallet.bankAccountNumber || "—"}
-//                     </p>
-//                   </div>
 //                 </div>
 //               </div>
 //             </div>
@@ -441,25 +426,125 @@
 //       </div>
 
 //       {/* RECENT TRANSACTIONS SECTION */}
+//       <Card className="border-slate-200 shadow-sm">
+//         <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center">
+//           <h2 className="text-lg font-semibold text-slate-900">
+//             Transaction History
+//           </h2>
+//           <Button
+//             variant="ghost"
+//             size="sm"
+//             className="text-teal-700 hover:bg-teal-50 gap-1"
+//           >
+//             View Statement <ArrowRight className="h-3 w-3" />
+//           </Button>
+//         </div>
+//         <CardContent className="p-0">
+//           {transactions.length === 0 ? (
+//             <div className="p-12 text-center space-y-3">
+//               <div className="bg-slate-100 h-12 w-12 rounded-full flex items-center justify-center mx-auto text-slate-400">
+//                 <WalletIcon className="h-6 w-6" />
+//               </div>
+//               <p className="text-slate-500 text-sm">
+//                 No transactions found for this wallet.
+//               </p>
+//             </div>
+//           ) : (
+//             <div className="overflow-x-auto">
+//               <table className="w-full text-left border-collapse">
+//                 <thead>
+//                   <tr className="bg-slate-50/50 text-[11px] uppercase tracking-wider text-slate-500 font-bold border-b">
+//                     <th className="px-6 py-4">Transaction Type</th>
+//                     <th className="px-6 py-4">Amount</th>
+//                     <th className="px-6 py-4">Status</th>
+//                     <th className="px-6 py-4 text-right">Date</th>
+//                   </tr>
+//                 </thead>
+//                 <tbody className="divide-y divide-slate-100">
+//                   {transactions.map((txn: any) => {
+//                     const status = (txn.status || "").toLowerCase();
+//                     const isDeposit =
+//                       txn.transactionType === "deposit" ||
+//                       txn.type === "deposit";
 
-//       <DataTable
-//         columns={columns}
-//         data={payment?.transactions || []}
-//         noDataMessage="No payments available."
-//       />
+//                     const badgeStyles: any = {
+//                       successful: "bg-green-50 text-green-700 border-green-100",
+//                       pending: "bg-amber-50 text-amber-700 border-amber-100",
+//                       failed: "bg-red-50 text-red-700 border-red-100",
+//                     };
+
+//                     return (
+//                       <tr
+//                         key={txn._id ?? txn.id}
+//                         className="hover:bg-slate-50/50 transition-colors group"
+//                       >
+//                         <td className="px-6 py-4">
+//                           <div className="flex items-center gap-3">
+//                             <div
+//                               className={`p-2 rounded-lg ${
+//                                 isDeposit
+//                                   ? "bg-teal-50 text-teal-600"
+//                                   : "bg-slate-100 text-slate-600"
+//                               }`}
+//                             >
+//                               {isDeposit ? (
+//                                 <ArrowUpRight className="h-3 w-3" />
+//                               ) : (
+//                                 <ArrowDownLeft className="h-3 w-3" />
+//                               )}
+//                             </div>
+//                             <span className="text-sm font-medium text-slate-700 capitalize">
+//                               {txn.type ?? txn.transactionType}
+//                             </span>
+//                           </div>
+//                         </td>
+//                         <td className="px-6 py-4 text-sm font-bold text-slate-900">
+//                           {isDeposit ? "+" : "-"}
+//                           {formatNaira(txn.amount)}
+//                         </td>
+//                         <td className="px-6 py-4">
+//                           <Badge
+//                             variant="outline"
+//                             className={`font-medium capitalize text-[10px] ${
+//                               badgeStyles[status] ||
+//                               "bg-slate-50 text-slate-600"
+//                             }`}
+//                           >
+//                             {status}
+//                           </Badge>
+//                         </td>
+//                         <td className="px-6 py-4 text-right text-xs text-slate-500 font-medium">
+//                           {txn.createdAt
+//                             ? new Date(txn.createdAt).toLocaleDateString(
+//                                 "en-GB",
+//                                 {
+//                                   day: "2-digit",
+//                                   month: "short",
+//                                   year: "numeric",
+//                                 }
+//                               )
+//                             : "--"}
+//                         </td>
+//                       </tr>
+//                     );
+//                   })}
+//                 </tbody>
+//               </table>
+//             </div>
+//           )}
+//         </CardContent>
+//       </Card>
 //     </div>
 //   );
 // }
 
 // export default Wallet;
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   Wallet as WalletIcon,
-  ArrowUpRight,
   ArrowDownLeft,
   Settings2,
   Landmark,
@@ -468,7 +553,6 @@ import {
   AlertCircle,
   Loader2,
   Plus,
-  ArrowRight,
 } from "lucide-react";
 
 import { walletService } from "@/api/wallet.api";
@@ -495,6 +579,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useSearchParams } from "react-router";
+import { transactionService } from "@/api/transaction.api";
+import DataTable from "@/components/custom/data-table";
+import { columns } from "../payments";
 
 function Wallet() {
   // --- Modal States ---
@@ -508,13 +596,27 @@ function Wallet() {
   const [accountNumber, setAccountNumber] = useState("");
   const queryClient = useQueryClient();
 
+  //payement mutations
+  const [searchParams] = useSearchParams();
+
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+
+  const { data: payment } = useQuery({
+    queryKey: ["transactions", { page, limit }],
+    queryFn: () =>
+      transactionService.getAllUserTransactions({
+        page: 1,
+        limit: 10,
+      }),
+  });
+
   // --- Mutations ---
   const createTopUpMutation = useMutation({
     mutationFn: (amt: any) => walletService.topUpWallet(amt),
     onSuccess: (res: any) => {
       setIsTopUpOpen(false); // Close modal
       const redirectUrl = res?.authorization_url;
-      console.log({ redirectUrl });
       if (redirectUrl) window.location.href = redirectUrl;
       else toast.error("Unable to start payment. Try again.");
     },
@@ -527,8 +629,7 @@ function Wallet() {
       toast.success("Withdrawal request submitted!");
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
-
-      setWithdrawAmount(0);
+      setWithdrawAmount(0); // Reset amount
       setIsWithdrawOpen(false); // Close modal
     },
     onError: (error: any) => toast.error(error?.message || "Withdraw failed"),
@@ -561,7 +662,7 @@ function Wallet() {
       queryFn: () => walletService.verifyAccountNumber(bankCode, accountNumber),
       enabled: accountNumber.length === 10 && !!bankCode,
       retry: false,
-    }
+    },
   );
 
   if (isLoading)
@@ -573,18 +674,14 @@ function Wallet() {
 
   const wallet = data?.wallet ?? {};
   const balance = typeof wallet.balance === "number" ? wallet.balance : 0;
-  const transactions: any[] = Array.isArray(wallet.transactions)
-    ? wallet.transactions
-    : [];
 
   const formatNaira = (n: number) => `₦${Number(n || 0).toLocaleString()}`;
 
   return (
-    <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="  space-y-8 ">
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-1">
-          {/* <h1 className="text-3xl font-bold tracking-tight text-slate-900">Wallet Overview</h1> */}
           <p className="text-slate-500">
             Manage your earnings, top-ups, and payout settings.
           </p>
@@ -842,8 +939,8 @@ function Wallet() {
                 Payout Destination
               </h3>
             </div>
-            <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="space-y-1">
+            <div className="p-8 grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 text-left">
+              <div className="space-y-1 ">
                 <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                   Account Name
                 </p>
@@ -854,26 +951,28 @@ function Wallet() {
                   </p>
                 </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  Bank Provider
-                </p>
-                <div className="flex items-center gap-2">
-                  <Landmark className="h-4 w-4 text-slate-300" />
-                  <p className="text-sm font-semibold text-slate-700">
-                    {wallet.bankName || "Not set"}
+              <div className=" flex justify-evenly items-center">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    Bank Provider
                   </p>
+                  <div className="flex items-center gap-2">
+                    <Landmark className="h-4 w-4 text-slate-300" />
+                    <p className="text-sm font-semibold text-slate-700">
+                      {wallet.bankName || "Not set"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  Account Number
-                </p>
-                <div className="flex items-center gap-2">
-                  <Hash className="h-4 w-4 text-slate-300" />
-                  <p className="text-sm font-mono font-bold text-slate-700">
-                    {wallet.bankAccountNumber || "—"}
+                <div className="space-y-1 ">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    Account Number
                   </p>
+                  <div className="flex items-center gap-2">
+                    <Hash className="h-4 w-4 text-slate-300" />
+                    <p className="text-sm font-mono font-bold text-slate-700">
+                      {wallet.bankAccountNumber || "—"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -882,114 +981,12 @@ function Wallet() {
       </div>
 
       {/* RECENT TRANSACTIONS SECTION */}
-      <Card className="border-slate-200 shadow-sm">
-        <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-slate-900">
-            Transaction History
-          </h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-teal-700 hover:bg-teal-50 gap-1"
-          >
-            View Statement <ArrowRight className="h-3 w-3" />
-          </Button>
-        </div>
-        <CardContent className="p-0">
-          {transactions.length === 0 ? (
-            <div className="p-12 text-center space-y-3">
-              <div className="bg-slate-100 h-12 w-12 rounded-full flex items-center justify-center mx-auto text-slate-400">
-                <WalletIcon className="h-6 w-6" />
-              </div>
-              <p className="text-slate-500 text-sm">
-                No transactions found for this wallet.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-50/50 text-[11px] uppercase tracking-wider text-slate-500 font-bold border-b">
-                    <th className="px-6 py-4">Transaction Type</th>
-                    <th className="px-6 py-4">Amount</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-right">Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {transactions.map((txn: any) => {
-                    const status = (txn.status || "").toLowerCase();
-                    const isDeposit =
-                      txn.transactionType === "deposit" ||
-                      txn.type === "deposit";
 
-                    const badgeStyles: any = {
-                      successful: "bg-green-50 text-green-700 border-green-100",
-                      pending: "bg-amber-50 text-amber-700 border-amber-100",
-                      failed: "bg-red-50 text-red-700 border-red-100",
-                    };
-
-                    return (
-                      <tr
-                        key={txn._id ?? txn.id}
-                        className="hover:bg-slate-50/50 transition-colors group"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div
-                              className={`p-2 rounded-lg ${
-                                isDeposit
-                                  ? "bg-teal-50 text-teal-600"
-                                  : "bg-slate-100 text-slate-600"
-                              }`}
-                            >
-                              {isDeposit ? (
-                                <ArrowUpRight className="h-3 w-3" />
-                              ) : (
-                                <ArrowDownLeft className="h-3 w-3" />
-                              )}
-                            </div>
-                            <span className="text-sm font-medium text-slate-700 capitalize">
-                              {txn.type ?? txn.transactionType}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm font-bold text-slate-900">
-                          {isDeposit ? "+" : "-"}
-                          {formatNaira(txn.amount)}
-                        </td>
-                        <td className="px-6 py-4">
-                          <Badge
-                            variant="outline"
-                            className={`font-medium capitalize text-[10px] ${
-                              badgeStyles[status] ||
-                              "bg-slate-50 text-slate-600"
-                            }`}
-                          >
-                            {status}
-                          </Badge>
-                        </td>
-                        <td className="px-6 py-4 text-right text-xs text-slate-500 font-medium">
-                          {txn.createdAt
-                            ? new Date(txn.createdAt).toLocaleDateString(
-                                "en-GB",
-                                {
-                                  day: "2-digit",
-                                  month: "short",
-                                  year: "numeric",
-                                }
-                              )
-                            : "--"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <DataTable
+        columns={columns}
+        data={payment?.transactions || []}
+        noDataMessage="No payments available."
+      />
     </div>
   );
 }
