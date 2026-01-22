@@ -67,7 +67,7 @@ export default function PublicPropertyDetail() {
   });
 
   const { data: systemSettings } = useQuery({
-    queryKey: ["system-settinsg"],
+    queryKey: ["system-settings"],
     queryFn: () => systemSettingsService.getSettings(),
   });
 

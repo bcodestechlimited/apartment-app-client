@@ -41,10 +41,10 @@ function PropertyGrid({ properties, isLoading, isError }: any) {
   const isAuthenticated = !!user;
 
   const getPropertyLink = (propertyId: string) => {
-    if (!isAuthenticated) return `/property/${propertyId}`;
-    if (isLandlord) return `/dashboard/landlord/property/${propertyId}`;
-    if (isTenant) return `/dashboard/property/${propertyId}`;
-    return `/property/${propertyId}`;
+    if (!isAuthenticated) return `/properties/${propertyId}`;
+    if (isLandlord) return `/dashboard/landlord/properties/${propertyId}`;
+    if (isTenant) return `/dashboard/properties/${propertyId}`;
+    return `/properties/${propertyId}`;
   };
 
   if (isLoading) return <PropertySkeletonGrid />;

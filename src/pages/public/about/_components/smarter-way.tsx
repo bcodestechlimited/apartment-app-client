@@ -2,8 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import newsletterBg from "@/assets/images/newsletter.png";
 import { Link } from "react-router";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function SmarterWay() {
+  let listApartmentUrl = "";
+  const user = useAuthStore((state) => state.user);
+  if (user && user.roles.includes("landlord")) {
+    listApartmentUrl = "/dashboard/landlord";
+  } else if (!user || !user.roles.includes("landlord")) {
+    listApartmentUrl = "/onboarding/landlord";
+  }
   return (
     <section
       className="relative py-24 px-4 text-white rounded-lg mb-14 overflow-hidden mx-4 my-6"
@@ -29,7 +37,7 @@ export default function SmarterWay() {
               Discover Apartments
             </Button>
           </Link>
-          <Link to="/">
+          <Link to={listApartmentUrl}>
             <Button className="bg-transparent border border-white hover:bg-transparent cursor-pointer">
               List Apartments
             </Button>

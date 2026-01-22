@@ -50,11 +50,6 @@ export const LanlordBookingRequestDetail = ({
     },
   });
 
-  const { data } = useQuery({
-    queryKey: ["system-settinsg"],
-    queryFn: () => systemSettingsService.getSettings(),
-  });
-
   const handleAccept = () => {
     bookingRequestMutation.mutate({ status: "approved" });
   };
@@ -63,19 +58,12 @@ export const LanlordBookingRequestDetail = ({
     bookingRequestMutation.mutateAsync({ status: "declined" });
   };
 
-  const otherFeesTotal =
-    bookingRequest?.property?.otherFees?.reduce(
-      (acc, curr) => acc + (curr.amount as number),
-      0,
-    ) || 0;
-
-  // 2. Grand Total is just Price + Calculated Fees
-  const platformFee =
-    ((data?.platformFeePercentage || 5) / 100) *
-    (bookingRequest?.property?.price || 0);
-
-  // const feesTotal = otherFeesTotal + platformFee;
-  const grandTotal = (bookingRequest?.property?.totalFees || 0) + platformFee;
+  // const otherFeesTotal =
+  //   bookingRequest?.property?.otherFees?.reduce(
+  //     (acc, curr) => acc + (curr.amount as number),
+  //     0,
+  //   ) || 0;
+  const grandTotal = bookingRequest?.netPrice || 0;
 
   if (!isOpen) return null;
 
@@ -118,19 +106,12 @@ export const LanlordBookingRequestDetail = ({
             </p>
           </div>
 
-          {/* <div className="rounded w-full flex gap-4 items-start">
-            <House size={22} />
-            <p>
-              <strong>Service Charge:</strong>{" "}
-              {formatCurrency(bookingRequest.serviceChargeAmount)}
-            </p>
-          </div> */}
           <div className="flex flex-col gap-1 ml-8 border-l-2 pl-3 py-1">
             <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
               <span>Basic rent:</span>
-              <span>{formatCurrency(bookingRequest.property.price)}</span>
+              <span>{formatCurrency(bookingRequest.basePrice)}</span>
             </div>
-            {bookingRequest?.property.otherFees.map((fee, idx) => (
+            {bookingRequest?.otherFees.map((fee, idx) => (
               <div
                 key={idx}
                 className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground"
@@ -141,7 +122,7 @@ export const LanlordBookingRequestDetail = ({
             ))}
             <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
               <span>Platform Fee:</span>
-              <span>{formatCurrency(platformFee)}</span>
+              <span>{formatCurrency(bookingRequest.platformFee)}</span>
             </div>
           </div>
 
@@ -227,28 +208,28 @@ ModalProps) => {
     },
   });
 
-  const { data } = useQuery({
-    queryKey: ["system-settinsg"],
-    queryFn: () => systemSettingsService.getSettings(),
-  });
+  // const { data } = useQuery({
+  //   queryKey: ["system-settin"],
+  //   queryFn: () => systemSettingsService.getSettings(),
+  // });
 
   const handleGeneratePaymentLink = () => {
     payForBookingRequestMutation.mutateAsync();
   };
 
   const otherFeesTotal =
-    bookingRequest?.property?.otherFees?.reduce(
+    bookingRequest?.otherFees?.reduce(
       (acc, curr) => acc + (curr.amount as number),
       0,
     ) || 0;
 
   // 2. Grand Total is just Price + Calculated Fees
-  const platformFee =
-    ((data?.platformFeePercentage || 5) / 100) *
-    (bookingRequest?.property?.price || 0);
+  // const platformFee =
+  //   ((data?.platformFeePercentage || 5) / 100) *
+  //   (bookingRequest?.property?.price || 0);
 
-  const feesTotal = otherFeesTotal + platformFee;
-  const grandTotal = (bookingRequest?.property?.totalFees || 0) + platformFee;
+  const feesTotal = otherFeesTotal + bookingRequest?.platformFee;
+  const grandTotal = bookingRequest?.netPrice || 0;
 
   if (!isOpen) return null;
 
@@ -322,7 +303,7 @@ ModalProps) => {
           <div className="flex flex-col gap-1 ml-8 border-l-2 pl-3 py-1">
             <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
               <span>Basic rent:</span>
-              <span>{formatCurrency(bookingRequest.property.price)}</span>
+              <span>{formatCurrency(bookingRequest?.basePrice)}</span>
             </div>
             {bookingRequest?.property.otherFees.map((fee, idx) => (
               <div
@@ -335,7 +316,7 @@ ModalProps) => {
             ))}
             <div className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground">
               <span>Platform Fee:</span>
-              <span>{formatCurrency(platformFee)}</span>
+              <span>{formatCurrency(bookingRequest?.platformFee)}</span>
             </div>
           </div>
         </div>

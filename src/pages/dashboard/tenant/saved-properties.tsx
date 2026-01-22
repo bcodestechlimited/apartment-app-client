@@ -89,7 +89,7 @@ export function PropertiesGrid({ properties, isLoading }: PropertiesGridProps) {
         <PublicPropertyCard
           property={property}
           key={property._id}
-          link={`/dashboard/property/${property._id}`}
+          link={`/dashboard/properties/${property._id}`}
         />
       ))}
     </div>

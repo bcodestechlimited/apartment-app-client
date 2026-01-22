@@ -136,7 +136,7 @@ export default function PropertyOverview() {
   const isLandlord = user?.roles?.includes("landlord");
 
   const { data } = useQuery({
-    queryKey: ["system-settinsg"],
+    queryKey: ["system-settings"],
     queryFn: () => systemSettingsService.getSettings(),
   });
 

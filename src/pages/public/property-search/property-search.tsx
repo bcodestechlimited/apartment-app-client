@@ -134,10 +134,10 @@ export default function PropertySearch() {
   };
 
   const handleGetLink = (propertyId: string) => {
-    if (isTenant) return `/dashboard/property/${propertyId}`;
-    if (isLandlord) return `/dashboard/landlord/property/${propertyId}`;
+    if (isTenant) return `/dashboard/properties/${propertyId}`;
+    if (isLandlord) return `/dashboard/landlord/properties/${propertyId}`;
     if (isAdmin) return `/admin/properties/${propertyId}`;
-    return `/property/${propertyId}`;
+    return `/properties/${propertyId}`;
   };
 
   return (
@@ -252,7 +252,7 @@ export default function PropertySearch() {
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              state === stateItem ? "opacity-100" : "opacity-0"
+                              state === stateItem ? "opacity-100" : "opacity-0",
                             )}
                           />
                           {stateItem}
@@ -301,7 +301,7 @@ export default function PropertySearch() {
                             <Check
                               className={cn(
                                 "mr-2 h-4 w-4",
-                                city === cityItem ? "opacity-100" : "opacity-0"
+                                city === cityItem ? "opacity-100" : "opacity-0",
                               )}
                             />
                             {cityItem}

@@ -57,7 +57,7 @@ export default function BookingModal({
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
-    queryKey: ["system-settinsg"],
+    queryKey: ["system-settings"],
     queryFn: () => systemSettingsService.getSettings(),
   });
 

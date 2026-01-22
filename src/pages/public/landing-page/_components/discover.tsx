@@ -96,7 +96,7 @@ export default function Discover() {
                         variant="ghost"
                         role="combobox"
                         aria-expanded={openState}
-                        className="w-full justify-between hover:bg-transparent hover:text-white text-white/90 font-normal px-4"
+                        className="w-full justify-between hover:bg-transparent hover:text-white text-white/90 font-normal px-4 cursor-pointer"
                       >
                         {selectedState ? selectedState : "Select your state"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -118,13 +118,14 @@ export default function Discover() {
                                   setSelectedCity(""); // Reset city when state changes
                                   setOpenState(false);
                                 }}
+                                className="text-sm cursor-pointer"
                               >
                                 <Check
                                   className={cn(
                                     "mr-2 h-4 w-4",
                                     selectedState === state
                                       ? "opacity-100"
-                                      : "opacity-0"
+                                      : "opacity-0",
                                   )}
                                 />
                                 {state}
@@ -147,7 +148,7 @@ export default function Discover() {
                         role="combobox"
                         aria-expanded={openCity}
                         disabled={!selectedState} // Disable if no state selected
-                        className="w-full justify-between hover:bg-transparent hover:text-white text-white/90 font-normal"
+                        className="w-full justify-between hover:bg-transparent hover:text-white text-white/90 font-normal  cursor-pointer"
                       >
                         {selectedCity ? selectedCity : "Select your city"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -170,18 +171,19 @@ export default function Discover() {
                                       setSelectedCity(city);
                                       setOpenCity(false);
                                     }}
+                                    className="text-sm cursor-pointer"
                                   >
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
                                         selectedCity === city
                                           ? "opacity-100"
-                                          : "opacity-0"
+                                          : "opacity-0",
                                       )}
                                     />
                                     {city}
                                   </CommandItem>
-                                )
+                                ),
                               )}
                           </CommandGroup>
                         </CommandList>
@@ -283,7 +285,7 @@ function CategoryTabs() {
               "relative  px-2 transition-colors duration-300",
               selected === tab
                 ? "text-custom-primary font-medium"
-                : "hover:text-foreground"
+                : "hover:text-foreground",
             )}
             // onClick={() => setSelected(tab)}
           >

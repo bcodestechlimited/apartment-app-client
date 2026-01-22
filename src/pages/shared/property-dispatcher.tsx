@@ -17,23 +17,23 @@ export const PropertyDispatcher = () => {
   // If they aren't logged in, send them to login, but keep the 'from' state
   // so they are sent back to this dispatcher after logging in.
   if (!user) {
-    return <Navigate to={`/property/${id}`} replace />;
+    return <Navigate to={`/properties/${id}`} replace />;
   }
 
   // 2. Handle Routing Based on Role
   const roles = user.roles || [];
 
   if (roles.includes("admin")) {
-    return <Navigate to={`/dashboard/admin/property/${id}`} replace />;
+    return <Navigate to={`/dashboard/admin/properties/${id}`} replace />;
   }
 
   if (roles.includes("landlord")) {
-    return <Navigate to={`/dashboard/landlord/property/${id}`} replace />;
+    return <Navigate to={`/dashboard/landlord/properties/${id}`} replace />;
   }
 
   if (roles.includes("tenant")) {
     // Assuming the tenant route is generic or specific
-    return <Navigate to={`/dashboard/property/${id}`} replace />;
+    return <Navigate to={`/dashboard/properties/${id}`} replace />;
   }
 
   // 3. Fallback for users with no valid role or unknown roles

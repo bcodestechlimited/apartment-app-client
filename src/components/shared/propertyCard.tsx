@@ -17,6 +17,9 @@ interface PropertyCardProps {
   property: IProperty;
   link?: string;
   label?: string;
+  settings?: {
+    platformFeePercentage: number;
+  };
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
@@ -86,12 +89,14 @@ export const PublicPropertyCard = ({
   property,
   link,
   label,
+  settings,
 }: PropertyCardProps) => {
   const {
     title,
     description,
     type,
     totalFees,
+    price,
     pictures,
     numberOfBedrooms,
     numberOfBathrooms,
@@ -100,7 +105,10 @@ export const PublicPropertyCard = ({
   // console.log(" property", property);
   if (!property) return null;
 
-  const href = link || `/property/${property._id}`;
+  const href = link || `/properties/${property._id}`;
+
+  const grandTotal =
+    totalFees + ((settings?.platformFeePercentage || 0) / 100) * price;
 
   return (
     <Link to={href}>
@@ -142,7 +150,7 @@ export const PublicPropertyCard = ({
           </p>
 
           <p className="font-bold text-lg">
-            {totalFees ? formatCurrency(totalFees) : ""}
+            {totalFees ? formatCurrency(grandTotal) : ""}
           </p>
 
           <div className="flex gap-4 flex-wrap mt-2">
@@ -170,7 +178,11 @@ export const PublicPropertyCard = ({
   );
 };
 
-export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
+export const LandLordPropertyCard = ({
+  property,
+  link,
+  settings,
+}: PropertyCardProps) => {
   const [editOpen, setEditOpen] = useState(false);
   const [unavailableOpen, setUnavailableOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -181,6 +193,7 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
     description,
     type,
     totalFees,
+    price,
     pictures,
     numberOfBedrooms,
     numberOfBathrooms,
@@ -189,7 +202,10 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
 
   console.log({ property });
 
-  const href = link || `/property/${property._id}`;
+  const grandTotal =
+    totalFees + ((settings?.platformFeePercentage || 0) / 100) * price;
+
+  const href = link || `/properties/${property._id}`;
 
   return (
     <>
@@ -224,7 +240,7 @@ export const LandLordPropertyCard = ({ property, link }: PropertyCardProps) => {
             </p>
 
             <p className="font-bold text-lg">
-              {totalFees ? formatCurrency(totalFees) : ""}
+              {totalFees ? formatCurrency(grandTotal) : ""}
             </p>
 
             <div className="flex items-center justify-between">

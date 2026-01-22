@@ -10,6 +10,7 @@ import AddPropertyModal from "./_components/add-property-modal";
 import { motion } from "motion/react";
 import { Loader } from "@/components/custom/loader";
 import { Plus } from "lucide-react";
+import { systemSettingsService } from "@/api/admin/system-settings.api";
 
 export default function Listings() {
   const [selected, setSelected] = useState("All");
@@ -37,6 +38,11 @@ export default function Listings() {
         limit: 10,
         type,
       }),
+  });
+
+  const { data: settings } = useQuery({
+    queryKey: ["system-settings"],
+    queryFn: () => systemSettingsService.getSettings(),
   });
 
   const openModal = () => setIsModalOpen(true);
@@ -111,6 +117,7 @@ export default function Listings() {
           isLoading={isLoading}
           properties={data?.properties || []}
           type={type || "all"}
+          settings={settings}
         />
       </div>
     </div>
@@ -119,6 +126,9 @@ export default function Listings() {
 
 interface PropertiesGridProps {
   properties: IProperty[];
+  settings: {
+    platformFeePercentage: number;
+  };
   isLoading: boolean;
   type: string;
 }
@@ -127,6 +137,7 @@ export function PropertiesGrid({
   properties,
   isLoading,
   type,
+  settings,
 }: PropertiesGridProps) {
   if (isLoading) return <Loader />;
 
@@ -159,8 +170,9 @@ export function PropertiesGrid({
         return (
           <LandLordPropertyCard
             property={property}
+            settings={settings}
             key={property._id}
-            link={`/dashboard/landlord/property/${property._id}`}
+            link={`/dashboard/landlord/properties/${property._id}`}
           />
         );
       })}

@@ -114,7 +114,7 @@ function App() {
           element: <PropertySearch />,
         },
         {
-          path: "property/:propertyId",
+          path: "properties/:propertyId",
           element: <PublicPropertyDetail />,
         },
         {
@@ -271,7 +271,7 @@ function App() {
               element: <PaymentVerification />,
             },
             {
-              path: "property/:propertyId",
+              path: "properties/:propertyId",
               element: <PropertyDetailLayout />,
               children: [
                 {
@@ -410,7 +410,7 @@ function App() {
               element: <LandlordProfile />,
             },
             {
-              path: "property/:propertyId",
+              path: "properties/:propertyId",
               element: <PropertyDetailLayout />,
               children: [
                 {

@@ -9,9 +9,10 @@ export interface IBookingRequest {
   moveInDate: string;
   startDate: Date;
   endDate: Date;
-  price: number;
+  basePrice: number;
   netPrice: number; // Price after discounts or fees
-  serviceChargeAmount: number; // Additional fees for the booking
+  otherFees: { name: string; amount: number }[];
+  platformFee: number; // Additional fees for the booking
   paymentDue?: Date;
   status: "pending" | "approved" | "declined" | "expired";
   paymentStatus: "pending" | "success" | "failed";
