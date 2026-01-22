@@ -204,6 +204,8 @@ export const LandLordPropertyCard = ({
 
   const grandTotal =
     totalFees + ((settings?.platformFeePercentage || 0) / 100) * price;
+  console.log("grandTotal", grandTotal);
+  console.log("totalFees", totalFees);
 
   const href = link || `/properties/${property._id}`;
 
@@ -240,7 +242,7 @@ export const LandLordPropertyCard = ({
             </p>
 
             <p className="font-bold text-lg">
-              {totalFees ? formatCurrency(grandTotal) : ""}
+              {totalFees ? formatCurrency(grandTotal) : "-"}
             </p>
 
             <div className="flex items-center justify-between">
