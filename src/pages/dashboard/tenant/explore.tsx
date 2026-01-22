@@ -90,6 +90,7 @@ export function PropertiesGrid({
   isLoading,
   settings,
 }: PropertiesGridProps) {
+  console.log("properties in properties grid", properties);
   if (isLoading) return <Loader />;
 
   if (!properties.length || properties.length < 1) {
@@ -102,14 +103,16 @@ export function PropertiesGrid({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {properties?.map((property: IProperty) => (
-        <PublicPropertyCard
-          property={property}
-          key={property._id}
-          link={`/dashboard/properties/${property._id}`}
-          settings={settings}
-        />
-      ))}
+      {properties &&
+        properties.length > 0 &&
+        properties?.map((property: IProperty) => (
+          <PublicPropertyCard
+            property={property}
+            key={property._id}
+            link={`/dashboard/properties/${property._id}`}
+            settings={settings}
+          />
+        ))}
     </div>
   );
 }
