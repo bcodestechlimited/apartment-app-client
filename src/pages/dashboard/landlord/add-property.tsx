@@ -193,7 +193,7 @@ export default function AddPropertyPage() {
   };
 
   return (
-    <div className="container mx-auto py-10 px-4 max-w-5xl">
+    <div className="container ">
       {/* Back Button & Header */}
       <div className="relative mb-8 flex items-center justify-center">
         {/* Back Button: Positioned absolutely to the left */}
@@ -208,7 +208,7 @@ export default function AddPropertyPage() {
 
         {/* Header Text: Centered naturally by flex container */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-3xl font-bold tracking-wider">
             Add New Property
           </h1>
           <p className="text-muted-foreground">

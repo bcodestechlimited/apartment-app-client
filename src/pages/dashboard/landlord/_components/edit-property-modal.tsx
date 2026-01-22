@@ -95,8 +95,8 @@ export default function EditPropertyModal({
       existingPictures: property.pictures,
       numberOfBedRooms: String(property.numberOfBedrooms),
       numberOfBathrooms: String(property.numberOfBathrooms),
-      isEnsuite: property.isEnsuite || false, // Default to false if missing
-      otherFees: property.otherFees || [], // Default to empty array if missing
+      isEnsuite: property.isEnsuite || false,
+      otherFees: property.otherFees || [],
     },
   });
 
@@ -118,7 +118,6 @@ export default function EditPropertyModal({
   const selectedState = watch("state") || property.state || "Lagos";
   const propertyType = watch("type") || property.type;
 
-  // Initialize form with property data when modal opens
   useEffect(() => {
     if (isOpen && property) {
       reset({
