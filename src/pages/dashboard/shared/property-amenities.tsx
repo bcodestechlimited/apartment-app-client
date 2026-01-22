@@ -22,7 +22,7 @@ export default function PropertyAmenities() {
             <p className="font-semibold text-xl">Unit Features</p>
 
             <div className="grid grid-cols-2 gap-4">
-              {property?.amenities.map((amenity) => (
+              {property?.amenities?.map((amenity) => (
                 <div key={amenity} className="flex gap-2 items-center">
                   <CircleCheck size={24} />
                   <p className="">{amenity}</p>
@@ -35,7 +35,7 @@ export default function PropertyAmenities() {
             <p className="font-semibold text-xl">Facilities</p>
 
             <div className="grid grid-cols-2 gap-4">
-              {property?.facilities.map((facility: string) => (
+              {property?.facilities?.map((facility: string) => (
                 <div key={facility} className="flex gap-2 items-center">
                   <CircleCheck size={24} />
                   <p className="">{facility}</p>
