@@ -305,7 +305,7 @@ ModalProps) => {
               <span>Basic rent:</span>
               <span>{formatCurrency(bookingRequest?.basePrice)}</span>
             </div>
-            {bookingRequest?.property.otherFees.map((fee, idx) => (
+            {bookingRequest?.otherFees.map((fee, idx) => (
               <div
                 key={idx}
                 className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground"
