@@ -85,7 +85,7 @@ export function PropertiesGrid({ properties, isLoading }: PropertiesGridProps) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {properties.map((property: IProperty) => (
+      {properties?.map((property: IProperty) => (
         <PublicPropertyCard
           property={property}
           key={property._id}

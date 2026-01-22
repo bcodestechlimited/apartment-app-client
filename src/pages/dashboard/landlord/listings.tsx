@@ -55,7 +55,7 @@ export default function Listings() {
       <div className="flex items-center justify-between mb-4">
         <div className="bg-custom-primary/10 w-fit rounded-full p-2">
           <ul className="relative flex items-center font-semibold text-sm gap-2">
-            {categories.map((category) => {
+            {categories?.map((category) => {
               const isActive = selected === category;
 
               return (
@@ -164,7 +164,7 @@ export function PropertiesGrid({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {properties.map((property: IProperty) => {
+      {properties?.map((property: IProperty) => {
         console.log({ property });
 
         return (

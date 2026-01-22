@@ -209,7 +209,7 @@ export default function PropertyOverview() {
             </div>
 
             {/* List Other Fees Dynamically */}
-            {/* {property?.otherFees?.map((fee, index) => (
+            {property?.otherFees?.map((fee, index) => (
               <div
                 key={index}
                 className="flex justify-between items-center text-sm text-gray-600  pb-1"
@@ -217,7 +217,7 @@ export default function PropertyOverview() {
                 <span className="capitalize">{fee.name}:</span>
                 <span>{formatCurrency(fee.amount)}</span>
               </div>
-            ))} */}
+            ))}
 
             <div className="flex justify-between items-center text-sm text-gray-600">
               <span>Platform Fee:</span>
