@@ -206,7 +206,7 @@ function TenantBookings() {
                   <span>Basic rent:</span>
                   <span>{formatCurrency(selectedBooking?.basePrice)}</span>
                 </div>
-                {selectedBooking?.otherFees.map((fee: any, idx: number) => (
+                {selectedBooking?.otherFees?.map((fee: any, idx: number) => (
                   <div
                     key={idx}
                     className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground"

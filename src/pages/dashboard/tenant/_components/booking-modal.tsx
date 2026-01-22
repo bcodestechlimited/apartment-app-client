@@ -161,7 +161,7 @@ export default function BookingModal({
           {/* 3. Dynamic Fee List - Replaces any static text */}
 
           <div className="flex flex-col gap-1 ml-8 border-l-2 pl-3 py-1">
-            {property.otherFees.map((fee, idx) => (
+            {property?.otherFees?.map((fee, idx) => (
               <div
                 key={idx}
                 className="flex justify-between w-full max-w-[250px] text-sm text-muted-foreground"

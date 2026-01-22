@@ -54,7 +54,7 @@ const PropertyRating = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto py-12 rounded-4xl">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto py-12 rounded-xl">
         <p className="font-[500] text-[20px] mb-4 text-center">Rate Property</p>
         <hr className="mb-6" />
 
