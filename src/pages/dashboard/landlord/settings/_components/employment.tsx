@@ -28,7 +28,7 @@ import { CustomAlert } from "@/components/custom/custom-alert";
 const formSchema = z.object({
   employmentStatus: z.enum(
     ["employed", "self-employed", "unemployed", "student", "retired"],
-    { error: () => ({ message: "Select employment status" }) }
+    { error: () => ({ message: "Select employment status" }) },
   ),
   companyName: z.string().min(2, "Company name is required"),
   jobTitle: z.string().min(2, "Job title is required"),
@@ -87,6 +87,14 @@ export default function Employment() {
     console.log("Employment Data:", data);
     mutation.mutateAsync(data);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mr-auto space-y-6 py-4">

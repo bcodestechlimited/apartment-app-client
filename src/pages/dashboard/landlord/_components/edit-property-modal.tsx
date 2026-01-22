@@ -155,6 +155,9 @@ export default function EditPropertyModal({
     onSuccess: () => {
       toast.success("Property updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-properties"] });
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+      queryClient.invalidateQueries({ queryKey: ["property"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
       closeModal();
     },
     onError: (error) => {

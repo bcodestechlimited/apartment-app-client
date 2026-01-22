@@ -145,7 +145,7 @@ function AdminSidebar() {
                       className={cn(
                         "flex items-center gap-2",
                         isActive(route.path) &&
-                          "bg-custom-primary/20 text-custom-primary"
+                          "bg-custom-primary/20 text-custom-primary",
                       )}
                     >
                       {route.icon}
@@ -188,7 +188,7 @@ function TopBar() {
   });
 
   return (
-    <div className="flex items-center justify-between   border-b bg-white mb-4 sticky top-0 z-10">
+    <div className="flex items-center justify-between pt-1 pb-0.5   border-b bg-white mb-4 sticky top-0 z-10">
       <div className="pl-3">
         <SidebarTrigger />
       </div>

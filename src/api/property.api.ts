@@ -41,7 +41,7 @@ class PropertyService {
     try {
       const response = await axiosInstance.patch(
         `/property/${propertyId}`,
-        payload
+        payload,
       );
 
       console.log({ response });
@@ -106,7 +106,7 @@ class PropertyService {
     try {
       const response = await axiosInstance.patch(
         `/admin/property/${propertyId}`,
-        payload
+        payload,
       );
 
       console.log({ response });
@@ -114,6 +114,38 @@ class PropertyService {
       return response.data;
     } catch (error) {
       handleAxiosError(error, "Failed to update property");
+    }
+  };
+
+  updatePropertyAvailability = async (
+    propertyId: string,
+    isAvailable: boolean,
+  ) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/property/landlord/update-availability`,
+        {
+          propertyId,
+          isAvailable,
+        },
+      );
+
+      console.log({ response });
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to update property availability");
+    }
+  };
+
+  softDeleteProperty = async (id: string) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/property/soft-delete/${id}`,
+      );
+      console.log({ response });
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to delete property");
     }
   };
 }

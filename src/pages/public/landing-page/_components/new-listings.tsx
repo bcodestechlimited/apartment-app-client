@@ -24,8 +24,8 @@ export default function NewListings() {
     });
 
     if (!isAuthenticated) return `/properties`;
-    if (isLandlord) return `/dashboard/landlord/properties`;
-    if (isTenant) return `/dashboard/properties`;
+    if (isLandlord) return `/dashboard/landlord/`;
+    if (isTenant) return `/dashboard/`;
     if (isAdmin) return `/dashboard/admin/properties`;
     return `/properties`;
   };

@@ -28,9 +28,11 @@ export default function MarkPropertyModal({
 
   const propertyMutation = useMutation({
     mutationFn: () =>
-      propertyService.updateProperty(property._id, {
-        isAvailable: !property.isAvailable,
-      }),
+      propertyService.updatePropertyAvailability(
+        property._id,
+        !property.isAvailable,
+      ),
+
     onSuccess: async () => {
       toast.success("Property updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-properties"] });
