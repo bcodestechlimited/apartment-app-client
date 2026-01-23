@@ -1,8 +1,33 @@
 import { Button } from "@/components/ui/button";
 import workspaceImage from "@/assets/images/workspaces.svg";
 import { Link } from "react-router";
+import type { IUser } from "@/interfaces/user.interface";
 
-export default function BrowseWorkspaces() {
+interface IBrowseWorkspacesProps {
+  user: IUser | null;
+}
+
+export default function BrowseWorkspaces({ user }: IBrowseWorkspacesProps) {
+  const isLandlord = user?.roles?.includes("landlord");
+  const isTenant = user?.roles?.includes("tenant");
+  const isAdmin = user?.roles?.includes("admin");
+  const isAuthenticated = !!user;
+
+  const getPropertyLink = (link?: string) => {
+    console.log({
+      isAuthenticated: !isAuthenticated,
+      isLandlord,
+      isTenant,
+      isAdmin,
+    });
+
+    if (!isAuthenticated) return `/properties/${link}`;
+    if (isLandlord) return `/dashboard/landlord/${link}`;
+    if (isTenant) return `/dashboard/${link}`;
+    if (isAdmin) return `/dashboard/admin/properties`;
+    return `/properties`;
+  };
+
   return (
     <div className="bg-[#FFFBF5] py-8">
       <div className="max-w-custom">
@@ -19,7 +44,7 @@ export default function BrowseWorkspaces() {
                 spaces designed for freelancers, startups, and remote teams.
               </p>
 
-              <Link to="/properties?propertyType=co-working-space">
+              <Link to={getPropertyLink("?propertyType=co-working-space")}>
                 <Button className="bg-custom-primary rounded-full px-8 font-light text-xs hover:bg-custom-primary/90 cursor-pointer">
                   Browse workspaces
                 </Button>

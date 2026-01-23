@@ -48,7 +48,9 @@ export default function MarkPropertyModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Mark as Unavailable</DialogTitle>
+          <DialogTitle>
+            Mark as {property.isAvailable ? "unavailable" : "available"}?
+          </DialogTitle>
           <DialogDescription>
             Are you sure you want to mark this property as{" "}
             {property.isAvailable ? "unavailable" : "available"}?
