@@ -62,7 +62,7 @@ export default function Footer() {
                 title: "Co-working space",
                 link: "/properties?propertyType=co-working-space",
               },
-              { title: "Patners", link: "#" },
+              { title: "Partners", link: "#" },
             ].map(({ title, link }) => (
               <li key={title}>
                 <Link to={link} className="text-gray-400 hover:text-white">

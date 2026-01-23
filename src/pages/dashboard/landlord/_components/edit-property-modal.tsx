@@ -563,7 +563,6 @@ export default function EditPropertyModal({
                           setSelectedRooms(value);
                           setValue("numberOfBedRooms", value);
 
-                          // Helper Logic: If "Ensuite" is checked, we assume AT LEAST this many bathrooms
                           if (watch("isEnsuite")) {
                             const currentBathrooms = Number(
                               watch("numberOfBathrooms") || 0,

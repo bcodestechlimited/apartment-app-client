@@ -2,14 +2,17 @@ import { propertyService } from "@/api/property.api";
 import { PublicPropertyCard } from "@/components/shared/propertyCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { IProperty } from "@/interfaces/property.interface";
+import type { IUser } from "@/interfaces/user.interface";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import { Layers } from "lucide-react";
 import { Link } from "react-router";
 
-export default function NewListings() {
-  const { user } = useAuthStore();
+interface NewListingsProps {
+  user: IUser | null;
+}
 
+export default function NewListings({ user }: NewListingsProps) {
   const isLandlord = user?.roles?.includes("landlord");
   const isTenant = user?.roles?.includes("tenant");
   const isAdmin = user?.roles?.includes("admin");

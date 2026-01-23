@@ -45,6 +45,9 @@ export default function PropertyOverview() {
       <div className="flex flex-col gap-2 text-start">
         <p className="text-xl font-semibold">{property?.description}</p>
         <p>Address: {property?.address}</p>
+        <p className="font-semibold text-sm line-clamp-2 text-gray-600">
+          {property?.state}, {property?.lga} lga
+        </p>
 
         <Button className="w-fit capitalize my-2">
           {property?.type.replace("-", " ")}

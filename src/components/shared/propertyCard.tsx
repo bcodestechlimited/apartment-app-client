@@ -101,6 +101,8 @@ export const PublicPropertyCard = ({
     numberOfBedrooms,
     numberOfBathrooms,
     seatingCapacity,
+    state,
+    lga,
   } = property;
 
   if (!property) return null;
@@ -142,6 +144,9 @@ export const PublicPropertyCard = ({
 
           <p className="font-semibold text-sm line-clamp-2 text-gray-600">
             {description}
+          </p>
+          <p className="font-semibold text-sm line-clamp-2 text-gray-600">
+            {state}, {lga}
           </p>
 
           <div className="mt-auto pt-2">
@@ -196,6 +201,8 @@ export const LandLordPropertyCard = ({
     numberOfBedrooms,
     numberOfBathrooms,
     seatingCapacity,
+    state,
+    lga,
   } = property;
 
   const grandTotal =
@@ -236,6 +243,9 @@ export const LandLordPropertyCard = ({
 
             <p className="font-semibold text-sm line-clamp-2 text-gray-600">
               {description}
+            </p>
+            <p className="font-semibold text-sm line-clamp-2 text-gray-600">
+              {state}, {lga}
             </p>
 
             <div className="mt-auto pt-2">

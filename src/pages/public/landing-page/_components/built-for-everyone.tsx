@@ -7,8 +7,40 @@ import forTenants2 from "@/assets/images/for-tenants-2.png";
 import forTenants3 from "@/assets/images/for-tenants-3.png";
 import forTenants4 from "@/assets/images/for-tenants-4.png";
 import greenArrow from "@/assets/images/green-arrow.png";
+import type { IUser } from "@/interfaces/user.interface";
 
-export default function BuiltForEveryone() {
+interface IBuiltForEveryone {
+  user: IUser | null;
+}
+
+export default function BuiltForEveryone({ user }: IBuiltForEveryone) {
+  const isLandlord = user?.roles?.includes("landlord");
+  const isTenant = user?.roles?.includes("tenant");
+  const isAdmin = user?.roles?.includes("admin");
+  const isAuthenticated = !!user;
+
+  const getPropertyLink = (link?: string) => {
+    console.log({
+      isAuthenticated: !isAuthenticated,
+      isLandlord,
+      isTenant,
+      isAdmin,
+    });
+
+    if (link) {
+      if (!isAuthenticated) return `/properties${link}`;
+      if (isLandlord) return `/dashboard/landlord/${link}`;
+      if (isTenant) return `/dashboard/${link}`;
+      if (isAdmin) return `/dashboard/admin/properties`;
+      return `/properties`;
+    }
+
+    if (!isAuthenticated) return `/properties`;
+    if (isLandlord) return `/dashboard/landlord`;
+    if (isTenant) return `/dashboard/`;
+    if (isAdmin) return `/dashboard/admin/properties`;
+    return `/properties`;
+  };
   const [tab, setTab] = useState("tenants");
 
   const tenants = [
@@ -16,28 +48,28 @@ export default function BuiltForEveryone() {
       title: "Monthly Rent Payments",
       desc: "Choose a payment plan that fits your lifestyle. Break free from the traditional lump-sum yearly rent and enjoy the ease of paying in smaller, manageable installments",
       img: forTenants1,
-      link: "/properties",
+      link: getPropertyLink(),
       linkText: "Get Started now",
     },
     {
       title: "Seamless Marketplace",
       desc: "Whether it’s a few nights, a few months, or a long-term stay, find flexible living arrangements that suit students, professionals, and families alike",
       img: forTenants2,
-      link: "/properties",
+      link: getPropertyLink(),
       linkText: "Explore now",
     },
     {
       title: "Verified Landlords & Listings",
       desc: "Every listing is vetted for authenticity, and all payments are handled securely within the platform — giving you peace of mind with every booking",
       img: forTenants3,
-      link: "/properties",
+      link: getPropertyLink(),
       linkText: "Explore now",
     },
     {
       title: "Access to Co-Working Spaces",
       desc: "Stay productive wherever you live by booking modern co-working spaces and private offices designed for freelancers, startups, and remote workers",
       img: forTenants4,
-      link: "/properties",
+      link: getPropertyLink("?propertyType=Co-working+Space"),
       linkText: "Book a space",
     },
   ];
@@ -47,28 +79,28 @@ export default function BuiltForEveryone() {
       title: "List Properties",
       desc: "Create attractive listings in minutes.",
       img: forTenants2,
-      link: "/login",
+      link: isLandlord ? getPropertyLink("add-property") : getPropertyLink(),
       linkText: "Get Started now",
     },
     {
       title: "Tenant Screening",
       desc: "Background checks & references.",
       img: forTenants4,
-      link: "/login",
+      link: getPropertyLink(),
       linkText: "Get Started now",
     },
     {
       title: "Automated Payments",
       desc: "Set up recurring rent collection.",
       img: forTenants3,
-      link: "/login",
+      link: getPropertyLink(),
       linkText: "Get Started now",
     },
     {
       title: "Portfolio Insights",
       desc: "Track income, occupancy & more.",
       img: forTenants1,
-      link: "/login",
+      link: getPropertyLink(),
       linkText: "Get Started now",
     },
   ];

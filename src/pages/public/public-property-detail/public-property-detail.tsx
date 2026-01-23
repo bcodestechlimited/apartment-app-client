@@ -160,6 +160,9 @@ export default function PublicPropertyDetail() {
           <div className="text-start">
             <p className="text-xl font-medium">{property.title}</p>
             <p className="text-lg text-muted-foreground">{property.address}</p>
+            <p className=" text-lg line-clamp-2 text-muted-foreground">
+              {property?.state} state, {property?.lga} lga
+            </p>
 
             <div className="space-x-2">
               <span className="font-medium">

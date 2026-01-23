@@ -6,6 +6,7 @@ import { authService } from "@/api/auth.api";
 import BrowseWorkspaces from "./_components/browse-workspaces";
 import BuiltForEveryone from "./_components/built-for-everyone";
 import FAQs from "./_components/faqs";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const LandingPage = () => {
   const query = useQuery({
@@ -14,12 +15,14 @@ const LandingPage = () => {
     retry: false,
   });
 
+  const { user } = useAuthStore();
+
   return (
     <div>
       <Discover />
-      <NewListings />
-      <BrowseWorkspaces />
-      <BuiltForEveryone />
+      <NewListings user={user} />
+      <BrowseWorkspaces user={user} />
+      <BuiltForEveryone user={user} />
       <FAQs />
       <Newsletter />
     </div>
