@@ -195,6 +195,7 @@ export const LandLordPropertyCard = ({
     pictures,
     numberOfBedrooms,
     numberOfBathrooms,
+    seatingCapacity,
   } = property;
 
   const grandTotal =
@@ -214,11 +215,19 @@ export const LandLordPropertyCard = ({
 
           <div className="p-4 text-start flex flex-col flex-1 gap-1">
             <span>
-              <small className="text-gray-500">
-                {Number(numberOfBedrooms) === 1
-                  ? "1 Bedroom"
-                  : `${numberOfBedrooms} Bedrooms`}
-              </small>
+              {Number(seatingCapacity) != 1 ? (
+                <small className="text-gray-500">
+                  {Number(seatingCapacity) === 1
+                    ? "1 Seating Capacity"
+                    : `${seatingCapacity} Seating Capacity`}
+                </small>
+              ) : (
+                <small className="text-gray-500">
+                  {Number(numberOfBedrooms) === 1
+                    ? "1 Bedroom"
+                    : `${numberOfBedrooms} Bedrooms`}
+                </small>
+              )}
             </span>
 
             <p className="font-medium text-xl line-clamp-1" title={title}>
@@ -236,12 +245,17 @@ export const LandLordPropertyCard = ({
 
               <div className="flex items-center justify-between mt-2">
                 <div className="flex gap-4 flex-wrap">
-                  {numberOfBedrooms ? (
+                  {Number(seatingCapacity) != 1 ? (
+                    <p className="text-sm text-gray-500 flex items-center gap-1">
+                      <RockingChair size={18} />
+                      {seatingCapacity}
+                    </p>
+                  ) : (
                     <p className="text-sm text-gray-500 flex items-center gap-1">
                       <Bed size={18} />
                       {numberOfBedrooms}
                     </p>
-                  ) : null}
+                  )}
                   {numberOfBathrooms ? (
                     <p className="text-sm text-gray-500 flex items-center gap-1">
                       <Bath size={18} />

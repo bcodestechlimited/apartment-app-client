@@ -104,7 +104,7 @@ export default function Documents() {
 
   const userDocuments = data?.documents || [];
   const isPendingDocument = userDocuments.some(
-    (doc: any) => doc.status === "pending"
+    (doc: any) => doc.status === "pending",
   );
 
   if (isError) {
@@ -186,7 +186,7 @@ export default function Documents() {
                         "border-2 border-dashed rounded-2xl flex flex-col items-center justify-center gap-3 p-8 text-center transition-all",
                         dragActive
                           ? "border-primary bg-primary/5"
-                          : "border-muted-foreground/25"
+                          : "border-muted-foreground/25",
                       )}
                     >
                       <Upload className="w-8 h-8 text-muted-foreground" />

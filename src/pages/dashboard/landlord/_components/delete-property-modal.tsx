@@ -27,10 +27,7 @@ export default function DeletePropertyModal({
   const queryClient = useQueryClient();
 
   const propertyMutation = useMutation({
-    mutationFn: () =>
-      propertyService.updateProperty(property._id, {
-        isDeleted: true,
-      }),
+    mutationFn: () => propertyService.softDeleteProperty(property._id),
     onSuccess: async () => {
       toast.success("Property deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-properties"] });
