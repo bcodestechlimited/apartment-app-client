@@ -67,6 +67,23 @@ class PropertyService {
       handleAxiosError(error, "Unable to get properties");
     }
   };
+
+  // getPropertiesPublic = async (params: IParams) => {
+  //   // console.log({ params });
+
+  //   try {
+  //     const response = await axiosInstance.get(`/property/public`, {
+  //       params,
+  //     });
+
+  //     // console.log({ response });
+
+  //     return response.data?.data;
+  //   } catch (error) {
+  //     handleAxiosError(error, "Unable to get properties");
+  //   }
+  // };
+
   getLandLordProperties = async (params: IParams) => {
     try {
       const response = await axiosInstance.get(`/property/landlord`, {

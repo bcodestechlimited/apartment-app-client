@@ -78,7 +78,7 @@ class AuthService {
     try {
       const response = await axiosInstance.post(
         `/auth/forgot-password`,
-        payload
+        payload,
       );
       return response.data?.data;
     } catch (error) {
@@ -90,7 +90,7 @@ class AuthService {
     try {
       const response = await axiosInstance.post(
         `/auth/reset-password`,
-        payload
+        payload,
       );
       return response.data?.data;
     } catch (error) {
@@ -116,6 +116,20 @@ class AuthService {
     }
   };
 
+  completeOnboarding = async (payload: any) => {
+    try {
+      console.log({ payload });
+      const response = await axiosInstance.post(
+        `/auth/complete-onboarding`,
+        payload,
+      );
+
+      return response.data?.data;
+    } catch (error) {
+      handleAxiosError(error, "Failed to complete onboarding");
+    }
+  };
+
   getUserPersonalInfo = async () => {
     try {
       const response = await axiosInstance.get(`/auth/profile/personal-info`);
@@ -132,7 +146,7 @@ class AuthService {
     try {
       const response = await axiosInstance.patch(
         `/auth/profile/personal-info`,
-        payload
+        payload,
       );
 
       console.log({ response });
@@ -159,7 +173,7 @@ class AuthService {
     try {
       const response = await axiosInstance.patch(
         `/auth/profile/employment`,
-        payload
+        payload,
       );
 
       console.log({ response });
@@ -186,7 +200,7 @@ class AuthService {
     try {
       const response = await axiosInstance.patch(
         `/auth/profile/next-of-kin`,
-        payload
+        payload,
       );
 
       console.log({ response });
@@ -213,7 +227,7 @@ class AuthService {
     try {
       const response = await axiosInstance.patch(
         `/auth/profile/guarantor`,
-        payload
+        payload,
       );
 
       console.log({ response });
@@ -243,7 +257,7 @@ class AuthService {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       console.log({ response });

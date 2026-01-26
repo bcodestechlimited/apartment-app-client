@@ -138,10 +138,11 @@ export default function PropertyOverview() {
             <Button
               disabled={
                 isLandlord ||
-                property.requestedBy?.includes(user?._id as string)
+                property.requestedBy?.includes(user?._id as string) ||
+                !property.isAvailable
               }
               onClick={() => setIsOpen(true)}
-              className="w-fit px-6 btn-primary"
+              className={`w-fit px-6 btn-primary `}
             >
               {property.requestedBy?.includes(user?._id as string) ? (
                 <span className="flex items-center gap-1">

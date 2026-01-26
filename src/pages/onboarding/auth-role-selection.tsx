@@ -19,7 +19,9 @@ export default function AuthRoleSelection() {
 
   const updateRoleMutation = useMutation({
     mutationFn: (selectedRole: string) =>
-      authService.updateUser({ roles: selectedRole ? [selectedRole] : [] }),
+      authService.completeOnboarding({
+        role: selectedRole ? [selectedRole] : [],
+      }),
     onSuccess: (data) => {
       const user = data.user;
       if (user && user.roles) {
@@ -91,7 +93,7 @@ export default function AuthRoleSelection() {
               {
                 "border-custom-primary": selectedRole === role.value,
                 "border-transparent": selectedRole !== role.value,
-              }
+              },
             )}
           >
             <img

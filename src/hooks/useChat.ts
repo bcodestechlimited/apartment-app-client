@@ -59,7 +59,7 @@ export const useChat = () => {
 
 export const useChatWindow = (
   conversationId: string,
-  currentUserId: string
+  currentUserId: string,
 ) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -90,7 +90,7 @@ export const useChatWindow = (
       (payload: { isTyping: boolean; recipientId: string }) => {
         console.log({ payload });
         setIsTyping(payload.isTyping);
-      }
+      },
     );
 
     socket.on("get_online_users", (res) => {

@@ -289,7 +289,7 @@ export default function PublicPropertyDetail() {
           <div className="flex flex-col items-center gap-2">
             <Button
               onClick={() => handleBooking()}
-              disabled={isLandlord || !hasUserAgreed}
+              disabled={isLandlord || !hasUserAgreed || !property.isAvailable}
               className="btn-primary w-full rounded-full"
             >
               Book Now

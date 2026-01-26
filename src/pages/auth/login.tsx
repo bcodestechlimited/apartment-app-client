@@ -13,7 +13,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { Spinner } from "@/components/custom/loader";
 import { useAuthActions } from "@/store/useAuthStore";
 import type { IUser } from "@/interfaces/user.interface";
@@ -22,6 +22,7 @@ import GoogleAuthButton from "@/components/custom/google-auth-button";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { images } from "@/constants/images";
+import { toast } from "sonner";
 
 interface SignInFormInputs {
   email: string;
@@ -31,6 +32,12 @@ interface SignInFormInputs {
 export default function Login() {
   const navigate = useNavigate();
   const { setAuthCredentials } = useAuthActions();
+  const [searchParams] = useSearchParams();
+  const loginError = searchParams.get("login-error");
+
+  if (loginError) {
+    toast.error("Your account has been blocked. Please contact support.");
+  }
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);

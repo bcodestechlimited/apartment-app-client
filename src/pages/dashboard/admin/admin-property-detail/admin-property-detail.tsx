@@ -41,6 +41,7 @@ export default function AdminPropertyDetail() {
       console.log({ response });
       queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
       queryClient.invalidateQueries({ queryKey: ["admin-property"] });
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
       setSuccess("Property verified successfully!");
     },
     onError: (error) => {

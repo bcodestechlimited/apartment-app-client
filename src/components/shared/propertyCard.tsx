@@ -203,6 +203,7 @@ export const LandLordPropertyCard = ({
     seatingCapacity,
     state,
     lga,
+    isAvailable,
   } = property;
 
   const grandTotal =
@@ -218,6 +219,17 @@ export const LandLordPropertyCard = ({
 
           <span className="bg-custom-primary text-white text-xs px-2 py-1 absolute top-4 left-0 capitalize rounded-r z-10">
             {type}
+          </span>
+          <span className="absolute top-12 left-0">
+            {isAvailable ? (
+              <p className="font-medium text-sm line-clamp-2 bg-custom-primary text-white px-2 py-1 rounded-r w-fit">
+                Available
+              </p>
+            ) : (
+              <p className="font-medium text-sm line-clamp-2 bg-red-600 text-white px-2 py-1 rounded-r w-fit">
+                Unavailable
+              </p>
+            )}
           </span>
 
           <div className="p-4 text-start flex flex-col flex-1 gap-1">
