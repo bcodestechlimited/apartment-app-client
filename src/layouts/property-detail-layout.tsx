@@ -1,16 +1,25 @@
-import { authService } from "@/api/auth.api";
 import { favouriteService } from "@/api/favourite.api";
 import { propertyService } from "@/api/property.api";
 import { Loader } from "@/components/custom/loader";
 import type { IProperty } from "@/interfaces/property.interface";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, Heart } from "lucide-react";
+import { ExternalLink, Heart, Maximize2 } from "lucide-react";
 import { Link, Outlet, useParams } from "react-router";
 import { toast } from "sonner";
 import { useShare } from "../hooks/useShare";
 import { getUniversalPropertyUrl } from "@/lib/utils";
+import { useState } from "react";
+import ImageLightbox from "@/components/custom/image-lightbox";
 function PropertyDetailLayout() {
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const openLightbox = (index: number) => {
+    setActiveImageIndex(index);
+    setShowLightbox(true);
+  };
+  const [showCarousel, setShowCarousel] = useState(false);
   const { user } = useAuthStore();
   // console.log("property detail layout user", user);
   const { propertyId } = useParams();
@@ -80,27 +89,49 @@ function PropertyDetailLayout() {
 
   return (
     <div>
-      <div className="flex gap-2 h-[400px]">
-        <div className="w-1/2">
-          <img
-            src={property?.pictures?.[0]}
-            alt=""
-            className="h-full w-full object-cover rounded"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
-          {property?.pictures?.slice(1, 5)?.map((picture, idx) => (
+      <div className="relative">
+        {/* Existing image grid - no changes */}
+        <div className="flex gap-2 h-[400px]">
+          <div className="w-1/2 relative">
             <img
-              key={idx}
-              className="w-full h-full object-cover rounded"
-              src={picture}
-              alt={`Image ${idx + 1}`}
+              src={property?.pictures?.[0]}
+              alt=""
+              className="h-full w-full object-cover rounded cursor-pointer"
+              onClick={() => openLightbox(0)}
             />
-          ))}
-        </div>
-      </div>
 
+            {/* Button to show carousel */}
+            <button
+              onClick={() => openLightbox(0)}
+              className="absolute bottom-4 right-4 bg-white/90 hover:bg-white text-gray-800 px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg transition-all hover:scale-105 cursor-pointer"
+            >
+              <Maximize2 size={18} />
+              View All Photos
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
+            {property?.pictures?.slice(1, 5)?.map((picture, idx) => (
+              <img
+                key={idx}
+                className="w-full h-full object-cover rounded cursor-pointer"
+                src={picture}
+                alt={`Image ${idx + 1}`}
+                onClick={() => openLightbox(idx + 1)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Carousel Overlay */}
+
+        <ImageLightbox
+          isOpen={showLightbox}
+          onClose={() => setShowLightbox(false)}
+          images={property?.pictures || []}
+          initialIndex={activeImageIndex}
+        />
+      </div>
       <div className="flex justify-between py-4">
         <div className="w-3/4 flex gap-4 justify-start font-semibold border-b max-w-fit">
           <Link className="border-b-2 py-2 px-4" to="">

@@ -60,7 +60,7 @@ function Wallet() {
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 10;
 
-  const { data: payment } = useQuery({
+  const { data: payment, isLoading: isLoadingTransactions } = useQuery({
     queryKey: ["transactions", { page, limit }],
     queryFn: () =>
       transactionService.getAllUserTransactions({
@@ -104,7 +104,7 @@ function Wallet() {
   });
 
   // --- Queries ---
-  const { data, isLoading } = useQuery({
+  const { data, isLoading: isLoading } = useQuery({
     queryKey: ["wallet"],
     queryFn: () => walletService.getUserWallet(),
   });
@@ -123,7 +123,7 @@ function Wallet() {
     },
   );
 
-  if (isLoading)
+  if (isLoading || isLoadingTransactions)
     return (
       <div className="h-[60vh] flex items-center justify-center">
         <Spinner />

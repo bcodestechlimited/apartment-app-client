@@ -37,6 +37,7 @@ import { toast } from "sonner";
 import OtherApartments from "./_components/other-apartments";
 import PropertyRatings from "@/components/shared/PropertyRating";
 import { systemSettingsService } from "@/api/admin/system-settings.api";
+import ImageLightbox from "@/components/custom/image-lightbox";
 
 const getAmenityIcon = (amenity: string) => {
   const icons: Record<string, JSX.Element> = {
@@ -51,6 +52,13 @@ const getAmenityIcon = (amenity: string) => {
 };
 
 export default function PublicPropertyDetail() {
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const openLightbox = (index: number) => {
+    setActiveImageIndex(index);
+    setShowLightbox(true);
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [hasUserAgreed, setHasUserAgreed] = useState(false);
   const { propertyId } = useParams();
@@ -122,7 +130,8 @@ export default function PublicPropertyDetail() {
           <img
             src={property?.pictures[0]}
             alt=""
-            className="h-full w-full object-cover rounded"
+            className="h-full w-full object-cover rounded cursor-pointer"
+            onClick={() => openLightbox(0)}
           />
         </div>
 
@@ -132,13 +141,23 @@ export default function PublicPropertyDetail() {
             .map((picture: string, index: number) => (
               <img
                 key={index}
-                className="w-full h-full object-cover rounded"
+                className="w-full h-full object-cover rounded cursor-pointer"
                 src={picture}
                 alt={`Image ${index + 1}`}
+                onClick={() => openLightbox(index + 1)}
               />
             ))}
         </div>
       </div>
+
+      {/* Carousel Overlay */}
+
+      <ImageLightbox
+        isOpen={showLightbox}
+        onClose={() => setShowLightbox(false)}
+        images={property?.pictures || []}
+        initialIndex={activeImageIndex}
+      />
 
       <div className="flex justify-between py-4">
         <div className="flex items-center gap-2">
