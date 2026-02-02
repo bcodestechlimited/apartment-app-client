@@ -15,16 +15,11 @@ class MessageService {
     }
   };
 
-  // Create a new conversation (e.g. landlord + tenant)
-  createConversation = async (payload: {
-    receiverId: string; // user IDs
-  }) => {
-    console.log({ payload });
-
+  createConversation = async (payload: { receiverId: string }) => {
     try {
       const response = await axiosInstance.post(
         `/message/conversation`,
-        payload
+        payload,
       );
       return response.data?.data;
     } catch (error) {
@@ -34,11 +29,11 @@ class MessageService {
 
   // Get a specific conversation
   getConversation = async (
-    conversationId: string
+    conversationId: string,
   ): Promise<IConversation | undefined> => {
     try {
       const response = await axiosInstance.get(
-        `/message/conversation/${conversationId}`
+        `/message/conversation/${conversationId}`,
       );
       return response.data?.data;
     } catch (error) {
@@ -48,13 +43,13 @@ class MessageService {
 
   // Get all messages for a conversation
   getMessages = async (
-    conversationId: string
+    conversationId: string,
   ): Promise<
     { conversation: IConversation; messages: IMessage[] } | undefined
   > => {
     try {
       const response = await axiosInstance.get(
-        `/message/conversation/${conversationId}/messages`
+        `/message/conversation/${conversationId}/messages`,
       );
       return response.data?.data;
     } catch (error) {
@@ -79,7 +74,7 @@ class MessageService {
   markAsRead = async (conversationId: string): Promise<any> => {
     try {
       const response = await axiosInstance.post(
-        `/message/conversation/${conversationId}/read`
+        `/message/conversation/${conversationId}/read`,
       );
       return response.data?.data;
     } catch (error) {

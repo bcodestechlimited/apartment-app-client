@@ -9,7 +9,6 @@ export default function MultiStepForm() {
   const methods = useForm({
     mode: "onBlur",
     defaultValues: {
-      // Add all the fields needed across all steps
       firstName: "",
       lastName: "",
       phoneNumber: "",
@@ -44,7 +43,6 @@ export default function MultiStepForm() {
 
   const currentStep = useMemo(() => {
     const currStep = steps.find((s) => s.path === pathname)?.index || 0;
-    console.log({ currStep, pathname });
     if (!currStep) {
       return 0;
     }

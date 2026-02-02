@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, useOutletContext } from "react-router";
 import {
   Loader,
   MapPin,
@@ -23,6 +23,7 @@ export default function AdminPropertyDetail() {
   const [success, setSuccess] = useState<string | null>(null);
   const { propertyId } = useParams();
   const navigate = useNavigate();
+  const systemSettings: any = useOutletContext();
 
   const queryClient = useQueryClient();
 
@@ -53,6 +54,10 @@ export default function AdminPropertyDetail() {
     setError(null);
     mutateAsync();
   };
+
+  const platformFee =
+    (systemSettings?.platformFeePercentage / 100) * property?.price;
+  const totalFee = platformFee + property?.totalFees;
 
   const btnText = isPending ? (
     <span className="flex items-center gap-2">
@@ -140,10 +145,39 @@ export default function AdminPropertyDetail() {
                 <p className="text-gray-500 text-sm capitalize">
                   {property.type}
                 </p>
+                <div className="p-4  bg-card text-card-foreground shadow-sm">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Pricing Details
+                  </h3>
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center text-sm text-gray-600  pb-1">
+                      <span>Basic Price:</span>
+                      <span>{formatCurrency(property.price)}</span>
+                    </div>
+
+                    {property?.otherFees?.map((fee: any, index: number) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center text-sm text-gray-600  pb-1"
+                      >
+                        <span className="capitalize">{fee.name}:</span>
+                        <span>{formatCurrency(fee.amount)}</span>
+                      </div>
+                    ))}
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Platform Fee:</span>
+                      <span>{formatCurrency(platformFee)}</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2 mt-2 font-bold text-xl">
+                      <span>Total:</span>
+                      <span>{formatCurrency(totalFee)}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="text-xl font-semibold text-custom-primary">
+              {/* <p className="text-xl font-semibold text-custom-primary">
                 {formatCurrency(property.price)}
-              </p>
+              </p> */}
             </div>
 
             <div className="flex items-center gap-4 text-gray-600 text-sm">

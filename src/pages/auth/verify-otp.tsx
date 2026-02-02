@@ -65,7 +65,6 @@ export default function VerifyOtp() {
     },
     onError: (error) => {
       toast.error(error.message || "Something went wrong");
-      console.error(error);
     },
   });
 
@@ -85,20 +84,14 @@ export default function VerifyOtp() {
         } else {
           navigate("/dashboard/admin");
         }
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     },
     onError: (error) => {
       toast.error(error.message || "Invalid OTP");
-      console.error(error);
     },
   });
 
   const handleResend = () => {
-    console.log("Resending OTP for email:", email);
-    console.log("Time left for resend:", timeLeft);
-
     if (!email || email.trim() === "" || email === "null") return;
     if (timeLeft <= 0) {
       resendMutation.mutate({ email });
@@ -106,8 +99,6 @@ export default function VerifyOtp() {
   };
 
   const handleVerify = () => {
-    console.log("Verifying OTP:", { otp, email });
-
     if (!otp || otp.length !== 4) {
       toast.error("Please enter the 4-digit OTP");
       return;

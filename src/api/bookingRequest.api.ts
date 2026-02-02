@@ -5,11 +5,8 @@ import { handleAxiosError } from "@/lib/utils";
 
 class BookingRequestService {
   createBookingRequest = async (payload: any) => {
-    console.log({ payload });
-
     try {
       const response = await axiosInstance.post(`/booking-request`, payload);
-      console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to book property");
@@ -33,8 +30,6 @@ class BookingRequestService {
         params,
       });
 
-      console.log({ data: response.data?.data });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to get booking requests");
@@ -46,8 +41,6 @@ class BookingRequestService {
       const response = await axiosInstance.get(
         `/booking-request/${bookingRequestId}`,
       );
-
-      console.log({ data: response.data?.data });
 
       return response.data?.data;
     } catch (error) {
@@ -65,8 +58,6 @@ class BookingRequestService {
         payload,
       );
 
-      console.log({ data: response.data?.data });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to update booking request");
@@ -82,8 +73,6 @@ class BookingRequestService {
         `/booking-request/${bookingRequestId}/pay`,
         payload,
       );
-
-      console.log({ data: response.data?.data });
 
       return response.data?.data;
     } catch (error) {

@@ -14,18 +14,12 @@ import {
 } from "@/components/ui/chart"; // Import required chart components
 import { occupancyData } from "./stats";
 
-// 1. Define the Chart Configuration
-// This maps the data key 'rate' to a label and color (using a CSS variable)
 const chartConfig = {
   rate: {
     label: "Occupancy Rate",
-    // Use a custom color variable that matches the design (e.g., indigo/violet)
     color: "hsl(240, 50%, 50%)", // Example HSL for Indigo-like color
   },
 } satisfies ChartConfig;
-
-// Use the existing occupancyData
-// const occupancyData = [ ... ]
 
 export function OccupancyChart() {
   return (

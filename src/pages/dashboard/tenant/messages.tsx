@@ -141,7 +141,8 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
 
   console.log({ isTyping });
 
-  if (!conversationId) return <div>No conversation selected</div>;
+  if (!conversationId)
+    return <div className="pl-2">No conversation selected</div>;
 
   if (isLoading)
     return (

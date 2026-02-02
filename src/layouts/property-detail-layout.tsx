@@ -4,14 +4,22 @@ import { Loader } from "@/components/custom/loader";
 import type { IProperty } from "@/interfaces/property.interface";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, Heart, Maximize2 } from "lucide-react";
+import {
+  ExternalLink,
+  Heart,
+  Loader2,
+  LoaderCircle,
+  Maximize2,
+} from "lucide-react";
 import { Link, Outlet, useParams } from "react-router";
 import { toast } from "sonner";
 import { useShare } from "../hooks/useShare";
 import { getUniversalPropertyUrl } from "@/lib/utils";
 import { useState } from "react";
 import ImageLightbox from "@/components/custom/image-lightbox";
+import { Spinner } from "@/components/ui/spinner";
 function PropertyDetailLayout() {
+  const [useShareModal, setUseShareModal] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
@@ -19,9 +27,7 @@ function PropertyDetailLayout() {
     setActiveImageIndex(index);
     setShowLightbox(true);
   };
-  const [showCarousel, setShowCarousel] = useState(false);
   const { user } = useAuthStore();
-  // console.log("property detail layout user", user);
   const { propertyId } = useParams();
   const queryClient = useQueryClient();
   const { handleShare } = useShare();
@@ -63,16 +69,19 @@ function PropertyDetailLayout() {
     }
   };
 
-  const onShareClick = () => {
+  const onShareClick = async () => {
     if (!propertyId) return;
+    setUseShareModal(true);
 
     const universalUrl = getUniversalPropertyUrl(propertyId);
 
-    handleShare({
+    await handleShare({
       title: property.title,
       text: `Check out ${property.title} on our platform!`,
       url: universalUrl,
     });
+
+    setUseShareModal(false);
   };
 
   if (isLoading) return <Loader />;
@@ -90,8 +99,7 @@ function PropertyDetailLayout() {
   return (
     <div>
       <div className="relative">
-        {/* Existing image grid - no changes */}
-        <div className="flex gap-2 h-[400px]">
+        <div className="flex gap-2 h-100">
           <div className="w-1/2 relative">
             <img
               src={property?.pictures?.[0]}
@@ -100,7 +108,6 @@ function PropertyDetailLayout() {
               onClick={() => openLightbox(0)}
             />
 
-            {/* Button to show carousel */}
             <button
               onClick={() => openLightbox(0)}
               className="absolute bottom-4 right-4 bg-white/90 hover:bg-white text-gray-800 px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg transition-all hover:scale-105 cursor-pointer"
@@ -122,8 +129,6 @@ function PropertyDetailLayout() {
             ))}
           </div>
         </div>
-
-        {/* Carousel Overlay */}
 
         <ImageLightbox
           isOpen={showLightbox}
@@ -158,10 +163,23 @@ function PropertyDetailLayout() {
             {isPropertySaved ? <Heart color="red" fill="red" /> : <Heart />}
           </span>
           <span
-            className="flex items-center gap-1 cursor-pointer hover:text-primary transition-colors"
+            className={`flex items-center gap-1 cursor-pointer hover:text-primary transition-colors ${
+              useShareModal
+                ? "opacity-60 pointer-events-none"
+                : "hover:text-primary"
+            }`}
             onClick={() => onShareClick()}
           >
-            <ExternalLink size={18} /> Share
+            {useShareModal ? (
+              <div className="flex justify-center items-center gap-2">
+                <Spinner className="" /> loading
+              </div>
+            ) : (
+              <div className="flex justify-center items-center">
+                <ExternalLink size={18} />
+                Share
+              </div>
+            )}
           </span>
         </div>
       </div>

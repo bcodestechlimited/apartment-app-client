@@ -51,7 +51,6 @@ export default function SignUp() {
     },
     onError: (error: any) => {
       toast.error(error.message || "Something went wrong");
-      console.log(error);
     },
   });
 
@@ -202,7 +201,7 @@ export default function SignUp() {
               {
                 "opacity-50 cursor-not-allowed":
                   !form.formState.isValid || mutation.isPending,
-              }
+              },
             )}
           >
             {mutation.isPending ? (

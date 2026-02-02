@@ -5,7 +5,6 @@ class WalletService {
   async topUpWallet(amount: number) {
     try {
       const response = await axiosInstance.post(`/wallet/`, { amount });
-      //   console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to top up wallet ");
@@ -15,9 +14,8 @@ class WalletService {
   async verifyPayment(reference: string) {
     try {
       const response = await axiosInstance.get(
-        `/wallet/verify-payment/${reference}`
+        `/wallet/verify-payment/${reference}`,
       );
-      //   console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to verify payment ");
@@ -26,7 +24,6 @@ class WalletService {
   async getUserWallet() {
     try {
       const response = await axiosInstance.get(`/wallet/`);
-      //   console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to fetch user wallet ");
@@ -44,9 +41,8 @@ class WalletService {
   async verifyAccountNumber(bankCode: string, accountNumber: string) {
     try {
       const response = await axiosInstance.get(
-        `/wallet/verify-account-number/?bankCode=${bankCode}&accountNumber=${accountNumber}`
+        `/wallet/verify-account-number/?bankCode=${bankCode}&accountNumber=${accountNumber}`,
       );
-      //   console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to verify account number ");
@@ -56,7 +52,6 @@ class WalletService {
   async withdrawFunds(amount: number) {
     try {
       const response = await axiosInstance.post(`/wallet/withdraw`, { amount });
-      //   console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to withdraw funds ");
@@ -68,10 +63,8 @@ class WalletService {
     bankCode: string;
   }) {
     try {
-      console.log("update payload", payload);
       const response = await axiosInstance.put(`/wallet`, payload);
 
-      //   console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to update wallet details ");

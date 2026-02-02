@@ -719,8 +719,6 @@ export default function AddPropertyPage() {
                               field.onChange(val);
                               setSelectedBathrooms(val);
                             }}
-                            // REMOVED: disabled={form.watch("isEnsuite")}
-                            // This allows the user to add extra toilets even if ensuite is checked
                             value={field.value}
                           >
                             <FormControl>

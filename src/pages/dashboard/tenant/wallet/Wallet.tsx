@@ -99,6 +99,8 @@ function Wallet() {
       toast.success("Wallet details updated");
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
       setIsSettingsOpen(false); // Close modal
+      setAccountNumber("");
+      setBankCode("");
     },
     onError: (error: any) => toast.error(error?.message || "Update failed"),
   });
@@ -152,7 +154,7 @@ function Wallet() {
             <DialogTrigger asChild>
               <Button
                 variant="outline"
-                className="border-slate-200 text-slate-700 hover:bg-slate-50 gap-2"
+                className="border-slate-200 text-slate-700 hover:bg-slate-50 gap-2 cursor-pointer"
               >
                 <Settings2 className="h-4 w-4" />
                 Payout Settings
@@ -175,7 +177,7 @@ function Wallet() {
                   <div className="space-y-2">
                     <Label>Select Bank</Label>
                     <Select value={bankCode} onValueChange={setBankCode}>
-                      <SelectTrigger>
+                      <SelectTrigger className="cursor-pointer">
                         <SelectValue
                           placeholder={
                             isLoadingBanks
@@ -229,7 +231,7 @@ function Wallet() {
                   </DialogClose>
                   <Button
                     type="submit"
-                    className="bg-teal-800"
+                    className="bg-teal-800 cursor-pointer"
                     disabled={
                       updateWalletMutation.isPending || !accountDetails?.data
                     }
@@ -248,7 +250,7 @@ function Wallet() {
             <DialogTrigger asChild>
               <Button
                 variant="outline"
-                className="border-orange-200 text-orange-700 hover:bg-orange-50 gap-2"
+                className="border-orange-200 text-orange-700 hover:bg-orange-50 gap-2 cursor-pointer"
               >
                 <ArrowDownLeft className="h-4 w-4" />
                 Withdraw
@@ -296,7 +298,7 @@ function Wallet() {
                 <DialogFooter>
                   <Button
                     type="submit"
-                    className="w-full bg-orange-600"
+                    className="w-full bg-orange-600 cursor-pointer"
                     disabled={withdrawMutation.isPending || balance < 1}
                   >
                     {withdrawMutation.isPending
@@ -311,7 +313,7 @@ function Wallet() {
           {/* TOP UP */}
           <Dialog open={isTopUpOpen} onOpenChange={setIsTopUpOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-teal-800 hover:bg-teal-900 gap-2">
+              <Button className="bg-teal-800 hover:bg-teal-900 gap-2 cursor-pointer">
                 <Plus className="h-4 w-4" />
                 Top Up
               </Button>
@@ -345,8 +347,8 @@ function Wallet() {
                 <DialogFooter>
                   <Button
                     type="submit"
-                    className="w-full bg-teal-800"
-                    disabled={createTopUpMutation.isPending}
+                    className="w-full bg-teal-800 cursor-pointer"
+                    disabled={createTopUpMutation.isPending || amount < 1}
                   >
                     {createTopUpMutation.isPending
                       ? "Connecting..."

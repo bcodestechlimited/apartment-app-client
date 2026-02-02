@@ -1,90 +1,105 @@
 import { walletService } from "@/api/wallet.api";
 import { Button } from "@/components/ui/button";
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import AnimationWrapper from "@/components/animations/animation-wrapper";
 import { useQuery } from "@tanstack/react-query";
-import { BadgeCheckIcon } from "lucide-react";
-import { useNavigate } from "react-router";
+import { BadgeCheckIcon, AlertCircleIcon, CreditCardIcon } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router";
 
 const PaymentVerification = () => {
   const navigate = useNavigate();
-
-  const reference = new URLSearchParams(window.location.search).get(
-    "reference"
-  );
+  const [searchParams] = useSearchParams();
+  const reference = searchParams.get("reference");
 
   const { isLoading, isError, isSuccess } = useQuery({
-    queryKey: ["paystack-verification"],
+    queryKey: ["paystack-verification", reference],
     queryFn: () => walletService.verifyPayment(reference as string),
+    enabled: !!reference,
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <div className="w-full max-w-sm flex flex-col items-center gap-6">
-        {/* Loading State */}
-        {isLoading && (
-          <div className="flex flex-col items-center justify-center gap-4">
-            <Spinner />
-            <p className="text-sm text-muted-foreground">
-              Verifying payment...
-            </p>
-          </div>
-        )}
+    <div className="min-h-[80vh] flex items-center justify-center p-4 bg-background">
+      <AnimationWrapper className="w-full max-w-md">
+        <Card className="border-none shadow-lg">
+          <CardHeader className="text-center flex flex-col items-center gap-2">
+            {isLoading && (
+              <div className="bg-primary/10 p-4 rounded-full mb-2">
+                <Spinner className="size-8 text-custom-primary" />
+              </div>
+            )}
+            {isSuccess && (
+              <div className="bg-green-100 p-4 rounded-full mb-2">
+                <BadgeCheckIcon className="size-10 text-green-600" />
+              </div>
+            )}
+            {isError && (
+              <div className="bg-red-100 p-4 rounded-full mb-2">
+                <AlertCircleIcon className="size-10 text-red-600" />
+              </div>
+            )}
+            <CardTitle className="text-2xl font-bold">
+              {isLoading && "Verifying Transaction"}
+              {isSuccess && "Payment Confirmed!"}
+              {isError && "Verification Failed"}
+            </CardTitle>
+            <CardDescription>
+              {reference
+                ? `Ref: ${reference}`
+                : "No transaction reference found"}
+            </CardDescription>
+          </CardHeader>
 
-        {/* Error State */}
-        {isError && (
-          <Item variant="outline" className="w-full p-4">
-            <ItemContent>
-              <ItemTitle>Payment Verification</ItemTitle>
-              <ItemDescription className="mt-1">
-                Payment verification failed. Please try again.
-              </ItemDescription>
-            </ItemContent>
+          <CardContent className="text-center space-y-4">
+            {isLoading && (
+              <p className="text-muted-foreground">
+                Please wait while we confirm your payment with the processor. Do
+                not refresh this page.
+              </p>
+            )}
 
-            <ItemActions>
+            {isSuccess && (
+              <div className="space-y-2">
+                <p className="text-muted-foreground">
+                  Your wallet has been successfully funded. You can now proceed
+                  to book properties or manage your listings.
+                </p>
+              </div>
+            )}
+
+            {isError && (
+              <p className="text-muted-foreground">
+                We couldn't verify your payment. If you were debited, please
+                contact support with your transaction reference.
+              </p>
+            )}
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-3">
+            {(isSuccess || isError) && (
               <Button
-                variant="outline"
-                size="sm"
-                className="w-full"
+                className="w-full btn-primary h-11"
                 onClick={() => navigate("/dashboard/wallet")}
               >
-                Okay
+                {isSuccess ? "Go to Wallet" : "Return to Dashboard"}
               </Button>
-            </ItemActions>
-          </Item>
-        )}
+            )}
 
-        {/* Success State */}
-        {isSuccess && (
-          <Item variant="outline" size="sm" className="w-full p-4">
-            <ItemMedia>
-              <BadgeCheckIcon className="size-6 text-green-500" />
-            </ItemMedia>
-
-            <ItemContent>
-              <ItemTitle>Your payment was verified successfully!</ItemTitle>
-            </ItemContent>
-
-            <ItemActions>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full"
-                onClick={() => navigate("/dashboard/wallet")}
-              >
-                Continue
+            {isLoading && (
+              <Button variant="ghost" disabled className="w-full">
+                Securely verifying...
               </Button>
-            </ItemActions>
-          </Item>
-        )}
-      </div>
+            )}
+          </CardFooter>
+        </Card>
+      </AnimationWrapper>
     </div>
   );
 };

@@ -4,14 +4,10 @@ import { handleAxiosError } from "@/lib/utils";
 
 class AdminPropertyService {
   getProperties = async (params: IParams) => {
-    console.log({ params });
-
     try {
       const response = await axiosInstance.get(`/admin/property`, {
         params,
       });
-
-      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -23,26 +19,18 @@ class AdminPropertyService {
     try {
       const response = await axiosInstance.get(`/property/${propertyId}`);
 
-      // console.log({ response });
-
       return response.data?.data?.property;
     } catch (error) {
       handleAxiosError(error, "Unable to get property");
     }
   };
 
-  //Testing
-
   updateProperty = async (propertyId: string, payload: any) => {
-    console.log({ payload });
-
     try {
       const response = await axiosInstance.patch(
         `/property/${propertyId}`,
-        payload
+        payload,
       );
-
-      // console.log({ response });
 
       return response.data?.data?.property;
     } catch (error) {
@@ -51,16 +39,12 @@ class AdminPropertyService {
   };
 
   addProperty = async (payload: any) => {
-    console.log({ payload });
-
     try {
       const response = await axiosInstance.post(`/property`, payload, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -74,8 +58,6 @@ class AdminPropertyService {
         params,
       });
 
-      // console.log({ response });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to get properties");
@@ -86,12 +68,8 @@ class AdminPropertyService {
     propertyId: string;
     moveInDate: string;
   }) => {
-    console.log({ payload });
-
     try {
       const response = await axiosInstance.post(`/booking/request`, payload);
-
-      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -105,9 +83,8 @@ class AdminPropertyService {
         `/admin/properties/${landlordId}`,
         {
           params,
-        }
+        },
       );
-      // console.log("land-properties-response", response.data.data);
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to get properties");

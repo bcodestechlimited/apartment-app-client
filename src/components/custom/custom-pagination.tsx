@@ -30,35 +30,28 @@ export default function CustomPagination({ pagination }: PaginationProps) {
     if (newPage < 1 || newPage > totalPages) return;
     const newParams = new URLSearchParams(searchParams);
     newParams.set("page", newPage.toString());
-    console.log({ newParams: newParams.toString() });
 
     setSearchParams(newParams);
   };
 
-  // console.log({ currentPage });
-  // console.log({ searchParams: searchParams.toString() });
-
   const renderPageNumbers = () => {
     const pages = [];
-    const maxVisiblePages = 5; // Number of visible page numbers
+    const maxVisiblePages = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-    // Adjust startPage if endPage is at the limit
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    // Render "..." if there are pages before the startPage
     if (startPage > 1) {
       pages.push(
         <PaginationItem key="ellipsis-start">
           <PaginationEllipsis />
-        </PaginationItem>
+        </PaginationItem>,
       );
     }
 
-    // Render page numbers
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <PaginationItem key={i}>
@@ -70,23 +63,22 @@ export default function CustomPagination({ pagination }: PaginationProps) {
           >
             {i}
           </PaginationLink>
-        </PaginationItem>
+        </PaginationItem>,
       );
     }
 
-    // Render "..." if there are pages after the endPage
     if (endPage < totalPages) {
       pages.push(
         <PaginationItem key="ellipsis-end">
           <PaginationEllipsis />
-        </PaginationItem>
+        </PaginationItem>,
       );
     }
 
     return pages;
   };
 
-  if (totalPages <= 1) return null; // Don't render pagination if there's only one page
+  if (totalPages <= 1) return null;
 
   return (
     <Pagination className="my-6">

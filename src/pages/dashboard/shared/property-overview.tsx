@@ -27,15 +27,6 @@ export default function PropertyOverview() {
     queryFn: () => systemSettingsService.getSettings(),
   });
 
-  // console.log("system-settings", data);
-
-  // 1. Calculate Fees and Total
-  // const feesTotal =
-  //   property?.otherFees?.reduce(
-  //     (acc, curr) => acc + (curr.amount as number),
-  //     0,
-  //   ) || 0;
-
   const platformFee =
     ((data?.platformFeePercentage || 5) / 100) * (property?.price || 0);
   const grandTotal = (property?.totalFees || 0) + platformFee;
@@ -43,10 +34,21 @@ export default function PropertyOverview() {
   return (
     <div className="p-4">
       <div className="flex flex-col gap-2 text-start">
-        <p className="text-xl font-semibold">{property?.description}</p>
+        <p className="text-xl font-semibold flex gap-5  items-center">
+          {property?.description}{" "}
+          {property?.isAvailable ? (
+            <p className="font-medium text-sm line-clamp-2 bg-custom-primary text-white px-1  rounded-sm w-fit">
+              Available
+            </p>
+          ) : (
+            <p className="font-medium text-sm line-clamp-2 bg-red-600 text-white px-2 py-1 rounded-r w-fit">
+              Unavailable
+            </p>
+          )}
+        </p>
         <p>Address: {property?.address}</p>
-        <p className="font-semibold text-sm line-clamp-2 text-gray-600">
-          {property?.state}, {property?.lga} lga
+        <p className="font-semibold text-sm line-clamp-2 text-gray-600 flex gap-3">
+          {property?.state}, {property?.lga} lga{" "}
         </p>
 
         <Button className="w-fit capitalize my-2">

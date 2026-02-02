@@ -2,21 +2,17 @@ import { propertyService } from "@/api/property.api";
 import { Loader } from "@/components/custom/loader";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import type { IProperty } from "@/interfaces/property.interface";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import {
+  formatCurrency,
+  formatDate,
+  getUniversalPropertyUrl,
+} from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 import {
   Bath,
-  Calendar,
   Calendar1,
   ChevronLeft,
   ExternalLink,
@@ -24,8 +20,6 @@ import {
   Home,
   LocateIcon,
   LucideShare2,
-  Share,
-  Share2,
   Utensils,
   Wifi,
   Wind,
@@ -38,6 +32,8 @@ import OtherApartments from "./_components/other-apartments";
 import PropertyRatings from "@/components/shared/PropertyRating";
 import { systemSettingsService } from "@/api/admin/system-settings.api";
 import ImageLightbox from "@/components/custom/image-lightbox";
+import { useShare } from "@/hooks/useShare";
+import { Spinner } from "@/components/ui/spinner";
 
 const getAmenityIcon = (amenity: string) => {
   const icons: Record<string, JSX.Element> = {
@@ -52,8 +48,12 @@ const getAmenityIcon = (amenity: string) => {
 };
 
 export default function PublicPropertyDetail() {
+  const [useShareModal, setUseShareModal] = useState(false);
+
   const [showLightbox, setShowLightbox] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const { handleShare } = useShare();
 
   const openLightbox = (index: number) => {
     setActiveImageIndex(index);
@@ -92,6 +92,21 @@ export default function PublicPropertyDetail() {
     }
 
     openModal();
+  };
+
+  const onShareClick = async () => {
+    if (!propertyId) return;
+    setUseShareModal(true);
+
+    const universalUrl = getUniversalPropertyUrl(propertyId);
+
+    await handleShare({
+      title: property.title,
+      text: `Check out ${property.title} on our platform!`,
+      url: universalUrl,
+    });
+
+    setUseShareModal(false);
   };
 
   if (isLoading) return <Loader />;
@@ -164,20 +179,47 @@ export default function PublicPropertyDetail() {
           <Button>{property?.type.replace("-", " ")}</Button>
           <Button>Rent</Button>
         </div>
-        {/* <div className="flex gap-2 w-1/4 justify-end">
-          <span className="flex items-center gap-1">
+        <div className="flex gap-2 w-1/4 justify-end">
+          {/* <span className="flex items-center gap-1">
             <Heart /> Save
+          </span> */}
+          <span
+            className={`flex items-center gap-1 cursor-pointer hover:text-primary transition-colors ${
+              useShareModal
+                ? "opacity-60 pointer-events-none"
+                : "hover:text-primary"
+            }`}
+            onClick={() => onShareClick()}
+          >
+            {useShareModal ? (
+              <div className="flex justify-center items-center gap-2">
+                <Spinner className="" /> loading
+              </div>
+            ) : (
+              <div className="flex justify-center items-center">
+                <ExternalLink size={18} />
+                Share
+              </div>
+            )}
           </span>
-          <span className="flex items-center gap-1">
-            <LucideShare2 /> Share
-          </span>
-        </div> */}
+        </div>
       </div>
 
       <div className="grid gap-6 grid-cols-5">
         <div className="col-span-3 flex flex-col gap-4">
           <div className="text-start">
-            <p className="text-xl font-medium">{property.title}</p>
+            <p className="text-xl font-medium flex items-center gap-5">
+              {property.title}{" "}
+              {property?.isAvailable ? (
+                <p className="font-medium text-sm line-clamp-2 bg-custom-primary text-white px-1  rounded-sm w-fit">
+                  Available
+                </p>
+              ) : (
+                <p className="font-medium text-sm line-clamp-2 bg-red-600 text-white px-1 rounded-r w-fit">
+                  Unavailable
+                </p>
+              )}
+            </p>
             <p className="text-lg text-muted-foreground">{property.address}</p>
             <p className=" text-lg line-clamp-2 text-muted-foreground">
               {property?.state} state, {property?.lga} lga

@@ -21,15 +21,11 @@ export const useChat = () => {
   const { user } = useAuthStore();
 
   useEffect(() => {
-    console.log(`UseChat initialized...`);
-
     if (!socket.connected) {
       socket.connect();
     }
 
-    socket.on("get_online_users", (res) => {
-      console.log(res);
-    });
+    socket.on("get_online_users", (res) => {});
 
     return () => {
       socket.off("get_online_users");
@@ -40,8 +36,6 @@ export const useChat = () => {
     if (!socket.connected) {
       socket.connect();
     }
-
-    console.log({ user });
 
     if (user) {
       socket.emit("add_online_user", {
@@ -70,8 +64,6 @@ export const useChatWindow = (
     enabled: !!conversationId,
   });
 
-  // console.log({ messages: data });
-
   useEffect(() => {
     if (!conversationId) return;
 
@@ -80,22 +72,17 @@ export const useChatWindow = (
     }
 
     socket.on("receive_message", (message: IMessage) => {
-      console.log(`Received message: ${message}`);
-      console.log({ message });
       setMessages((prev) => [...prev, message]);
     });
 
     socket.on(
       "receive_typing_status",
       (payload: { isTyping: boolean; recipientId: string }) => {
-        console.log({ payload });
         setIsTyping(payload.isTyping);
       },
     );
 
-    socket.on("get_online_users", (res) => {
-      console.log(res);
-    });
+    socket.on("get_online_users", (res) => {});
 
     return () => {
       socket.off("receive_message");

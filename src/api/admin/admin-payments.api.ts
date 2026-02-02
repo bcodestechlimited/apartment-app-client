@@ -15,11 +15,10 @@ export class AdminPaymentsService {
   }
 
   async processWithdrawal(payload: any) {
-    console.log(" processWithdrawal payload", payload);
     try {
       const response = await axiosInstance.post(
         `/admin/transactions/process-withdrawal`,
-        payload
+        payload,
       );
       return response.data?.data;
     } catch (error) {

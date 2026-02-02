@@ -56,13 +56,11 @@ export default function Login() {
       const { user } = data;
       if (user && user.roles) {
         if (user && !user.isEmailVerified) {
-          console.log("email not verified", user);
           return navigate("/auth/verify-otp");
         }
         if (user.roles.includes("admin")) {
           return navigate("/dashboard/admin");
         } else if (user.roles.includes("landlord")) {
-          console.log("landlord");
           return navigate("/dashboard/landlord");
         }
       }
@@ -73,13 +71,11 @@ export default function Login() {
     onError: (error: any) => {
       // toast.error(error.message || "Something went wrong");
       setError(error.message || "Something went wrong");
-      console.log("login error", error);
     },
   });
 
   /** ---- Submit Handler ---- */
   const onSubmit = (data: SignInFormInputs) => {
-    console.log("Form data:", data);
     setError(null);
     setAuthCredentials({
       email: data.email,

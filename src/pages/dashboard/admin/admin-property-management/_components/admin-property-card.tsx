@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import type { IProperty } from "@/interfaces/property.interface";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Bath, Bed, CheckCircle, Ellipsis, Eye } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useOutletContext } from "react-router";
 
 interface PropertyCardProps {
   property: IProperty;
@@ -19,16 +19,16 @@ export const AdminPropertyCard = ({ property, link }: PropertyCardProps) => {
     numberOfBedrooms,
     numberOfBathrooms,
     isVerified,
+    totalFees,
   } = property;
 
+  const systemSettings: any = useOutletContext();
+
+  const platformFee = (systemSettings?.platformFeePercentage / 100) * price;
   return (
     <div
       className={cn(
-        `relative bg-white rounded-lg overflow-hidden w-full border border-gray-200 flex flex-col ` // <-- flex column layout
-        // {
-        //   "border-yellow-500": !isVerified,
-        //   "border-green-500": isVerified,
-        // }
+        `relative bg-white rounded-lg overflow-hidden w-full border border-gray-200 flex flex-col `, // <-- flex column layout
       )}
     >
       {/* Image */}
@@ -48,7 +48,7 @@ export const AdminPropertyCard = ({ property, link }: PropertyCardProps) => {
         <span
           className={cn(
             "absolute top-4 right-0 text-xs px-2 py-1 rounded-l font-medium z-10",
-            isVerified ? "bg-green-700 text-white" : "bg-yellow-500 text-black"
+            isVerified ? "bg-green-700 text-white" : "bg-yellow-500 text-black",
           )}
         >
           {isVerified ? (
@@ -76,7 +76,7 @@ export const AdminPropertyCard = ({ property, link }: PropertyCardProps) => {
         <h3 className="font-semibold mt-1">{title}</h3>
 
         <p className="font-bold text-lg">
-          {price ? formatCurrency(price) : ""}
+          {price ? formatCurrency((totalFees + platformFee) | 0) : ""}
         </p>
 
         <div className="flex justify-between flex-wrap mt-2">

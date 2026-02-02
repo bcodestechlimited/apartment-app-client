@@ -34,8 +34,6 @@ export default function SignIn() {
   const targetPath =
     typeof previousPath === "string" ? previousPath : previousPath?.pathname;
 
-  console.log("previousPath", previousPath);
-
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,14 +51,11 @@ export default function SignIn() {
       const { user } = signInResponse;
 
       if (targetPath && targetPath.includes("/property/")) {
-        // console.log("Navigating to previous path:", previousPath);
-
         if (user?.roles?.includes("admin")) {
           return navigate("/dashboard/admin");
         } else if (user?.roles?.includes("landlord")) {
           return navigate(`/dashboard/landlord${previousPath}`);
         } else {
-          console.log("Navigating to:", `/dashboard${previousPath}`);
           return navigate(`/dashboard${previousPath}`);
         }
       }
@@ -76,7 +71,6 @@ export default function SignIn() {
     onError: (error: any) => {
       // toast.error(error.message || "Something went wrong");
       setError(error.message || "Something went wrong");
-      console.log(error);
     },
   });
 

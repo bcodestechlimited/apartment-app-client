@@ -46,7 +46,6 @@ export default function ForgotPassword() {
     },
     onError: (error: any) => {
       toast.error(error.message || "Something went wrong");
-      console.log(error);
     },
   });
 

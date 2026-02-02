@@ -8,8 +8,6 @@ class AuthService {
     try {
       const response = await axiosInstance.post(`/auth/signup`, payload);
 
-      console.log({ response });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to register");
@@ -18,7 +16,6 @@ class AuthService {
   signIn = async (payload: any) => {
     try {
       const response = await axiosInstance.post(`/auth/signin`, payload);
-      console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to sign in");
@@ -47,8 +44,6 @@ class AuthService {
     try {
       const response = await axiosInstance.patch(`/auth`, payload);
 
-      console.log({ response });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to update");
@@ -65,8 +60,6 @@ class AuthService {
   resendOTP = async (payload: any) => {
     try {
       const response = await axiosInstance.post(`/auth/send-otp`, payload);
-
-      console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -118,7 +111,6 @@ class AuthService {
 
   completeOnboarding = async (payload: any) => {
     try {
-      console.log({ payload });
       const response = await axiosInstance.post(
         `/auth/complete-onboarding`,
         payload,
@@ -134,8 +126,6 @@ class AuthService {
     try {
       const response = await axiosInstance.get(`/auth/profile/personal-info`);
 
-      console.log({ response });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to get user info");
@@ -149,8 +139,6 @@ class AuthService {
         payload,
       );
 
-      console.log({ response });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to update user personal info");
@@ -160,8 +148,6 @@ class AuthService {
   getUserEmployment = async () => {
     try {
       const response = await axiosInstance.get(`/auth/profile/employment`);
-
-      console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -176,8 +162,6 @@ class AuthService {
         payload,
       );
 
-      console.log({ response });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to update user employment info");
@@ -187,8 +171,6 @@ class AuthService {
   getUserNextOfKin = async () => {
     try {
       const response = await axiosInstance.get(`/auth/profile/next-of-kin`);
-
-      console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -203,8 +185,6 @@ class AuthService {
         payload,
       );
 
-      console.log({ response });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to update user next of kin");
@@ -214,8 +194,6 @@ class AuthService {
   getUserGuarantor = async () => {
     try {
       const response = await axiosInstance.get(`/auth/profile/guarantor`);
-
-      console.log({ response });
 
       return response.data?.data;
     } catch (error) {
@@ -230,8 +208,6 @@ class AuthService {
         payload,
       );
 
-      console.log({ response });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to update user guarantor info");
@@ -241,7 +217,6 @@ class AuthService {
   getUserDocuments = async () => {
     try {
       const response = await axiosInstance.get(`/auth/profile/documents`);
-      console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Failed to get user guarantor info");
@@ -259,8 +234,6 @@ class AuthService {
           },
         },
       );
-
-      console.log({ response });
 
       return response.data?.data;
     } catch (error) {

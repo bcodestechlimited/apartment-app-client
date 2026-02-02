@@ -28,10 +28,25 @@ export const propertyColumns: ColumnDef<any>[] = [
     ),
   },
   {
-    accessorKey: "price",
+    accessorKey: "totalFees",
     header: () => <div className="text-center">Price</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("price"));
+      const amount = parseFloat(row.getValue("totalFees"));
+      return (
+        <div className="text-center font-medium">{formatCurrency(amount)}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "price",
+    header: () => <div className="text-center">Platform Fee</div>,
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as any;
+
+      const settings = meta.settings;
+      const platformFee = settings?.platformFeePercentage;
+      console.log({ platformFee });
+      const amount = parseFloat(row.getValue("price")) * (platformFee / 100);
       return (
         <div className="text-center font-medium">{formatCurrency(amount)}</div>
       );

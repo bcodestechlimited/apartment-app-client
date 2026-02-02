@@ -9,8 +9,6 @@ export const AuthGuard = () => {
 
   const url = location.pathname;
 
-  console.log("url", url);
-
   if (isLoading) {
     return <AuthLoader />;
   }
@@ -25,12 +23,9 @@ export const AuthGuard = () => {
 export const LandlordAuthGuard = () => {
   const location = useLocation();
 
-  console.log("landlord guard");
   const url = location.pathname;
-  console.log("url", url);
 
   const { data: user, isLoading } = useAuthUser();
-  // console.log("landlord guard user", user);
 
   if (isLoading) {
     return <AuthLoader />;
@@ -53,10 +48,8 @@ export const LandlordAuthGuard = () => {
 };
 
 export const TenantAuthGuard = () => {
-  console.log("tenant guard");
   const location = useLocation();
   const url = location.pathname;
-  console.log("url", url);
 
   const { data: user, isLoading } = useAuthUser();
 
