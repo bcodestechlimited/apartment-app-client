@@ -14,20 +14,16 @@ export function useAdminLandlordDetails(landlordId: string | undefined) {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Namespaced Params
-  const pPage = Number(searchParams.get("pPage")) || 1; // Property Page
+  const pPage = Number(searchParams.get("pPage")) || 1;
   const pLimit = Number(searchParams.get("pLimit")) || 5;
-  const rPage = Number(searchParams.get("rPage")) || 1; // Report Page
+  const rPage = Number(searchParams.get("rPage")) || 1;
   const rLimit = Number(searchParams.get("rLimit")) || 5;
 
-  // 1. Fetch Landlord Profile & Metrics
   const profileQuery = useQuery({
     queryKey: ["landlord-profile", landlordId],
     queryFn: () => adminUserManagementService.getLandlord(landlordId!),
     enabled: !!landlordId,
   });
-
-  //   console.log("profileQuery", profileQuery?.data);
 
   const bookingStatsQuery = useQuery({
     queryKey: ["landlord-booking-stats", landlordId],
@@ -35,9 +31,6 @@ export function useAdminLandlordDetails(landlordId: string | undefined) {
     enabled: !!landlordId,
   });
 
-  // console.log("bookingStatsQuery", bookingStatsQuery?.data);
-
-  // 2. Fetch Listed Properties (Independent)
   const propertiesQuery = useQuery({
     queryKey: ["landlord-properties", landlordId, pPage, pLimit],
     queryFn: () =>
@@ -54,9 +47,6 @@ export function useAdminLandlordDetails(landlordId: string | undefined) {
     enabled: !!landlordId,
   });
 
-  // console.log(" propertiesQuery", propertiesQuery.data);
-
-  // 3. Fetch Flags/Reports (Independent)
   const reportsQuery = useQuery({
     queryKey: ["landlord-reports", landlordId, rPage, rLimit],
     queryFn: () =>
@@ -75,10 +65,10 @@ export function useAdminLandlordDetails(landlordId: string | undefined) {
           });
           return next;
         },
-        { replace: true }
+        { replace: true },
       );
     },
-    [setSearchParams]
+    [setSearchParams],
   );
 
   return {
@@ -86,7 +76,6 @@ export function useAdminLandlordDetails(landlordId: string | undefined) {
     paymentMetrics: bookingStatsQuery.data || [],
     isLoadingProfile: profileQuery.isLoading,
     documents: documentQuery.data || [],
-    // Properties Table
     properties: propertiesQuery.data?.properties || [],
     propertyPagination: {
       pageIndex: pPage,
@@ -98,7 +87,6 @@ export function useAdminLandlordDetails(landlordId: string | undefined) {
     setPropertyPage: (p: number) => updateTableParam({ pPage: p }),
     setPropertyLimit: (l: number) => updateTableParam({ pLimit: l, pPage: 1 }),
 
-    // Reports Table
     reports: reportsQuery.data?.data || [],
     reportPagination: {
       pageIndex: rPage,

@@ -12,8 +12,6 @@ export const handleAxiosError = (
   error: any,
   alternateMessage?: string,
 ): string => {
-  // console.log({ error: error.response?.data?.errors });
-
   if (!error) {
     throw new Error("An unknown error occurred");
   }
@@ -24,13 +22,11 @@ export const handleAxiosError = (
     );
   }
   if (error instanceof AxiosError) {
-    // console.log(error?.response?.data);
     throw new Error(error.response?.data?.message || alternateMessage);
   }
   throw error;
 };
 
-// returns: MM/DD/YYYY (e.g., 06/19/2025)
 export const formatDate = (date: string | Date): string => {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -41,10 +37,7 @@ export const formatDate = (date: string | Date): string => {
   return new Date(date).toLocaleDateString("en-CA", options);
 };
 
-// returns: 19th June 2025
 export function formatPrettyDate(dateString: string) {
-  // Helper function to get the ordinal suffix
-
   if (!dateString) return " - ";
 
   function getOrdinalSuffix(day: number) {
@@ -61,7 +54,6 @@ export function formatPrettyDate(dateString: string) {
     }
   }
 
-  // Create a Date object from the ISO 8601 string
   const date = new Date(dateString);
 
   const day = date.getDate();
@@ -78,7 +70,6 @@ export const formatCurrency = (amount: number | string): string => {
     style: "currency",
     currency: "NGN",
   }).format(parsedAmount);
-  // return `N${num.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 };
 
 export const getActualTypeFromParam = (type: string): string | undefined => {
@@ -97,7 +88,6 @@ export const getActualTypeFromParam = (type: string): string | undefined => {
   return propertyTypes[type.toLowerCase()].replace("-", " ");
 };
 
-// lib/download-helper.ts
 export async function downloadFile(url: string, fileName: string) {
   try {
     const response = await fetch(url);
@@ -110,12 +100,9 @@ export async function downloadFile(url: string, fileName: string) {
     document.body.appendChild(link);
     link.click();
 
-    // Cleanup
     document.body.removeChild(link);
     window.URL.revokeObjectURL(blobUrl);
   } catch (error) {
-    console.error("Download failed:", error);
-    // Fallback: open in new tab if blob fails
     window.open(url, "_blank");
   }
 }

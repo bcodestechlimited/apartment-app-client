@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
 import { authService } from "@/api/auth.api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import {
@@ -47,6 +47,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { systemSettingsService } from "@/api/admin/system-settings.api";
 
 interface Submenu {
   name: string;
@@ -193,13 +194,13 @@ function TopBar() {
         <SidebarTrigger />
       </div>
 
-      <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
+      {/* <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
         <Search className="w-5 h-5 text-gray-600 ml-3" />
         <Input
           placeholder="Search"
           className="border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none "
         />
-      </div>
+      </div> */}
 
       <div className="flex items-center">
         <Bell className="w-6 h-6 text-gray-300" />
@@ -253,37 +254,17 @@ function TopBar() {
   );
 }
 
-// export default function AdminLayout() {
-//   useSocketConnection();
-
-//   return (
-//     <div className="flex min-h-screen">
-//       <AdminSidebar />
-//       <div className="flex-1 bg-white p-4">
-//         <TopBar />
-//         {/* <div className="w-full max-w-[1440px]"> */}
-//         <div className="w-full mb-12">
-//           <Breadcrumb />
-//           <Outlet />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 export default function AdminLayout() {
   useSocketConnection();
 
+  const settingsQuery = useQuery({
+    queryKey: ["settings"],
+    queryFn: () => systemSettingsService.getSettings(),
+  });
+  const settings = settingsQuery.data;
+
   return (
-    <SidebarProvider
-    // style={
-    //   {
-    //     // optional: control widths
-    //     "--sidebar-width": "16rem",
-    //     "--sidebar-width-mobile": "16rem",
-    //   } as React.CSSProperties
-    // }
-    >
+    <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AdminSidebar />
         <main className="flex-1 ">
@@ -294,7 +275,7 @@ export default function AdminLayout() {
 
           <div className="w-full mb-12  ">
             <Breadcrumb />
-            <Outlet />
+            <Outlet context={settings} />
           </div>
         </main>
       </div>

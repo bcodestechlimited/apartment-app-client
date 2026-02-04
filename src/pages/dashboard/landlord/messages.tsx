@@ -31,7 +31,7 @@ function ChatSidebar({ conversations }: { conversations: IConversation[] }) {
   function getOtherParticipantName(conversation: IConversation) {
     if (!user) return "";
     const otherParticipant = conversation.participants.filter(
-      (p) => p._id !== user?._id
+      (p) => p._id !== user?._id,
     )[0];
 
     return otherParticipant?.firstName;
@@ -89,7 +89,7 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     if (!user) return "";
     if (!conversation) return "";
     const otherParticipant = conversation.participants.filter(
-      (p) => p._id !== user?._id
+      (p) => p._id !== user?._id,
     )[0];
 
     return otherParticipant;
@@ -111,7 +111,7 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     if (!user) return "";
     if (!conversation) return "";
     const otherParticipant = conversation.participants.filter(
-      (p) => p._id !== user?._id
+      (p) => p._id !== user?._id,
     )[0];
 
     return otherParticipant?.firstName + " " + otherParticipant?.lastName;
@@ -137,7 +137,8 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     });
   };
 
-  if (!conversationId) return <div>No conversation selected</div>;
+  if (!conversationId)
+    return <div className="pl-2">No conversation selected</div>;
 
   if (isLoading) return <Loader />;
   if (isError) return <div>Error</div>;
@@ -154,7 +155,7 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/80">
-        {messages.length > 1 &&
+        {messages.length > 0 &&
           messages?.map((message) => {
             return (
               <ChatBubble

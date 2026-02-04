@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, useOutletContext } from "react-router";
 import {
   Loader,
   MapPin,
@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   CheckCircle,
   Loader2,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,12 +18,24 @@ import { Badge } from "@/components/ui/badge";
 import { propertyService } from "@/api/property.api";
 import { useState } from "react";
 import { CustomAlert } from "@/components/custom/custom-alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function AdminPropertyDetail() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const { propertyId } = useParams();
   const navigate = useNavigate();
+  const systemSettings: any = useOutletContext();
 
   const queryClient = useQueryClient();
 
@@ -41,6 +54,7 @@ export default function AdminPropertyDetail() {
       console.log({ response });
       queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
       queryClient.invalidateQueries({ queryKey: ["admin-property"] });
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
       setSuccess("Property verified successfully!");
     },
     onError: (error) => {
@@ -48,18 +62,53 @@ export default function AdminPropertyDetail() {
     },
   });
 
+  const { mutateAsync: deleteProperty, isPending: isdeletePending } =
+    useMutation({
+      mutationFn: () =>
+        propertyService.adminUpdateProperty(propertyId!, { isDeleted: true }),
+      onSuccess: (response) => {
+        console.log({ response });
+        queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
+        queryClient.invalidateQueries({ queryKey: ["admin-property"] });
+        queryClient.invalidateQueries({ queryKey: ["properties"] });
+        setSuccess("Property unverified successfully!");
+        navigate("/dashboard/admin/properties");
+      },
+      onError: (error) => {
+        setError(error.message || "Failed to unverify property");
+      },
+    });
+
   const handleSubmit = async () => {
     setError(null);
     mutateAsync();
   };
 
-  const btnText = isPending ? (
+  const platformFee =
+    (systemSettings?.platformFeePercentage / 100) * property?.price;
+  const totalFee = platformFee + property?.totalFees;
+
+  const verifyBtnContent = isPending ? (
     <span className="flex items-center gap-2">
-      <Loader2 /> Verifying...
+      <Loader2 className="animate-spin w-4 h-4" />
+      Verifying...
     </span>
   ) : (
     <span className="flex items-center gap-2">
-      <CheckCircle className="w-5 h-5" /> Verify Property
+      <CheckCircle className="w-5 h-5" />
+      Verify Property
+    </span>
+  );
+
+  const deleteBtnContent = isdeletePending ? (
+    <span className="flex items-center gap-2">
+      <Loader2 className="animate-spin w-4 h-4" />
+      Deleting...
+    </span>
+  ) : (
+    <span className="flex items-center gap-2">
+      <Trash2 className="w-5 h-5" />
+      Delete Property
     </span>
   );
 
@@ -139,10 +188,37 @@ export default function AdminPropertyDetail() {
                 <p className="text-gray-500 text-sm capitalize">
                   {property.type}
                 </p>
+                <div className=" py-4 ">
+                  <h3 className="text-md font-medium mb-2">Pricing Details</h3>
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center text-sm text-gray-600  pb-1">
+                      <span>Basic Price:</span>
+                      <span>{formatCurrency(property.price)}</span>
+                    </div>
+
+                    {property?.otherFees?.map((fee: any, index: number) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center text-sm text-gray-600  pb-1"
+                      >
+                        <span className="capitalize">{fee.name}:</span>
+                        <span>{formatCurrency(fee.amount)}</span>
+                      </div>
+                    ))}
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Platform Fee:</span>
+                      <span>{formatCurrency(platformFee)}</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2 mt-2 font-bold text-xl">
+                      <span>Total:</span>
+                      <span>{formatCurrency(totalFee)}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="text-xl font-semibold text-custom-primary">
+              {/* <p className="text-xl font-semibold text-custom-primary">
                 {formatCurrency(property.price)}
-              </p>
+              </p> */}
             </div>
 
             <div className="flex items-center gap-4 text-gray-600 text-sm">
@@ -193,11 +269,11 @@ export default function AdminPropertyDetail() {
             </p>
             <p>
               <span className="font-semibold">Phone: </span>
-              {property.landlord?.phone || "N/A"}
+              {property.user?.phoneNumber || "N/A"}
             </p>
             <p>
               <span className="font-semibold">Email Verified: </span>
-              {property.landlord?.isVerified ? "Yes" : "No"}
+              {property.user?.isEmailVerified ? "Yes" : "No"}
             </p>
           </div>
         </CardContent>
@@ -217,28 +293,82 @@ export default function AdminPropertyDetail() {
       </div>
 
       {/* Verification Actions */}
-      {!property.isVerified && (
-        <div className="flex gap-4 justify-end">
-          <Button
-            className="bg-custom-primary hover:bg-custom-primary/80 text-white flex items-center gap-2 cursor-pointer"
-            onClick={() => handleSubmit()}
-          >
-            {btnText}{" "}
-          </Button>
-        </div>
-      )}
+      <div className="flex justify-end gap-5">
+        {!property.isVerified && (
+          <div className="flex gap-4 justify-end">
+            <Button
+              className="bg-custom-primary hover:bg-custom-primary/80 text-white flex items-center gap-2 cursor-pointer"
+              onClick={() => handleSubmit()}
+            >
+              {verifyBtnContent}
+            </Button>
+          </div>
+        )}
 
-      {property.isVerified && (
-        <div className="flex gap-4 justify-end">
-          <Button
-            disabled={property.isVerified}
-            className="bg-custom-primary hover:bg-custom-primary/80 text-white flex items-center gap-2"
-          >
-            Property Verified
-            <CheckCircle className="w-5 h-5" />
-          </Button>
-        </div>
-      )}
+        {property.isVerified && (
+          <div className="flex gap-4 justify-end">
+            <Button
+              disabled={property.isVerified}
+              className="bg-custom-primary hover:bg-custom-primary/80 text-white flex items-center gap-2"
+            >
+              Property Verified
+              <CheckCircle className="w-5 h-5" />
+            </Button>
+          </div>
+        )}
+        {!property.isDeleted && (
+          <div className="flex justify-end">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  Delete Property
+                </Button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+
+                  <AlertDialogDescription>
+                    This action will unverify and delete this property. It will
+                    no longer be visible to users. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="cursor-pointer">
+                    Cancel
+                  </AlertDialogCancel>
+
+                  <AlertDialogAction
+                    className="bg-red-600 hover:bg-red-700 cursor-pointer"
+                    onClick={() => deleteProperty()}
+                    disabled={isdeletePending}
+                  >
+                    {deleteBtnContent}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        )}
+
+        {property.isDeleted && (
+          <div className="flex gap-4 justify-end">
+            <Button
+              disabled={property.isDeleted}
+              className="bg-custom-primary hover:bg-custom-primary/80 text-white flex items-center gap-2"
+            >
+              Property Deleted
+              <CheckCircle className="w-5 h-5" />
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

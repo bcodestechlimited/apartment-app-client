@@ -20,8 +20,6 @@ class TenantService {
         params,
       });
 
-      console.log({ data: response.data });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to get tenants");

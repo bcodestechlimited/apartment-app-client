@@ -31,6 +31,7 @@ export default function DeletePropertyModal({
     onSuccess: async () => {
       toast.success("Property deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-properties"] });
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
       closeModal();
     },
     onError: (error) => {

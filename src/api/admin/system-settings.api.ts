@@ -5,7 +5,6 @@ export class SystemSettingsService {
   getSettings = async () => {
     try {
       const response = await axiosInstance.get(`/system-settings`);
-      //   console.log("report response", response?.data);
 
       return response.data;
     } catch (error) {

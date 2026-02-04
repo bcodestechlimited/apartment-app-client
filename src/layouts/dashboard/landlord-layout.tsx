@@ -167,18 +167,12 @@ function TopBar() {
   const navigate = useNavigate();
 
   const { user } = useAuthStore();
-  // const { reset } = useAuthActions();
-
-  console.log("user from topbar in landlord", user);
 
   const logoutMutation = useMutation({
     mutationFn: authService.logOut,
     onSuccess: (response) => {
       toast.success(response.message);
-      // console.log(reset);
-      // reset();
 
-      console.log("user after logout", user);
       navigate("/", { replace: true });
     },
     onError: (error) => {

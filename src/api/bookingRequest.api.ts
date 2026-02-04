@@ -5,11 +5,8 @@ import { handleAxiosError } from "@/lib/utils";
 
 class BookingRequestService {
   createBookingRequest = async (payload: any) => {
-    console.log({ payload });
-
     try {
       const response = await axiosInstance.post(`/booking-request`, payload);
-      console.log({ response });
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to book property");
@@ -33,8 +30,6 @@ class BookingRequestService {
         params,
       });
 
-      console.log({ data: response.data?.data });
-
       return response.data?.data;
     } catch (error) {
       handleAxiosError(error, "Unable to get booking requests");
@@ -44,10 +39,8 @@ class BookingRequestService {
   getBookingRequest = async (bookingRequestId: string) => {
     try {
       const response = await axiosInstance.get(
-        `/booking-request/${bookingRequestId}`
+        `/booking-request/${bookingRequestId}`,
       );
-
-      console.log({ data: response.data?.data });
 
       return response.data?.data;
     } catch (error) {
@@ -57,15 +50,13 @@ class BookingRequestService {
 
   updateLandlordBookingRequests = async (
     bookingRequestId: string,
-    payload: any
+    payload: any,
   ) => {
     try {
       const response = await axiosInstance.patch(
         `/booking-request/${bookingRequestId}`,
-        payload
+        payload,
       );
-
-      console.log({ data: response.data?.data });
 
       return response.data?.data;
     } catch (error) {
@@ -73,13 +64,15 @@ class BookingRequestService {
     }
   };
 
-  payForBookingRequest = async (bookingRequestId: string) => {
+  payForBookingRequest = async (
+    bookingRequestId: string,
+    payload: { useWallet: boolean },
+  ) => {
     try {
-      const response = await axiosInstance.get(
-        `/booking-request/${bookingRequestId}/pay`
+      const response = await axiosInstance.post(
+        `/booking-request/${bookingRequestId}/pay`,
+        payload,
       );
-
-      console.log({ data: response.data?.data });
 
       return response.data?.data;
     } catch (error) {

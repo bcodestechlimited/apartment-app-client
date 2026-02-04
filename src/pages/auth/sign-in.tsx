@@ -18,6 +18,7 @@ import { useAuthActions } from "@/store/useAuthStore";
 import type { IUser } from "@/interfaces/user.interface";
 import { CustomAlert } from "@/components/custom/custom-alert";
 import GoogleAuthButton from "@/components/custom/google-auth-button";
+import { ta } from "date-fns/locale";
 
 interface SignInFormInputs {
   email: string;
@@ -33,8 +34,6 @@ export default function SignIn() {
 
   const targetPath =
     typeof previousPath === "string" ? previousPath : previousPath?.pathname;
-
-  console.log("previousPath", previousPath);
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,15 +52,19 @@ export default function SignIn() {
       const { user } = signInResponse;
 
       if (targetPath && targetPath.includes("/property/")) {
-        // console.log("Navigating to previous path:", previousPath);
-
         if (user?.roles?.includes("admin")) {
           return navigate("/dashboard/admin");
         } else if (user?.roles?.includes("landlord")) {
           return navigate(`/dashboard/landlord${previousPath}`);
         } else {
-          console.log("Navigating to:", `/dashboard${previousPath}`);
           return navigate(`/dashboard${previousPath}`);
+        }
+      }
+      if (targetPath && targetPath.includes("/dashboard/admin/properties")) {
+        console.log("admin target path", targetPath);
+        console.log("admin user roles", user?.roles);
+        if (user?.roles?.includes("admin")) {
+          return navigate(`${targetPath}`);
         }
       }
 
@@ -76,7 +79,6 @@ export default function SignIn() {
     onError: (error: any) => {
       // toast.error(error.message || "Something went wrong");
       setError(error.message || "Something went wrong");
-      console.log(error);
     },
   });
 

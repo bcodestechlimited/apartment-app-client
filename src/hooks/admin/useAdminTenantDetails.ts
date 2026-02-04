@@ -31,9 +31,6 @@ export function useAdminTenantDetails(tenantId: string | undefined) {
     enabled: !!tenantId,
   });
 
-  // console.log("bookingstatsquery", bookingStatsQuery.data);
-
-  // --- 3. Independent Query: Booking History ---
   const bookingsQuery = useQuery({
     queryKey: ["tenant-bookings", tenantId, bPage, bLimit],
     queryFn: () =>
@@ -43,8 +40,6 @@ export function useAdminTenantDetails(tenantId: string | undefined) {
       }),
     enabled: !!tenantId,
   });
-  //   console.log("bookingsQuery", bookingsQuery?.data);
-  // --- 4. Independent Query: Flags/Reports ---
   const reportsQuery = useQuery({
     queryKey: ["tenant-reports", tenantId, rPage, rLimit],
     queryFn: () =>
@@ -60,9 +55,7 @@ export function useAdminTenantDetails(tenantId: string | undefined) {
     queryFn: () => adminDocumentsService.getDocumentByUserId(tenantId!),
     enabled: !!tenantId,
   });
-  // console.log("documentQuery", documentQuery?.data);
 
-  // --- 5. URL Update Helper ---
   const updateTableParam = useCallback(
     (updates: Record<string, string | number | null>) => {
       setSearchParams(
@@ -74,10 +67,10 @@ export function useAdminTenantDetails(tenantId: string | undefined) {
           });
           return next;
         },
-        { replace: true }
+        { replace: true },
       );
     },
-    [setSearchParams]
+    [setSearchParams],
   );
 
   return {
@@ -87,7 +80,6 @@ export function useAdminTenantDetails(tenantId: string | undefined) {
 
     documents: documentQuery.data || [],
 
-    // Booking Table
     bookings: bookingsQuery.data?.bookings || [],
     bookingPagination: {
       pageIndex: bPage,
@@ -97,9 +89,8 @@ export function useAdminTenantDetails(tenantId: string | undefined) {
     },
     isFetchingBookings: bookingsQuery.isFetching,
     setBookingPage: (p: number) => updateTableParam({ bPage: p }),
-    setBookingLimit: (l: number) => updateTableParam({ bLimit: l, bPage: 1 }), // Fixed: Update limit and reset to page 1
+    setBookingLimit: (l: number) => updateTableParam({ bLimit: l, bPage: 1 }),
 
-    // Report Table
     reports: reportsQuery.data?.reports || [],
     reportPagination: {
       pageIndex: rPage,
@@ -109,6 +100,6 @@ export function useAdminTenantDetails(tenantId: string | undefined) {
     },
     isFetchingReports: reportsQuery.isFetching,
     setReportPage: (p: number) => updateTableParam({ rPage: p }),
-    setReportLimit: (l: number) => updateTableParam({ rLimit: l, rPage: 1 }), // Fixed: Update limit and reset to page 1
+    setReportLimit: (l: number) => updateTableParam({ rLimit: l, rPage: 1 }),
   };
 }

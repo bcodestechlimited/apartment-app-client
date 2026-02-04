@@ -37,6 +37,11 @@ export function AdminPaymentsPage() {
       color: "bg-teal-50 text-teal-700",
     },
     {
+      title: "Total Gross Volume",
+      value: data?.stats?.totalGrossVolume,
+      color: "bg-teal-50 text-teal-700",
+    },
+    {
       title: "Pending Payouts",
       value: data?.stats?.pendingPayouts,
       color: "bg-orange-50 text-orange-700",
@@ -56,8 +61,6 @@ export function AdminPaymentsPage() {
     setIsModalOpen(true);
   };
 
-  // ... (handleConfirmWithdrawal and metrics)
-
   const processWithdrawalMutation = useMutation({
     mutationFn: ({
       transactionId,
@@ -71,9 +74,8 @@ export function AdminPaymentsPage() {
       adminPaymentsService.processWithdrawal({ transactionId, action, reason }),
     onSuccess: (res) => {
       toast.success(res.message || "Action completed successfully");
-      // Refresh the table data to show the updated status
       queryClient.invalidateQueries({ queryKey: ["admin-payments"] });
-      setIsModalOpen(false); // Close the modal
+      setIsModalOpen(false);
       setSelectedTransaction(null);
     },
     onError: (err: any) => {
@@ -83,7 +85,7 @@ export function AdminPaymentsPage() {
 
   const handleConfirmWithdrawal = (
     action: "approved" | "rejected",
-    reason?: string
+    reason?: string,
   ) => {
     if (!selectedTransaction?._id) return;
 
@@ -96,7 +98,7 @@ export function AdminPaymentsPage() {
   return (
     <div className="p-6 space-y-6 text-left">
       {/* Metrics Cards UI ... */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-4">
         {metrics.map((m, i) => (
           <Card key={i} className={`border-none shadow-none ${m.color}`}>
             <CardHeader className="pb-1">
@@ -126,19 +128,22 @@ export function AdminPaymentsPage() {
         <div className="flex gap-2 w-full md:w-auto">
           {/* Category Filter */}
           <Select value={filters.type} onValueChange={setType}>
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-40">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Types</SelectItem>
               <SelectItem value="payment">Rent Payments</SelectItem>
               <SelectItem value="withdrawal">Withdrawals</SelectItem>
+              <SelectItem value="deposit">Deposits</SelectItem>
+              <SelectItem value="refund">Refunds</SelectItem>
+              <SelectItem value="debit">Wallet Debits</SelectItem>
             </SelectContent>
           </Select>
 
           {/* Status Filter */}
           <Select value={filters.status} onValueChange={setStatus}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-35">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>

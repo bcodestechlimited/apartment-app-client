@@ -13,6 +13,7 @@ import {
 import { OccupancyChart } from "./_components/occupancy-chart";
 import { RevenueChart } from "./_components/revenue-chart";
 import { MetricCard } from "./_components/metric-card";
+import { useOutletContext } from "react-router";
 
 const typeOptions = [
   { label: "All Types", value: "All" },
@@ -36,7 +37,9 @@ function AdminDashboard() {
     setPropertyType,
   } = useAdminProperties();
 
-  console.log("Admin Dashboard - Properties Data:", data);
+  const settings = useOutletContext();
+  console.log({ settings });
+
   const pagination = {
     pageIndex: filters.page,
     pageSize: filters.limit,
@@ -50,19 +53,15 @@ function AdminDashboard() {
 
   return (
     <div className="p-6 space-y-6 min-h-screen">
-      {/* Metrics and Charts omitted for brevity - keep your existing code here */}
-
       <div className="">
         <MetricCard data={data?.meta} />
       </div>
 
       {/* 2. Charts Row */}
       <div className="grid gap-6 lg:grid-cols-3 h-full">
-        {/* Occupancy Chart (2/3 width) */}
         <div className="lg:col-span-2">
           <OccupancyChart />
         </div>
-        {/* Revenue Chart (1/3 width) */}
         <div className="lg-col-span-1">
           <RevenueChart />
         </div>
@@ -87,14 +86,17 @@ function AdminDashboard() {
             <Select
               value={filters.propertyType || "All"}
               onValueChange={(val) => setPropertyType(val === "All" ? "" : val)}
-              
             >
               <SelectTrigger className="w-48 cursor-pointer">
                 <SelectValue placeholder="Category " />
               </SelectTrigger>
               <SelectContent>
                 {typeOptions.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value} className="cursor-pointer">
+                  <SelectItem
+                    key={opt.value}
+                    value={opt.value}
+                    className="cursor-pointer"
+                  >
                     {opt.label}
                   </SelectItem>
                 ))}
@@ -112,6 +114,7 @@ function AdminDashboard() {
             setPage={setPage}
             setPageSize={setLimit}
             onSortChange={handleSortChange}
+            meta={{ settings: settings }}
           />
         </div>
       </div>

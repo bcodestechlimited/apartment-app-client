@@ -1,28 +1,47 @@
-import { authService } from "@/api/auth.api";
 import { favouriteService } from "@/api/favourite.api";
 import { propertyService } from "@/api/property.api";
 import { Loader } from "@/components/custom/loader";
 import type { IProperty } from "@/interfaces/property.interface";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, Heart } from "lucide-react";
+import {
+  ExternalLink,
+  Heart,
+  Loader2,
+  LoaderCircle,
+  Maximize2,
+} from "lucide-react";
 import { Link, Outlet, useParams } from "react-router";
 import { toast } from "sonner";
 import { useShare } from "../hooks/useShare";
 import { getUniversalPropertyUrl } from "@/lib/utils";
+import { useState } from "react";
+import ImageLightbox from "@/components/custom/image-lightbox";
+import { Spinner } from "@/components/ui/spinner";
 function PropertyDetailLayout() {
+  const [useShareModal, setUseShareModal] = useState(false);
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const openLightbox = (index: number) => {
+    setActiveImageIndex(index);
+    setShowLightbox(true);
+  };
   const { user } = useAuthStore();
-  // console.log("property detail layout user", user);
   const { propertyId } = useParams();
   const queryClient = useQueryClient();
   const { handleShare } = useShare();
 
   const canFavourite = user?.roles?.includes("tenant");
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["property", propertyId],
     queryFn: () => propertyService.getProperty(propertyId!),
-    retry: !!propertyId,
+    enabled: !!propertyId,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 404) return false;
+      return failureCount < 3;
+    },
   });
 
   const isPropertySaved = user?.savedProperties?.includes(propertyId!);
@@ -54,20 +73,32 @@ function PropertyDetailLayout() {
     }
   };
 
-  const onShareClick = () => {
+  const onShareClick = async () => {
     if (!propertyId) return;
+    setUseShareModal(true);
 
     const universalUrl = getUniversalPropertyUrl(propertyId);
 
-    handleShare({
+    await handleShare({
       title: property.title,
       text: `Check out ${property.title} on our platform!`,
       url: universalUrl,
     });
+
+    setUseShareModal(false);
   };
 
   if (isLoading) return <Loader />;
-  if (isError) return <div>Something went wrong</div>;
+  if (isError)
+    return (
+      <div className="py-10 text-center">
+        <p className="text-lg font-semibold">Failed to load property</p>
+        <p className="text-sm text-muted-foreground">
+          The property may have been removed or there was a network error.
+        </p>
+      </div>
+    );
+
   if (!data)
     return (
       <div>
@@ -80,27 +111,45 @@ function PropertyDetailLayout() {
 
   return (
     <div>
-      <div className="flex gap-2 h-[400px]">
-        <div className="w-1/2">
-          <img
-            src={property?.pictures?.[0]}
-            alt=""
-            className="h-full w-full object-cover rounded"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
-          {property?.pictures?.slice(1, 5)?.map((picture, idx) => (
+      <div className="relative">
+        <div className="flex gap-2 h-100">
+          <div className="w-1/2 relative">
             <img
-              key={idx}
-              className="w-full h-full object-cover rounded"
-              src={picture}
-              alt={`Image ${idx + 1}`}
+              src={property?.pictures?.[0]}
+              alt=""
+              className="h-full w-full object-cover rounded cursor-pointer"
+              onClick={() => openLightbox(0)}
             />
-          ))}
-        </div>
-      </div>
 
+            <button
+              onClick={() => openLightbox(0)}
+              className="absolute bottom-4 right-4 bg-white/90 hover:bg-white text-gray-800 px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg transition-all hover:scale-105 cursor-pointer"
+            >
+              <Maximize2 size={18} />
+              View All Photos
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
+            {property?.pictures?.slice(1, 5)?.map((picture, idx) => (
+              <img
+                key={idx}
+                className="w-full h-full object-cover rounded cursor-pointer"
+                src={picture}
+                alt={`Image ${idx + 1}`}
+                onClick={() => openLightbox(idx + 1)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <ImageLightbox
+          isOpen={showLightbox}
+          onClose={() => setShowLightbox(false)}
+          images={property?.pictures || []}
+          initialIndex={activeImageIndex}
+        />
+      </div>
       <div className="flex justify-between py-4">
         <div className="w-3/4 flex gap-4 justify-start font-semibold border-b max-w-fit">
           <Link className="border-b-2 py-2 px-4" to="">
@@ -127,10 +176,23 @@ function PropertyDetailLayout() {
             {isPropertySaved ? <Heart color="red" fill="red" /> : <Heart />}
           </span>
           <span
-            className="flex items-center gap-1 cursor-pointer hover:text-primary transition-colors"
+            className={`flex items-center gap-1 cursor-pointer hover:text-primary transition-colors ${
+              useShareModal
+                ? "opacity-60 pointer-events-none"
+                : "hover:text-primary"
+            }`}
             onClick={() => onShareClick()}
           >
-            <ExternalLink size={18} /> Share
+            {useShareModal ? (
+              <div className="flex justify-center items-center gap-2">
+                <Spinner className="" /> loading
+              </div>
+            ) : (
+              <div className="flex justify-center items-center">
+                <ExternalLink size={18} />
+                Share
+              </div>
+            )}
           </span>
         </div>
       </div>

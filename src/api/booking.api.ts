@@ -29,22 +29,16 @@ class BookingService {
     try {
       const response = await axiosInstance.get(`/property/${propertyId}`);
 
-      // console.log({ response });
-
       return response.data?.data?.property;
     } catch (error) {
       handleAxiosError(error, "Unable to get property");
     }
   };
   getBookings = async (params: IParams) => {
-    // console.log({ params });
-
     try {
       const response = await axiosInstance.get(`/property`, {
         params,
       });
-
-      // console.log({ response });
 
       return response.data?.data;
     } catch (error) {

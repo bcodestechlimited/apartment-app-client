@@ -9,9 +9,8 @@ export class AdminReportService {
         `/admin/report/${reportedUser}`,
         {
           params,
-        }
+        },
       );
-      //   console.log("report response", response?.data);
 
       return response.data;
     } catch (error) {

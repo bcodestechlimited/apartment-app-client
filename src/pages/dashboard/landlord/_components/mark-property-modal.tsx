@@ -36,6 +36,7 @@ export default function MarkPropertyModal({
     onSuccess: async () => {
       toast.success("Property updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-properties"] });
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
       closeModal();
     },
     onError: (error) => {

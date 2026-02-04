@@ -2,8 +2,9 @@
 import { propertyRatingService } from "@/api/property-rating.api";
 import { propertyService } from "@/api/property.api";
 import { Loader } from "@/components/custom/loader"; // Ensure you have this or use a simple div
+import { formatDate, formatPrettyDate } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkle } from "lucide-react";
+import { Sparkle, Star } from "lucide-react";
 import { useParams } from "react-router";
 
 export default function PropertyRatings() {
@@ -45,13 +46,13 @@ export default function PropertyRatings() {
         <div className="flex gap-2 text-lg items-center">
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
-              <Sparkle
+              <Star
                 key={star}
-                size={18}
+                size={16}
                 className={
-                  star <= Math.round(property?.averageRating)
-                    ? "text-yellow-500"
-                    : "text-gray-400"
+                  star <= Math.round(property?.averageRating || 0)
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "text-gray-300"
                 }
               />
             ))}
@@ -74,20 +75,20 @@ export default function PropertyRatings() {
               }  border-gray-200 pb-2`}
             >
               <img
-                className="w-8 h-8 rounded-full"
-                src={rating?.tenantId?.avatar}
+                className="w-14 h-14 rounded-full"
+                src={rating?.tenantId?.avatar || ""}
                 alt={rating?.tenantId?.firstName || "User"}
               />
 
               <div>
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <Sparkle
+                    <Star
                       key={star}
-                      size={16}
+                      size={12}
                       className={
                         star <= rating.rating
-                          ? "text-yellow-500"
+                          ? "fill-yellow-400 text-yellow-400"
                           : "text-gray-300"
                       }
                     />
@@ -95,15 +96,11 @@ export default function PropertyRatings() {
                 </div>
 
                 <p className="text-base italic text-gray-700">
-                  "{rating.comment}"
+                  {rating.comment}
                 </p>
 
                 <p className="text-sm text-gray-500">
-                  {rating.tenantId?.firstName},
-                  {new Date(rating.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {formatDate(rating.createdAt)} by {rating.tenantId?.firstName}
                 </p>
               </div>
             </div>

@@ -59,7 +59,6 @@ export default function ResetPassword() {
       const errorMessage = error.message || "Failed to reset password";
       setError(errorMessage);
       toast.error(errorMessage);
-      console.log(error);
     },
   });
 

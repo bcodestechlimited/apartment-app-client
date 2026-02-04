@@ -50,7 +50,7 @@ function ChatSidebar({ conversations }: { conversations: IConversation[] }) {
   function getOtherParticipantName(conversation: IConversation) {
     if (!user) return "";
     const otherParticipant = conversation.participants.filter(
-      (p) => p._id !== user?._id
+      (p) => p._id !== user?._id,
     )[0];
 
     return otherParticipant.firstName;
@@ -101,14 +101,13 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     if (!user) return "";
     if (!conversation) return "";
     const otherParticipant = conversation.participants.filter(
-      (p) => p._id !== user?._id
+      (p) => p._id !== user?._id,
     )[0];
 
     return otherParticipant;
   }
 
   const onSubmit = async (payload: { message: string }) => {
-    console.log({ payload });
     const otherParticipant = getOtherParticipant(conversation as IConversation);
     if (!otherParticipant) return;
     sendMessage(payload.message, otherParticipant._id);
@@ -119,7 +118,7 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
     if (!user) return "";
     if (!conversation) return "";
     const otherParticipant = conversation.participants.filter(
-      (p) => p._id !== user?._id
+      (p) => p._id !== user?._id,
     )[0];
 
     return otherParticipant.firstName + " " + otherParticipant.lastName;
@@ -128,8 +127,6 @@ function ChatWindow({ conversationId }: { conversationId: string | null }) {
   const handleIsTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     const otherParticipant = getOtherParticipant(conversation as IConversation);
     if (!otherParticipant) return;
-
-    console.log(event.target.value);
 
     if (!event.target.value) {
       socket.emit("send_typing_status", {
