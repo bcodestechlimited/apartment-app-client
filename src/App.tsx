@@ -195,38 +195,6 @@ function App() {
         },
       ],
     },
-    // {
-    //   path: "property",
-    //   element: <PublicPropertyLayout />, // <-- Outer Layout
-    //   children: [
-    //     {
-    //       path: ":propertyId",
-    //       element: <PropertyDetailLayout />, // <-- Inner Layout
-    //       children: [
-    //         {
-    //           path: "",
-    //           element: <PropertyOverview />,
-    //         },
-    //         {
-    //           path: "description",
-    //           element: <PropertyDescription />,
-    //         },
-    //         {
-    //           path: "details",
-    //           element: <PropertyDetails />,
-    //         },
-    //         {
-    //           path: "amenities",
-    //           element: <PropertyAmenities />,
-    //         },
-    //         {
-    //           path: "location",
-    //           element: <PropertyLocation />,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
 
     // Tenant Routes
     {

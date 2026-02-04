@@ -34,10 +34,14 @@ function PropertyDetailLayout() {
 
   const canFavourite = user?.roles?.includes("tenant");
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["property", propertyId],
     queryFn: () => propertyService.getProperty(propertyId!),
-    retry: !!propertyId,
+    enabled: !!propertyId,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 404) return false;
+      return failureCount < 3;
+    },
   });
 
   const isPropertySaved = user?.savedProperties?.includes(propertyId!);
@@ -85,7 +89,16 @@ function PropertyDetailLayout() {
   };
 
   if (isLoading) return <Loader />;
-  if (isError) return <div>Something went wrong</div>;
+  if (isError)
+    return (
+      <div className="py-10 text-center">
+        <p className="text-lg font-semibold">Failed to load property</p>
+        <p className="text-sm text-muted-foreground">
+          The property may have been removed or there was a network error.
+        </p>
+      </div>
+    );
+
   if (!data)
     return (
       <div>

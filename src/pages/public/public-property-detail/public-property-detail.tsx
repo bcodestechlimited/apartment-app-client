@@ -111,7 +111,15 @@ export default function PublicPropertyDetail() {
 
   if (isLoading) return <Loader />;
 
-  if (isError) return <div>Something went wrong</div>;
+  if (isError)
+    return (
+      <div className="py-10 text-center">
+        <p className="text-lg font-semibold">Failed to load property</p>
+        <p className="text-sm text-muted-foreground">
+          The property may have been removed or there was a network error.
+        </p>
+      </div>
+    );
 
   if (!data)
     return (

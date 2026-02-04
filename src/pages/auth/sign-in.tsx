@@ -18,6 +18,7 @@ import { useAuthActions } from "@/store/useAuthStore";
 import type { IUser } from "@/interfaces/user.interface";
 import { CustomAlert } from "@/components/custom/custom-alert";
 import GoogleAuthButton from "@/components/custom/google-auth-button";
+import { ta } from "date-fns/locale";
 
 interface SignInFormInputs {
   email: string;
@@ -57,6 +58,13 @@ export default function SignIn() {
           return navigate(`/dashboard/landlord${previousPath}`);
         } else {
           return navigate(`/dashboard${previousPath}`);
+        }
+      }
+      if (targetPath && targetPath.includes("/dashboard/admin/properties")) {
+        console.log("admin target path", targetPath);
+        console.log("admin user roles", user?.roles);
+        if (user?.roles?.includes("admin")) {
+          return navigate(`${targetPath}`);
         }
       }
 
