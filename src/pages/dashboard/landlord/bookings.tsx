@@ -181,7 +181,7 @@ export default function Bookings() {
                       Pricing: {selectedBooking.property.pricingModel}
                     </span>
                   </div>
-                  <div className="text-xs text-muted-foreground mb-1 truncate">
+                  <div className="text-xs text-muted-foreground mb-1  text-ellipsis">
                     {selectedBooking.property.description}
                   </div>
                   <div className="flex gap-2 mb-1">
@@ -263,7 +263,7 @@ export default function Bookings() {
               <Button
                 variant="outline"
                 onClick={() => setOpenBookingDetail(false)}
-                className="  mx-auto w-full mb-4"
+                className="  mx-auto w-full mb-4 cursor-pointer"
               >
                 Close
               </Button>

@@ -90,7 +90,7 @@ const TenantRating = ({ tenant, isOpen, closeModal }: AddTenantRatingProps) => {
           {rating ? (
             <Button
               onClick={handleSubmit}
-              className="bg-[#004542] hover:bg-[#006c66] text-white px-10 py-2 rounded-md"
+              className="bg-custom-primary hover:bg-[#006c66] text-white px-10 py-2 rounded-md cursor-pointer"
             >
               Submit
             </Button>

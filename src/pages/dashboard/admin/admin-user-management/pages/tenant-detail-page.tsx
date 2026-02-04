@@ -93,14 +93,6 @@ export function TenantDetailPage() {
             </h1>
           </div>
         </div>
-        {/* <div className="flex space-x-4">
-          <Button variant="default" size="lg" className="bg-custom-primary">
-            <Star className="mr-2 h-4 w-4" /> Suspend
-          </Button>
-          <Button variant="outline" size="lg" className="text-custom-primary">
-            <X className="h-4 w-4 mr-2" /> Reject
-          </Button>
-        </div> */}
       </div>
 
       {/* --- 2. Basic Information --- */}

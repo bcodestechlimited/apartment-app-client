@@ -25,11 +25,10 @@ export function TenantPage() {
     setPage,
     setLimit,
     setSortBy,
-    setStatus, // New
-    setIsVerified, // New
+    setStatus,
+    setIsVerified,
   } = useAdminTenants();
 
-  // Extract pagination and data
   const tenants = data?.tenants || [];
   const pagination = {
     pageIndex: currentState.page,
@@ -78,19 +77,26 @@ export function TenantPage() {
         {/* Filters Section */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Payment Status Filter */}
-          {/* Payment Status Filter */}
           <Select
             value={currentState.status || "all"}
-            onValueChange={(val) => setStatus(val === "all" ? "" : val)} // Reset to empty string if "all"
+            onValueChange={(val) => setStatus(val === "all" ? "" : val)}
           >
             <SelectTrigger className="w-37.5 cursor-pointer">
               <SelectValue placeholder="Payment Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="Cleared">Cleared</SelectItem>
-              <SelectItem value="Outstanding">Outstanding</SelectItem>
-              <SelectItem value="Overdue">Overdue</SelectItem>
+              <SelectItem value="all" className="cursor-pointer">
+                All Statuses
+              </SelectItem>
+              <SelectItem value="Cleared" className="cursor-pointer">
+                Cleared
+              </SelectItem>
+              <SelectItem value="Outstanding" className="cursor-pointer">
+                Outstanding
+              </SelectItem>
+              <SelectItem value="Overdue" className="cursor-pointer">
+                Overdue
+              </SelectItem>
             </SelectContent>
           </Select>
 
@@ -99,13 +105,19 @@ export function TenantPage() {
             value={currentState.isVerified || "all"}
             onValueChange={(val) => setIsVerified(val === "all" ? "" : val)} // Reset to empty string if "all"
           >
-            <SelectTrigger className="w-37.5">
+            <SelectTrigger className="w-37.5 cursor-pointer">
               <SelectValue placeholder="Verification" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Verification</SelectItem>
-              <SelectItem value="true">Verified</SelectItem>
-              <SelectItem value="false">Unverified</SelectItem>
+              <SelectItem value="all" className="cursor-pointer">
+                All Verification
+              </SelectItem>
+              <SelectItem value="true" className="cursor-pointer">
+                Verified
+              </SelectItem>
+              <SelectItem value="false" className="cursor-pointer">
+                Unverified
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

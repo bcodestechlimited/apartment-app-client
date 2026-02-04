@@ -50,7 +50,7 @@ export function LandlordDetailPage() {
       title: "Last Payout",
       amount: paymentMetrics?.lastPayoutAmount || 0,
       description: `Last Payout on ${formatPrettyDate(
-        paymentMetrics?.lastPayoutDate
+        paymentMetrics?.lastPayoutDate,
       )}`,
       bgColor: "text-blue-700",
     },
@@ -102,7 +102,7 @@ export function LandlordDetailPage() {
         <div className="space-y-3">
           <div className="flex items-center gap-3 text-gray-600">
             <Phone className="w-5 h-5" />
-            <span>{landlord.phoneNumber || "09076237409"}</span>
+            <span>{landlord.phoneNumber || "No phone provided"}</span>
           </div>
           <div className="flex items-center gap-3 text-gray-600">
             <Mail className="w-5 h-5" />

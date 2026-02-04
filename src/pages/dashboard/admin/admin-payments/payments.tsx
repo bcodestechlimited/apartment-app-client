@@ -128,29 +128,49 @@ export function AdminPaymentsPage() {
         <div className="flex gap-2 w-full md:w-auto">
           {/* Category Filter */}
           <Select value={filters.type} onValueChange={setType}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-40 cursor-pointer">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="payment">Rent Payments</SelectItem>
-              <SelectItem value="withdrawal">Withdrawals</SelectItem>
-              <SelectItem value="deposit">Deposits</SelectItem>
-              <SelectItem value="refund">Refunds</SelectItem>
-              <SelectItem value="debit">Wallet Debits</SelectItem>
+              <SelectItem value="all" className="cursor-pointer">
+                All Types
+              </SelectItem>
+              <SelectItem value="payment" className="cursor-pointer">
+                Rent Payments
+              </SelectItem>
+              <SelectItem value="withdrawal" className="cursor-pointer">
+                Withdrawals
+              </SelectItem>
+              <SelectItem value="deposit" className="cursor-pointer">
+                Deposits
+              </SelectItem>
+              <SelectItem value="refund" className="cursor-pointer">
+                Refunds
+              </SelectItem>
+              <SelectItem value="debit" className="cursor-pointer">
+                Wallet Debits
+              </SelectItem>
             </SelectContent>
           </Select>
 
           {/* Status Filter */}
           <Select value={filters.status} onValueChange={setStatus}>
-            <SelectTrigger className="w-35">
+            <SelectTrigger className="w-35 cursor-pointer ">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="success">Success</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="failed">Failed</SelectItem>
+              <SelectItem value="all" className="cursor-pointer">
+                All Status
+              </SelectItem>
+              <SelectItem value="success" className="cursor-pointer">
+                Success
+              </SelectItem>
+              <SelectItem value="pending" className="cursor-pointer">
+                Pending
+              </SelectItem>
+              <SelectItem value="failed" className="cursor-pointer">
+                Failed
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

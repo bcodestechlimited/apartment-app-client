@@ -86,13 +86,13 @@ const ReportTenant = ({
             <p className="font-medium mb-2">Reason</p>
 
             <Select onValueChange={setReason}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full cursor-pointer">
                 <SelectValue placeholder="Select a reason" />
               </SelectTrigger>
 
               <SelectContent>
                 {predefinedReasons.map((r) => (
-                  <SelectItem key={r} value={r}>
+                  <SelectItem key={r} value={r} className="cursor-pointer">
                     {r}
                   </SelectItem>
                 ))}
@@ -112,7 +112,7 @@ const ReportTenant = ({
         </div>
 
         <Button
-          className="w-full bg-[#004542] hover:bg-[#00332f]"
+          className="w-full bg-custom-primary hover:bg-[#00332f] cursor-pointer"
           onClick={() => {
             handleSubmit();
           }}
