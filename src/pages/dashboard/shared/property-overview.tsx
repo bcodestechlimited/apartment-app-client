@@ -35,25 +35,27 @@ export default function PropertyOverview() {
     <div className="p-4">
       <div className="flex flex-col gap-2 text-start">
         <p className="text-xl font-semibold flex gap-5  items-center">
-          {property?.description}{" "}
-          {property?.isAvailable ? (
-            <p className="font-medium text-sm line-clamp-2 bg-custom-primary text-white px-1  rounded-sm w-fit">
-              Available
-            </p>
-          ) : (
-            <p className="font-medium text-sm line-clamp-2 bg-red-600 text-white px-2 py-1 rounded-r w-fit">
-              Unavailable
-            </p>
-          )}
+          <div className="max-w-1/2 ">{property?.description}</div>
         </p>
         <p>Address: {property?.address}</p>
         <p className="font-semibold text-sm line-clamp-2 text-gray-600 flex gap-3">
           {property?.state}, {property?.lga} lga{" "}
         </p>
+        <div className="flex gap-3">
+          <Button className="w-fit capitalize ">
+            {property?.type.replace("-", " ")}
+          </Button>
 
-        <Button className="w-fit capitalize my-2">
-          {property?.type.replace("-", " ")}
-        </Button>
+          {property?.isAvailable ? (
+            <p className="font-medium text-base line-clamp-2 flex justify-center items-center bg-custom-primary text-white px-3  rounded-sm w-fit">
+              Available
+            </p>
+          ) : (
+            <p className="font-medium text-base line-clamp-2 flex  justify-center items-center bg-red-600 text-white px-2 py-1 rounded-r w-fit">
+              Unavailable
+            </p>
+          )}
+        </div>
 
         <div className="bg-gray-50 border p-4 rounded w-fit flex gap-10 sm:gap-34 items-center justify-between">
           <p className="font-semibold text-2xl">
