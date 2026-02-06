@@ -5,11 +5,7 @@ import { handleAxiosError } from "@/lib/utils";
 class PropertyService {
   addProperty = async (payload: any) => {
     try {
-      const response = await axiosInstance.post(`/property`, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axiosInstance.post(`/property`, payload, {});
 
       return response.data?.data;
     } catch (error) {
