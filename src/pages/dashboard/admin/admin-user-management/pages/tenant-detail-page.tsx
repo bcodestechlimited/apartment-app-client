@@ -9,8 +9,13 @@ import { flagsReportsColumns } from "../_components/column-definition/flag-repor
 import { bookingColumns } from "../_components/column-definition/booking-columns";
 import { MetricCard } from "../_components/metrics-card";
 import { VerificationDocuments } from "../_components/user-document";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { adminUserManagementService } from "@/api/admin/admin-user-management";
+import { toast } from "sonner";
+import { adminReportService } from "@/api/admin/admin-report.api";
 
 export function TenantDetailPage() {
+  const queryClient = useQueryClient();
   const { id } = useParams();
 
   const {
@@ -56,6 +61,21 @@ export function TenantDetailPage() {
     },
   ];
 
+  const updateReportMutation = useMutation({
+    mutationFn: ({ reportId, action }: { reportId: string; action: string }) =>
+      // Assuming you have a report service; adjust the API call as needed
+      adminReportService.updateReport(reportId, { status: action }),
+    onSuccess: () => {
+      toast.success("Report updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["tenant-reports"] });
+    },
+    onError: (err: any) => toast.error(err.message || "Action failed"),
+  });
+
+  const handleResolve = (reportId: string) => {
+    updateReportMutation.mutate({ reportId, action: "resolved" });
+  };
+
   if (isLoadingProfile) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -93,14 +113,6 @@ export function TenantDetailPage() {
             </h1>
           </div>
         </div>
-        {/* <div className="flex space-x-4">
-          <Button variant="default" size="lg" className="bg-custom-primary">
-            <Star className="mr-2 h-4 w-4" /> Suspend
-          </Button>
-          <Button variant="outline" size="lg" className="text-custom-primary">
-            <X className="h-4 w-4 mr-2" /> Reject
-          </Button>
-        </div> */}
       </div>
 
       {/* --- 2. Basic Information --- */}
@@ -125,7 +137,7 @@ export function TenantDetailPage() {
           isLoading={isFetchingBookings}
           pagination={bookingPagination}
           setPage={setBookingPage}
-          setPageSize={setBookingLimit} // Fixed: Passing correct handler
+          setPageSize={setBookingLimit}
           onSortChange={() => {}}
         />
       </div>
@@ -151,8 +163,12 @@ export function TenantDetailPage() {
           isLoading={isFetchingReports}
           pagination={reportPagination}
           setPage={setReportPage}
-          setPageSize={setReportLimit} // Fixed: Passing correct handler
+          setPageSize={setReportLimit}
           onSortChange={() => {}}
+          meta={{
+            onResolve: handleResolve,
+            // onDelete: handleDelete,
+          }}
         />
       </div>
     </div>

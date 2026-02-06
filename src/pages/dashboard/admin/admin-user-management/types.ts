@@ -7,6 +7,7 @@ export interface Report {
   };
   status: "Pending" | "Reached";
   action: string;
+  _id: string;
 }
 
 export interface Booking {

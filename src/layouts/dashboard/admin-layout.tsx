@@ -1,29 +1,22 @@
-import { useState, type JSX } from "react";
+import { type JSX } from "react";
 import {
   Users,
   ChevronDown,
   Bell,
-  Search,
   House,
   BookOpen,
-  FileChartColumnIncreasing,
-  Mail,
   LogOut,
-  Settings,
   CreditCardIcon,
-  ShieldAlert,
   ShieldAlertIcon,
-  Headset,
 } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { images } from "@/constants/images";
 import { cn } from "@/lib/utils";
 import { useSocketConnection } from "@/hooks/useSocketConnection";
-import { useAuthActions, useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import { authService } from "@/api/auth.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -38,7 +31,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -193,14 +185,6 @@ function TopBar() {
       <div className="pl-3">
         <SidebarTrigger />
       </div>
-
-      {/* <div className="flex items-center  rounded-full w-[700px] bg-[#F7F7F7] h-10">
-        <Search className="w-5 h-5 text-gray-600 ml-3" />
-        <Input
-          placeholder="Search"
-          className="border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none "
-        />
-      </div> */}
 
       <div className="flex items-center">
         <Bell className="w-6 h-6 text-gray-300" />

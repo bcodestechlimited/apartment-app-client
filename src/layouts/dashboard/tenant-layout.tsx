@@ -5,19 +5,15 @@ import {
   BookOpenCheck,
   HandCoins,
   Mail,
-  Search,
-  Bell,
   LogOut,
   Settings,
   Wallet,
-  ChevronRight,
   ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router";
-import { useState, type JSX } from "react";
+import { type JSX } from "react";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { toast } from "sonner";
@@ -310,7 +306,7 @@ export function TenantSidebar() {
                 // CASE 1: Route has a submenu (Nested)
                 if (route.submenu && route.submenu.length > 0) {
                   const hasActiveChild = route.submenu.some((sub) =>
-                    isActive(sub.path)
+                    isActive(sub.path),
                   );
 
                   return (
@@ -372,7 +368,7 @@ export function TenantSidebar() {
                         className={cn(
                           "flex items-center gap-2",
                           isActive(route.path) &&
-                            "bg-custom-primary/20 text-custom-primary"
+                            "bg-custom-primary/20 text-custom-primary",
                         )}
                       >
                         {route.icon}

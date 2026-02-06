@@ -48,7 +48,6 @@ export default function AdminUserManagement() {
           <TabsList>
             <NavTab to="tenants">Tenants</NavTab>
             <NavTab to="landlords">Landlords</NavTab>
-            {/* <NavTab to="agents">Agents</NavTab> */}
           </TabsList>
         </nav>
       </div>

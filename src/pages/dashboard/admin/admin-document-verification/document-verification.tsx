@@ -30,7 +30,6 @@ import { adminDocumentsService } from "@/api/admin/admin-documents.api";
 import { toast } from "sonner";
 
 export function AdminDocumentVerification() {
-  // 1. Hook and Data Management
   const {
     data,
     isLoading,
@@ -40,16 +39,16 @@ export function AdminDocumentVerification() {
     setPage,
     setLimit,
     setSortBy,
-  } = useVerificationDocuments(); // --- NEW STATE: Modal Management ---
+  } = useVerificationDocuments();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewedDocument, setViewedDocument] = useState<Document | null>(null); // Handler to open the modal
+  const [viewedDocument, setViewedDocument] = useState<Document | null>(null);
   const queryClient = useQueryClient();
 
   const handleViewDocument = (document: Document) => {
     setViewedDocument(document);
     setIsModalOpen(true);
-  }; // --- Memoize Columns and Actions ---
+  };
 
   const verifyDocumentMutation = useMutation({
     mutationFn: (documentId: string) =>
@@ -78,13 +77,13 @@ export function AdminDocumentVerification() {
       onVerifyDocument: (id: string) => verifyDocumentMutation.mutateAsync(id),
       onRejectDocument: (id: string) => rejectDocumentMutation.mutateAsync(id),
     }),
-    []
+    [],
   );
 
   const verificationColumns = useMemo(
     () => createVerificationColumns(actions),
 
-    [actions]
+    [actions],
   ); // 2. Data extraction and local state
 
   const documents: Document[] = data?.data || [];
@@ -97,12 +96,6 @@ export function AdminDocumentVerification() {
   };
 
   const [localSearch, setLocalSearch] = useState(currentState.search); // --- Sync and Debounce Logic ---
-
-  // useEffect(() => {
-  //   if (currentState.search !== localSearch) {
-  //     setLocalSearch(currentState.search);
-  //   }
-  // }, [currentState.search, localSearch]);
 
   useEffect(() => {
     if (localSearch === currentState.search) {
@@ -143,22 +136,23 @@ export function AdminDocumentVerification() {
               value={currentState.verificationStatus || "All"}
               onValueChange={(value) => setStatus(value === "All" ? "" : value)}
             >
-              <SelectTrigger className="w-full justify-between border-gray-200">
+              <SelectTrigger className="w-full justify-between border-gray-200 cursor-pointer">
                 <SelectValue placeholder="Document Type" /> {" "}
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="All">Status: All</SelectItem>
                 {documentTypeOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
+                  <SelectItem
+                    key={option}
+                    value={option}
+                    className="cursor-pointer"
+                  >
                     {option}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-
-          {/* Audit logs */}
-          <Button variant="default">View Audit Log</Button>
         </div>
       </div>
       {/* --- 3. Verification Documents Table --- */}

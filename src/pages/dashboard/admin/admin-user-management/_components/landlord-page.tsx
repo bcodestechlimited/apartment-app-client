@@ -1,86 +1,3 @@
-// // LandlordView.tsx
-// import React from "react";
-// import {
-//   landlordColumns,
-//   type Landlord,
-// } from "./column-definition/landlord-columns";
-// import { Button } from "@/components/ui/button";
-// import { ChevronDown } from "lucide-react";
-// import { DataTable } from "../../_component/data-table";
-
-// // --- Placeholder Data based on USERS(LANDLORDS).png ---
-// const mockLandlordData: Landlord[] = [
-//   {
-//     id: "l1",
-//     name: "Chiamaka Eze",
-//     email: "chi.ezee@email.com",
-//     phone: "0803 123 4567",
-//     propertiesListed: 12,
-//     earnings: 8500000,
-//     agentsAssigned: 3,
-//     status: "Verified",
-//   },
-//   {
-//     id: "l2",
-//     name: "Tunde Balogun",
-//     email: "chi.ezee@email.com",
-//     phone: "0803 123 4567",
-//     propertiesListed: 7,
-//     earnings: 8500000,
-//     agentsAssigned: 2,
-//     status: "Pending",
-//   },
-//   {
-//     id: "l3",
-//     name: "Mary Okafor",
-//     email: "chi.ezee@email.com",
-//     phone: "0803 123 4567",
-//     propertiesListed: 20,
-//     earnings: 8500000,
-//     agentsAssigned: 5,
-//     status: "Failed",
-//   },
-//   {
-//     id: "l4",
-//     name: "Ahmed Musa",
-//     email: "chi.ezee@email.com",
-//     phone: "0803 123 4567",
-//     propertiesListed: 4,
-//     earnings: 8500000,
-//     agentsAssigned: 1,
-//     status: "Verified",
-//   },
-//   {
-//     id: "l5",
-//     name: "Ifeoma Nwachukwu",
-//     email: "chi.ezee@email.com",
-//     phone: "0803 123 4567",
-//     propertiesListed: 10,
-//     earnings: 8500000,
-//     agentsAssigned: 3,
-//     status: "Verified",
-//   },
-// ];
-
-// export function LandlordPage() {
-//   // This is where you would place specific filter UI if Landlords needed a custom dropdown
-//   const customLandlordFilters = (
-//     <Button variant="outline">
-//       Filter by: Status <ChevronDown className="h-4 w-4 ml-1" />
-//     </Button>
-//   );
-
-//   return (
-//     <DataTable
-//       data={mockLandlordData}
-//       columns={landlordColumns}
-//       // You can optionally pass custom filters here if needed:
-//       // customFilterUi={customLandlordFilters}
-//     />
-//   );
-// }
-
-// src/pages/admin/user-management/LandlordPage.tsx
 import React from "react";
 import { DataTable } from "../../_component/data-table";
 import { landlordColumns } from "./column-definition/landlord-columns";
@@ -163,13 +80,19 @@ export function LandlordPage() {
             value={currentState.status || "all"}
             onValueChange={(val) => setStatus(val === "all" ? "" : val)}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-45 cursor-pointer">
               <SelectValue placeholder="Filter by Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Landlords</SelectItem>
-              <SelectItem value="Verified">Verified</SelectItem>
-              <SelectItem value="Unverified">Unverified</SelectItem>
+              <SelectItem value="all" className="cursor-pointer">
+                All Landlords
+              </SelectItem>
+              <SelectItem value="Verified" className="cursor-pointer">
+                Verified
+              </SelectItem>
+              <SelectItem value="Unverified" className="cursor-pointer">
+                Unverified
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
