@@ -29,10 +29,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import ImageLightbox from "@/components/custom/image-lightbox";
 
 export default function AdminPropertyDetail() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const { propertyId } = useParams();
   const navigate = useNavigate();
   const systemSettings: any = useOutletContext();
@@ -84,6 +87,11 @@ export default function AdminPropertyDetail() {
     mutateAsync();
   };
 
+  const openLightbox = (index: number) => {
+    setActiveImageIndex(index);
+    setShowLightbox(true);
+  };
+
   const platformFee =
     (systemSettings?.platformFeePercentage / 100) * property?.price;
   const totalFee = platformFee + property?.totalFees;
@@ -122,7 +130,7 @@ export default function AdminPropertyDetail() {
 
   if (!property) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+      <div className="flex flex-col items-center justify-center py-20 text-gray-50">
         <p>Property not found.</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate(-1)}>
           Go Back
@@ -132,7 +140,7 @@ export default function AdminPropertyDetail() {
   }
 
   return (
-    <div className="space-y-4 p-6">
+    <div className="space-y-4 p-6 ">
       {/* Back Button */}
       <div className="flex items-center justify-between">
         <Button
@@ -163,7 +171,8 @@ export default function AdminPropertyDetail() {
           <img
             src={property.pictures?.[0]}
             alt={property.title}
-            className="w-full h-80 rounded-xl object-cover"
+            className="w-full h-80 rounded-xl object-cover cursor-pointer"
+            onClick={() => openLightbox(0)}
           />
           <div className="grid grid-cols-4 gap-3">
             {property.pictures
@@ -173,11 +182,19 @@ export default function AdminPropertyDetail() {
                   key={index}
                   src={pic}
                   alt={`Property image ${index + 1}`}
-                  className="w-full h-20 rounded-lg object-cover"
+                  className="w-full h-20 rounded-lg object-cover cursor-pointer"
+                  onClick={() => openLightbox(index + 1)}
                 />
               ))}
           </div>
         </div>
+
+        <ImageLightbox
+          isOpen={showLightbox}
+          onClose={() => setShowLightbox(false)}
+          images={property?.pictures || []}
+          initialIndex={activeImageIndex}
+        />
 
         {/* Property Info */}
         <Card className="border rounded-xl shadow-none text-start">

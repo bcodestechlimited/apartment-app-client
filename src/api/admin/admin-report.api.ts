@@ -17,6 +17,19 @@ export class AdminReportService {
       handleAxiosError(error, "Unable to get report");
     }
   };
+
+  updateReport = async (reportedUser: string, payload: any) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/admin/report/${reportedUser}`,
+        payload,
+      );
+
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error, "Unable to update report");
+    }
+  };
 }
 
 export const adminReportService = new AdminReportService();

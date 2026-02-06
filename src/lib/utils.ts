@@ -64,8 +64,27 @@ export function formatPrettyDate(dateString: string) {
   return `${dayWithSuffix} ${monthName} ${year}`;
 }
 
-export const formatCurrency = (amount: number | string): string => {
+// export const formatCurrency = (amount: number | string): string => {
+//   const parsedAmount = typeof amount === "string" ? parseFloat(amount) : amount;
+//   return new Intl.NumberFormat("en-NG", {
+//     style: "currency",
+//     currency: "NGN",
+//   }).format(parsedAmount);
+// };
+
+export const formatCurrency = (
+  amount: number | string | undefined | null,
+): string => {
+  if (amount === "" || amount === undefined || amount === null) {
+    return "";
+  }
+
   const parsedAmount = typeof amount === "string" ? parseFloat(amount) : amount;
+
+  if (isNaN(parsedAmount)) {
+    return "";
+  }
+
   return new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: "NGN",

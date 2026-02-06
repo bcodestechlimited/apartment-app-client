@@ -86,14 +86,6 @@ export function LandlordDetailPage() {
             </h1>
           </div>
         </div>
-        {/* <div className="flex space-x-3">
-          <Button className="bg-[#003333] hover:bg-[#002222] text-white px-8">
-            <Star className="mr-2 h-4 w-4 fill-white" /> Suspend
-          </Button>
-          <Button variant="outline" className="border-gray-200 px-8">
-            <X className="mr-2 h-4 w-4" /> Reject
-          </Button>
-        </div> */}
       </div>
 
       {/* --- 2. Basic Information --- */}
