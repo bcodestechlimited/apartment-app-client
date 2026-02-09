@@ -52,9 +52,9 @@ export default function Listings() {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col md:items-end gap-4 lg:flex-row items-center lg:items-center justify-between mb-4">
+      <div className="flex flex-col items-end gap-4 lg:flex-row items-center lg:items-center justify-between mb-4">
         <div className="bg-custom-primary/10 w-fit rounded-lg md:rounded-full p-2 ">
-          <ul className="relative flex items-center font-semibold text-sm gap-2 w-85 md:w-full overflow-x-auto  md:px-4 md:pl-6 lg:px-0 lg:pl-0">
+          <ul className="relative flex items-center font-semibold text-sm gap-2 w-85 md:w-full overflow-x-auto  md:px-4 md:pl-6 lg:px-0 lg:pl-0 whitespace-nowrap md:whitespace-normal">
             {categories?.map((category) => {
               const isActive = selected === category;
 

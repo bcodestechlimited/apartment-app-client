@@ -163,11 +163,11 @@ export default function PersonalInfo() {
   };
 
   return (
-    <div className="max-w-2xl mr-auto space-y-6 py-4">
+    <div className="max-w-2xl  space-y-6 py-4 ">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          className="flex flex-col md:grid md:grid-cols-2 gap-4 "
         >
           {/* Profile Picture */}
           <FormField
@@ -178,8 +178,8 @@ export default function PersonalInfo() {
                 <FormLabel className="text-muted-foreground font-normal">
                   Profile Picture
                 </FormLabel>
-                <div className="flex items-center gap-6">
-                  <div className="flex flex-col gap-2">
+                <div className="flex flex-col  md:flex-rowitems-center gap-6">
+                  <div className="flex flex-col gap-2 ">
                     {previewUrl && (
                       <div className="relative w-24 h-24">
                         <img
