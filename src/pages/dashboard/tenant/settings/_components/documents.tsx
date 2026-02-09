@@ -12,20 +12,13 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import {
-  Upload,
-  FileIcon,
-  X,
-  FileText,
-  FileStack,
-  CloudAlert,
-  CloudAlertIcon,
-  ServerCrash,
-} from "lucide-react";
+import { Upload, X, FileText, ServerCrash, Loader2 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/api/auth.api";
 import { toast } from "sonner";
 import { CustomAlert } from "@/components/custom/custom-alert";
+import { uploadFileToCloudinary } from "@/lib/upload";
+import ImageLightbox from "@/components/custom/image-lightbox";
 
 const formSchema = z.object({
   document: z
@@ -37,42 +30,42 @@ export default function Documents() {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Lightbox state
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: ["user-documents"],
     queryFn: () => authService.getUserDocuments(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      document: [],
-    },
   });
 
   const mutation = useMutation({
-    mutationFn: authService.updateUserDocuments,
-    onSuccess: (data) => {
-      console.log({ data });
+    mutationFn: (payload: { document: string; name: string }) =>
+      authService.updateUserDocuments(payload),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-documents"] });
       queryClient.invalidateQueries({ queryKey: ["verification-documents"] });
       toast.success("Documents updated successfully!");
       setError(null);
       setPreview(null);
+      form.reset();
     },
     onError: (error: any) => {
-      // toast.error(error.message || "Something went wrong");
       setError(error.message || "Something went wrong");
-      console.log(error);
     },
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setPreview(URL.createObjectURL(file));
     form.setValue("document", file, { shouldValidate: true });
   };
@@ -81,10 +74,8 @@ export default function Documents() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
-
     setPreview(URL.createObjectURL(file));
     form.setValue("document", file, { shouldValidate: true });
   };
@@ -94,17 +85,34 @@ export default function Documents() {
     form.resetField("document");
   };
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log({ document: data });
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsProcessing(true);
+    setError(null);
 
-    const formData = new FormData();
-    formData.append("document", data.document);
-    mutation.mutate(formData);
+    try {
+      // Step 1: Upload to Cloudinary
+      const cloudinaryResult = await uploadFileToCloudinary(values.document);
+
+      if (!cloudinaryResult?.secure_url) {
+        throw new Error("Failed to upload image. Please try again.");
+      }
+
+      // Step 2: Submit URL and original filename to Backend
+      await mutation.mutateAsync({
+        document: cloudinaryResult.secure_url,
+        name: values.document.name,
+      });
+    } catch (err: any) {
+      setError(err.message || "An error occurred during submission");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const userDocuments = data?.documents || [];
+  const allDocumentUrls = userDocuments.map((doc: any) => doc.fileUrl);
   const isPendingDocument = userDocuments.some(
-    (doc: any) => doc.status === "pending"
+    (doc: any) => doc.status === "pending",
   );
 
   if (isError) {
@@ -125,7 +133,7 @@ export default function Documents() {
             Uploaded Documents
           </h3>
           <div className="space-y-4">
-            {userDocuments.map((doc: any) => (
+            {userDocuments.map((doc: any, index: number) => (
               <div
                 key={doc._id}
                 className="flex items-center justify-between border rounded-xl px-4 py-3 relative"
@@ -142,15 +150,17 @@ export default function Documents() {
                     </p>
                   </div>
                 </div>
-                <a
-                  href={doc.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary font-medium text-sm hover:underline"
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedImageIndex(index);
+                    setIsLightboxOpen(true);
+                  }}
+                  className="text-primary font-medium text-sm hover:underline cursor-pointer"
                 >
                   View
-                </a>
-                <span className="absolute -top-3 right-0 text-yellow-800 bg-yellow-300 px-4 rounded-full capitalize">
+                </button>
+                <span className="absolute -top-3 right-0 text-yellow-800 bg-yellow-300 px-4 rounded-full capitalize text-[10px] py-0.5 font-bold">
                   {doc.status}
                 </span>
               </div>
@@ -186,7 +196,9 @@ export default function Documents() {
                         "border-2 border-dashed rounded-2xl flex flex-col items-center justify-center gap-3 p-8 text-center transition-all",
                         dragActive
                           ? "border-primary bg-primary/5"
-                          : "border-muted-foreground/25"
+                          : "border-muted-foreground/25",
+                        (isProcessing || isPendingDocument) &&
+                          "opacity-50 pointer-events-none",
                       )}
                     >
                       <Upload className="w-8 h-8 text-muted-foreground" />
@@ -206,7 +218,7 @@ export default function Documents() {
                         onChange={handleFileChange}
                         className="hidden"
                         multiple={false}
-                        disabled={isPendingDocument}
+                        disabled={isPendingDocument || isProcessing}
                       />
                     </div>
                   ) : (
@@ -238,13 +250,32 @@ export default function Documents() {
             <Button
               type="submit"
               className="btn-primary rounded-full px-12"
-              disabled={mutation.isPending || isPendingDocument}
+              disabled={
+                mutation.isPending ||
+                isProcessing ||
+                isPendingDocument ||
+                !preview
+              }
             >
-              {mutation.isPending ? "Saving..." : "Save Image"}
+              {isProcessing || mutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save Image"
+              )}
             </Button>
           </div>
         </form>
       </Form>
+
+      <ImageLightbox
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        images={allDocumentUrls}
+        initialIndex={selectedImageIndex}
+      />
     </div>
   );
 }

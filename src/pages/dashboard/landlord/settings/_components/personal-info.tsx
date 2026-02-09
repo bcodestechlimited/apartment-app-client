@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, Loader, Loader2, Upload, X } from "lucide-react";
+import { CalendarIcon, Loader, Upload, X } from "lucide-react";
 
 import {
   Form,
@@ -37,11 +37,13 @@ import {
   NIGERIAN_STATE_CITIES,
   NIGERIAN_STATES,
 } from "@/constants/nigerian-states";
+import { uploadFileToCloudinary } from "@/lib/upload"; // Import your utility
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
-  email: z.email("Enter a valid email address"),
+  email: z.string().email("Enter a valid email address"),
   phoneNumber: z.string().min(7, "Enter a valid phone number"),
   gender: z.enum(["male", "female", "other"], {
     error: "Select a gender",
@@ -53,22 +55,23 @@ const formSchema = z.object({
         const date = val instanceof Date ? val : new Date(val);
         return date <= new Date();
       },
-      { message: "Date of birth cannot be in the future" }
+      { message: "Date of birth cannot be in the future" },
     )
     .optional(),
   address: z.string().min(3, "Address is required"),
   state: z.string().min(1, "Select a state"),
   city: z.string().min(1, "City is required"),
-  avatar: z.instanceof(File).optional(),
+  avatar: z.any().optional(), // Changed to any to handle initial URL strings or new Files
 });
 
 export default function PersonalInfo() {
   const [error, setError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false); // New state for upload + save
 
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["user-personal-info"],
     queryFn: () => authService.getUserPersonalInfo(),
   });
@@ -106,57 +109,58 @@ export default function PersonalInfo() {
       form.setValue("city", data.personalInfo.city);
       if (data.personalInfo.avatar) {
         setPreviewUrl(data.personalInfo.avatar);
+        form.setValue("avatar", data.personalInfo.avatar);
       }
     }
   }, [data, form]);
 
   const mutation = useMutation({
     mutationFn: authService.updateUserPersonalInfo,
-    onSuccess: (data) => {
-      console.log({ data });
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-personal-info"] });
       queryClient.invalidateQueries({ queryKey: ["auth-user"] });
       toast.success("Personal info updated successfully!");
       form.reset(form.getValues());
     },
     onError: (error: any) => {
-      // toast.error(error.message || "Something went wrong");
       setError(error.message || "Something went wrong");
-      console.log(error);
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setError(null);
-    console.log("Form data:", values);
+    setIsProcessing(true);
 
-    const formData = new FormData();
+    try {
+      let avatarUrl = values.avatar;
+      let avatarName = "";
 
-    Object.keys(values).forEach((key) => {
-      const value = values[key as keyof typeof values];
-
-      if (key === "avatar") {
-        if (value instanceof File) {
-          formData.append(key, value);
+      // Step 1: Handle avatar upload if it's a new file
+      if (values.avatar instanceof File) {
+        avatarName = values.avatar.name;
+        const cloudinaryResult = await uploadFileToCloudinary(values.avatar);
+        if (!cloudinaryResult?.secure_url) {
+          throw new Error("Failed to upload profile picture");
         }
-      } else if (value !== undefined && value !== null) {
-        // Handle Date objects
-        if (value instanceof Date) {
-          formData.append(key, value.toISOString());
-        } else {
-          formData.append(key, String(value));
-        }
+        avatarUrl = cloudinaryResult.secure_url;
       }
-    });
 
-    console.log("FormData entries:", Array.from(formData.entries()));
+      // Step 2: Prepare JSON payload (No more FormData)
+      const payload = {
+        ...values,
+        avatar: avatarUrl,
+        avatarName: avatarName,
+        dob: values.dob instanceof Date ? values.dob.toISOString() : values.dob,
+      };
 
-    mutation.mutateAsync(formData as any);
+      // Step 3: Send to backend
+      await mutation.mutateAsync(payload as any);
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setIsProcessing(false);
+    }
   };
-
-  const personalInfo = data?.personalInfo;
-
-  // console.log({ personalInfo });
 
   return (
     <div className="max-w-2xl mr-auto space-y-6 py-4">
@@ -169,7 +173,7 @@ export default function PersonalInfo() {
           <FormField
             control={form.control}
             name="avatar"
-            render={({ field: { value, onChange, ...fieldProps } }) => (
+            render={({ field: { onChange, value, ...fieldProps } }) => (
               <FormItem className="col-span-2">
                 <FormLabel className="text-muted-foreground font-normal">
                   Profile Picture
@@ -185,6 +189,7 @@ export default function PersonalInfo() {
                         />
                         <button
                           type="button"
+                          disabled={isProcessing}
                           onClick={() => {
                             onChange(undefined);
                             setPreviewUrl(null);
@@ -197,11 +202,22 @@ export default function PersonalInfo() {
                     )}
                   </div>
                   <FormControl>
-                    <label className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition">
+                    <label
+                      className={cn(
+                        "flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition",
+                        isProcessing && "opacity-50 cursor-not-allowed",
+                      )}
+                    >
                       <div className="flex items-center gap-2">
-                        <Upload size={20} />
+                        {isProcessing ? (
+                          <Loader className="animate-spin" size={20} />
+                        ) : (
+                          <Upload size={20} />
+                        )}
                         <span className="text-sm text-muted-foreground">
-                          Click to upload profile picture
+                          {isProcessing
+                            ? "Processing..."
+                            : "Click to upload profile picture"}
                         </span>
                       </div>
                       <Input
@@ -209,13 +225,14 @@ export default function PersonalInfo() {
                         type="file"
                         accept="image/*"
                         className="hidden"
+                        disabled={isProcessing}
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            onChange(file); // Update React Hook Form
+                            onChange(file);
                             const reader = new FileReader();
                             reader.onloadend = () => {
-                              setPreviewUrl(reader.result as string); // Update UI
+                              setPreviewUrl(reader.result as string);
                             };
                             reader.readAsDataURL(file);
                           }
@@ -234,7 +251,7 @@ export default function PersonalInfo() {
             control={form.control}
             name="firstName"
             render={({ field }) => (
-              <FormItem className="">
+              <FormItem>
                 <FormLabel className="text-muted-foreground font-normal">
                   First Name
                 </FormLabel>
@@ -271,7 +288,7 @@ export default function PersonalInfo() {
             )}
           />
 
-          {/* Email */}
+          {/* email */}
           <FormField
             control={form.control}
             name="email"
@@ -283,7 +300,7 @@ export default function PersonalInfo() {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="Enter email address"
+                    placeholder="Enter email"
                     className="rounded-full py-5 px-5"
                     {...field}
                   />
@@ -293,7 +310,7 @@ export default function PersonalInfo() {
             )}
           />
 
-          {/* Phone */}
+          {/* phoneNumber */}
           <FormField
             control={form.control}
             name="phoneNumber"
@@ -304,7 +321,7 @@ export default function PersonalInfo() {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter phone number"
+                    placeholder="Enter phone"
                     className="rounded-full py-5 px-5"
                     {...field}
                   />
@@ -314,40 +331,36 @@ export default function PersonalInfo() {
             )}
           />
 
-          {/* Gender */}
+          {/* gender */}
           <FormField
             control={form.control}
             name="gender"
-            render={({ field }) => {
-              console.log({ value: field.value });
-
-              return (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground font-normal">
-                    Gender
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value ?? ""}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="rounded-full py-5 px-5 w-full">
-                        <SelectValue placeholder="Select gender" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="rounded-xl">
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-muted-foreground font-normal">
+                  Gender
+                </FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value ?? ""}
+                >
+                  <FormControl>
+                    <SelectTrigger className="rounded-full py-5 px-5 w-full">
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
           />
 
-          {/* Date of Birth */}
+          {/* dob */}
           <FormField
             control={form.control}
             name="dob"
@@ -361,12 +374,13 @@ export default function PersonalInfo() {
                     <FormControl>
                       <Button
                         variant="outline"
-                        className={`w-full justify-start text-left font-normal ${
-                          !field.value && "text-muted-foreground"
-                        }`}
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
                       >
                         {field.value ? (
-                          format(field.value, "PPP")
+                          format(new Date(field.value), "PPP")
                         ) : (
                           <span>Select date</span>
                         )}
@@ -374,15 +388,14 @@ export default function PersonalInfo() {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className=" w-auto p-0" align="start">
+                  <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={field.value as Date}
+                      selected={field.value ? new Date(field.value) : undefined}
                       onSelect={field.onChange}
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }
-                      // autoFocus
                       captionLayout="dropdown"
                       startMonth={new Date(1900, 0)}
                       endMonth={new Date()}
@@ -395,7 +408,7 @@ export default function PersonalInfo() {
             )}
           />
 
-          {/* Address */}
+          {/* address */}
           <FormField
             control={form.control}
             name="address"
@@ -416,7 +429,7 @@ export default function PersonalInfo() {
             )}
           />
 
-          {/* State */}
+          {/* state */}
           <FormField
             control={form.control}
             name="state"
@@ -449,7 +462,7 @@ export default function PersonalInfo() {
             )}
           />
 
-          {/* City */}
+          {/* city */}
           <FormField
             control={form.control}
             name="city"
@@ -487,11 +500,13 @@ export default function PersonalInfo() {
           {/* Submit Button */}
           <div className="col-span-2 flex justify-end mt-4">
             <Button
-              disabled={mutation.isPending || !form.formState.isDirty}
+              disabled={
+                mutation.isPending || isProcessing || !form.formState.isDirty
+              }
               type="submit"
               className="btn-primary rounded-full px-12"
             >
-              {mutation.isPending ? (
+              {isProcessing || mutation.isPending ? (
                 <span className="flex items-center gap-2">
                   <Loader className="animate-spin" /> Saving...
                 </span>

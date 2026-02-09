@@ -82,7 +82,7 @@ export default function Discover() {
             <AnimationWrapper
               delay={0.5}
               stagger={0.15}
-              className="flex flex-wrap items-center justify-center space-x-4 pt-18 backdrop-blur-xs bg-white/10 p-6 rounded md:rounded-full shadow-md text-white w-full relative"
+              className="flex flex-wrap items-center justify-center md:space-x-4 pt-10 md:pt-18 backdrop-blur-xs bg-white/10 md:p-6 rounded md:rounded-full shadow-md text-white w-full relative"
             >
               <div className="grid grid-cols-2 md:grid-cols-5 items-center gap-2 text-sm w-full">
                 <CategoryTabs />
@@ -245,7 +245,7 @@ export default function Discover() {
                 </div>
 
                 {/* Search Button */}
-                <div className="flex justify-center col-span-2 md:col-span-1">
+                <div className="flex justify-center py-5 md:py-0 col-span-2 md:col-span-1">
                   <Link
                     to={`/properties?propertyType=${selectedPropertyType}&state=${selectedState}&city=${selectedCity}&pricingModel=${selectedPricingModel}`}
                   >
@@ -276,7 +276,7 @@ function CategoryTabs() {
   const [selected, setSelected] = useState();
 
   return (
-    <div className="absolute -top-5 left-0 right-0 mx-auto w-[80%]">
+    <div className="absolute hidden md:block -top-5 left-0 right-0 mx-auto w-[80%]">
       <ul className="relative flex items-center justify-between bg-white/90 backdrop-blur-md text-muted-foreground text-xs sm:text-sm px-4 py-4 rounded-full border border-white/20 shadow-sm">
         {tabs.map((tab) => (
           <li

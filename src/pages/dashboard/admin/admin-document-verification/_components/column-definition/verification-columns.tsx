@@ -32,45 +32,45 @@ const renderStatus = (status: VerificationStatus) => (
 
 // --- Column Definitions Function ---
 export const createVerificationColumns = (
-  actions: VerificationActions
+  actions: VerificationActions,
 ): ColumnDef<Document>[] => [
   {
     accessorKey: "name",
-    header: () => <div className="text-center">Document Name</div>,
+    header: () => <div className="text-left">Document Name</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.original?.name || "N/A"}</div>
+      <div className="text-left">{row.original?.name || "N/A"}</div>
     ),
   },
   {
     accessorKey: "user",
-    header: () => <div className="text-center">User</div>,
+    header: () => <div className="text-left">User</div>,
     cell: ({ row }) => (
-      <div className="text-center">
+      <div className="text-left">
         {row.original?.user?.firstName + " " + row.original?.user?.lastName}
       </div>
     ),
   },
   {
     accessorKey: "userType",
-    header: () => <div className="text-center">User Type</div>,
+    header: () => <div className="text-left">User Type</div>,
     cell: ({ row }) => (
-      <div className="text-center">{row.original?.user?.roles}</div>
+      <div className="text-left">{row.original?.user?.roles}</div>
     ),
   },
   {
     accessorKey: "dateUploaded",
-    header: () => <div className="text-center">Date Uploaded</div>,
+    header: () => <div className="text-left">Date Uploaded</div>,
     cell: ({ row }) => (
-      <div className="text-center">
+      <div className="text-left">
         {formatPrettyDate(row.original.uploadedAt)}
       </div>
     ),
   },
   {
     accessorKey: "status",
-    header: () => <div className="text-center">Status</div>,
+    header: () => <div className="text-left">Status</div>,
     cell: ({ row }) => (
-      <div className="text-center">{renderStatus(row.original.status)}</div>
+      <div className="text-left">{renderStatus(row.original.status)}</div>
     ),
   },
 
@@ -87,8 +87,6 @@ export const createVerificationColumns = (
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            {/* Standard Shadcn Button usage. This is the source of the error 
-                   but MUST be used if the environment is correct. */}
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />

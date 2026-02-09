@@ -51,9 +51,9 @@ export default function SignIn() {
     onSuccess: (signInResponse: { user: IUser }) => {
       const { user } = signInResponse;
 
-      if (targetPath && targetPath.includes("/property/")) {
+      if (targetPath && targetPath.includes("/properties/")) {
         if (user?.roles?.includes("admin")) {
-          return navigate("/dashboard/admin");
+          return navigate(`/dashboard/admin${previousPath}`);
         } else if (user?.roles?.includes("landlord")) {
           return navigate(`/dashboard/landlord${previousPath}`);
         } else {

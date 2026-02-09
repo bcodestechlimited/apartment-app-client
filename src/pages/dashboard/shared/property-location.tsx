@@ -12,7 +12,7 @@ export default function PropertyLocation() {
   console.log({ property });
 
   return (
-    <div className="text-start p-4">
+    <div className="text-start p-1 md:p-2">
       <h2 className="text-2xl font-medium">Locations & Map</h2>
       <p>Coming Soon</p>
     </div>

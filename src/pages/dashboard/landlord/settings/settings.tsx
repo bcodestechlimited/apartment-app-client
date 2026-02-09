@@ -16,7 +16,7 @@ export default function SettingsLayout() {
   return (
     <div className="space-y-4 p-2">
       {/* Top Navigation Bar */}
-      <aside className="relative flex justify-between border-b w-full">
+      <aside className="relative grid grid-cols-3 md:flex justify-between border-b w-full">
         {settingsLinks.map((link) => {
           const isActive =
             location.pathname.endsWith(link.path) ||

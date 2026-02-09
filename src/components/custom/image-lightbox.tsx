@@ -57,7 +57,7 @@ export default function ImageLightbox({
                     {({ zoomIn, zoomOut, resetTransform }) => (
                       <div className="relative w-full flex flex-col items-center">
                         {/* Control Buttons - Fixed and Functional */}
-                        <div className="absolute left-4 top-1/5 -translate-y-1/2 flex flex-col gap-3 z-110">
+                        <div className="absolute left-1 top-1/5 md:top-1/8 -translate-y-1/2 flex flex-col   gap-3 z-110">
                           <button
                             onClick={() => zoomIn(0.5)}
                             className="bg-white/10 hover:bg-white/20 p-3 rounded-full text-white backdrop-blur-md border border-white/20 transition-all active:scale-90 cursor-pointer"

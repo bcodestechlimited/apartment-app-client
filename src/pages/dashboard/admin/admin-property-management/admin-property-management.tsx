@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { adminPropertyService } from "@/api/admin/admin-property.api";
 import { useSearchParams } from "react-router";
 import PropertyFilters from "./_components/property-filters";
-import { Pagination } from "../../shared/_components/pagination";
+import { Pagination } from "../../../../components/custom/pagination";
 
 export default function AdminPropertyManagement() {
   const [searchParams, setSearchParams] = useSearchParams();

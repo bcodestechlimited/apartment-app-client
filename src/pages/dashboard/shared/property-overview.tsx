@@ -32,7 +32,7 @@ export default function PropertyOverview() {
   const grandTotal = (property?.totalFees || 0) + platformFee;
 
   return (
-    <div className="p-4">
+    <div className="p-1 md:p-2">
       <div className="flex flex-col gap-2 text-start">
         <p className="text-xl font-semibold flex gap-5  items-center">
           <div className="max-w-1/2 ">{property?.description}</div>

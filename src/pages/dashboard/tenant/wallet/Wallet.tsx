@@ -43,7 +43,6 @@ import DataTable from "@/components/custom/data-table";
 import { columns } from "../payments/payments";
 
 function Wallet() {
-  // --- Modal States ---
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
@@ -54,9 +53,7 @@ function Wallet() {
   const [accountNumber, setAccountNumber] = useState("");
   const queryClient = useQueryClient();
 
-  //payement mutations
   const [searchParams] = useSearchParams();
-
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 10;
 
@@ -69,11 +66,10 @@ function Wallet() {
       }),
   });
 
-  // --- Mutations ---
   const createTopUpMutation = useMutation({
     mutationFn: (amt: any) => walletService.topUpWallet(amt),
     onSuccess: (res: any) => {
-      setIsTopUpOpen(false); // Close modal
+      setIsTopUpOpen(false);
       const redirectUrl = res?.authorization_url;
       if (redirectUrl) window.location.href = redirectUrl;
       else toast.error("Unable to start payment. Try again.");
@@ -87,8 +83,8 @@ function Wallet() {
       toast.success("Withdrawal request submitted!");
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      setWithdrawAmount(0); // Reset amount
-      setIsWithdrawOpen(false); // Close modal
+      setWithdrawAmount(0);
+      setIsWithdrawOpen(false);
     },
     onError: (error: any) => toast.error(error?.message || "Withdraw failed"),
   });
@@ -98,14 +94,13 @@ function Wallet() {
     onSuccess: () => {
       toast.success("Wallet details updated");
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
-      setIsSettingsOpen(false); // Close modal
+      setIsSettingsOpen(false);
       setAccountNumber("");
       setBankCode("");
     },
     onError: (error: any) => toast.error(error?.message || "Update failed"),
   });
 
-  // --- Queries ---
   const { data, isLoading: isLoading } = useQuery({
     queryKey: ["wallet"],
     queryFn: () => walletService.getUserWallet(),
@@ -134,33 +129,30 @@ function Wallet() {
 
   const wallet = data?.wallet ?? {};
   const balance = typeof wallet.balance === "number" ? wallet.balance : 0;
-
   const formatNaira = (n: number) => `₦${Number(n || 0).toLocaleString()}`;
 
   return (
-    <div className=" space-y-8 ">
+    <div className="space-y-8 w-full max-w-full overflow-hidden">
       {/* HEADER SECTION */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <p className="text-slate-500">
+          <p className="text-slate-500 text-sm sm:text-base">
             Manage your earnings, top-ups, and payout settings.
           </p>
         </div>
 
-        {/* ACTION BUTTONS GROUP */}
-        <div className="flex flex-wrap gap-3">
-          {/* UPDATE DETAILS */}
+        <div className="flex flex-wrap items-center gap-3">
           <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
-                className="border-slate-200 text-slate-700 hover:bg-slate-50 gap-2 cursor-pointer"
+                className="flex-1 sm:flex-none border-slate-200 text-slate-700 hover:bg-slate-50 gap-2 cursor-pointer h-11"
               >
                 <Settings2 className="h-4 w-4" />
-                Payout Settings
+                <span className="whitespace-nowrap">Payout Settings</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] w-[95vw] rounded-xl">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -186,7 +178,7 @@ function Wallet() {
                           }
                         />
                       </SelectTrigger>
-                      <SelectContent className="h-64">
+                      <SelectContent className="max-h-64">
                         {banks?.banks?.map((bank: any) => (
                           <SelectItem key={bank.id} value={bank.code}>
                             {bank.name}
@@ -202,6 +194,7 @@ function Wallet() {
                       value={accountNumber}
                       onChange={(e) => setAccountNumber(e.target.value)}
                       placeholder="0123456789"
+                      className="h-11"
                     />
                   </div>
                   {isLoadingAccountDetails && (
@@ -211,11 +204,11 @@ function Wallet() {
                   )}
                   {accountDetails?.data && (
                     <div className="p-3 bg-teal-50 border border-teal-100 rounded-lg flex items-center gap-3">
-                      <div className="h-8 w-8 bg-teal-100 rounded-full flex items-center justify-center text-teal-700 font-bold text-xs uppercase">
+                      <div className="h-8 w-8 bg-teal-100 rounded-full flex items-center justify-center text-teal-700 font-bold text-xs uppercase shrink-0">
                         {accountDetails.data.account_name.charAt(0)}
                       </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-teal-900 leading-none">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-teal-900 leading-none truncate">
                           {accountDetails.data.account_name}
                         </p>
                         <p className="text-[10px] text-teal-600 font-medium uppercase mt-1 tracking-wider">
@@ -225,13 +218,15 @@ function Wallet() {
                     </div>
                   )}
                 </div>
-                <DialogFooter className="gap-2">
+                <DialogFooter className="gap-2 sm:gap-0">
                   <DialogClose asChild>
-                    <Button variant="ghost">Cancel</Button>
+                    <Button variant="ghost" className="w-full sm:w-auto">
+                      Cancel
+                    </Button>
                   </DialogClose>
                   <Button
                     type="submit"
-                    className="bg-teal-800 cursor-pointer"
+                    className="w-full sm:w-auto bg-teal-800 cursor-pointer"
                     disabled={
                       updateWalletMutation.isPending || !accountDetails?.data
                     }
@@ -245,18 +240,17 @@ function Wallet() {
             </DialogContent>
           </Dialog>
 
-          {/* WITHDRAW */}
           <Dialog open={isWithdrawOpen} onOpenChange={setIsWithdrawOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
-                className="border-orange-200 text-orange-700 hover:bg-orange-50 gap-2 cursor-pointer"
+                className="flex-1 sm:flex-none border-orange-200 text-orange-700 hover:bg-orange-50 gap-2 cursor-pointer h-11"
               >
                 <ArrowDownLeft className="h-4 w-4" />
                 Withdraw
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] w-[95vw] rounded-xl">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -298,7 +292,7 @@ function Wallet() {
                 <DialogFooter>
                   <Button
                     type="submit"
-                    className="w-full bg-orange-600 cursor-pointer"
+                    className="w-full bg-orange-600 cursor-pointer h-11"
                     disabled={withdrawMutation.isPending || balance < 1}
                   >
                     {withdrawMutation.isPending
@@ -310,15 +304,14 @@ function Wallet() {
             </DialogContent>
           </Dialog>
 
-          {/* TOP UP */}
           <Dialog open={isTopUpOpen} onOpenChange={setIsTopUpOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-teal-800 hover:bg-teal-900 gap-2 cursor-pointer">
+              <Button className="flex-1 sm:flex-none bg-teal-800 hover:bg-teal-900 gap-2 cursor-pointer h-11">
                 <Plus className="h-4 w-4" />
                 Top Up
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] w-[95vw] rounded-xl">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -347,7 +340,7 @@ function Wallet() {
                 <DialogFooter>
                   <Button
                     type="submit"
-                    className="w-full bg-teal-800 cursor-pointer"
+                    className="w-full bg-teal-800 cursor-pointer h-11"
                     disabled={createTopUpMutation.isPending || amount < 1}
                   >
                     {createTopUpMutation.isPending
@@ -363,10 +356,9 @@ function Wallet() {
 
       {/* TOP SECTION: BALANCE & BANK INFO */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* BALANCE CARD */}
         <Card className="lg:col-span-1 bg-teal-900 border-none shadow-xl text-white overflow-hidden relative">
           <div className="absolute top-[-20%] right-[-10%] w-48 h-48 bg-teal-800 rounded-full blur-3xl opacity-50" />
-          <CardContent className="p-8 space-y-6 relative z-10">
+          <CardContent className="p-6 sm:p-8 space-y-6 relative z-10">
             <div className="flex justify-between items-center">
               <div className="p-2 bg-teal-800/50 rounded-lg">
                 <WalletIcon className="h-6 w-6 text-teal-300" />
@@ -379,7 +371,7 @@ function Wallet() {
               <p className="text-teal-100/70 text-sm font-medium">
                 Available Balance
               </p>
-              <h2 className="text-4xl font-bold tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight truncate">
                 {formatNaira(balance)}
               </h2>
             </div>
@@ -390,45 +382,44 @@ function Wallet() {
           </CardContent>
         </Card>
 
-        {/* BANK DETAILS CARD */}
-        <Card className="lg:col-span-2 border-slate-200 shadow-sm">
+        <Card className="lg:col-span-2 border-slate-200 shadow-sm overflow-hidden">
           <CardContent className="p-0">
             <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-200">
-              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+              <h3 className="font-semibold text-slate-900 flex items-center justify-center gap-2">
                 <Landmark className="h-4 w-4 text-slate-500" />
                 Payout Destination
               </h3>
             </div>
-            <div className="p-8 grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 text-left">
-              <div className="space-y-1 ">
+            <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 ">
+              <div className="space-y-2  md:text-left">
                 <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                   Account Name
                 </p>
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-slate-300" />
-                  <p className="text-sm font-semibold text-slate-700 capitalize">
+                <div className="flex items-center justify-center md:justify-start gap-2 min-w-0">
+                  <User className="h-4 w-4 text-slate-300 shrink-0" />
+                  <p className="text-sm font-semibold text-slate-700 capitalize truncate">
                     {wallet.bankAccountName || "Not set"}
                   </p>
                 </div>
               </div>
-              <div className=" flex justify-evenly items-center">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-4">
+                <div className="space-y-2">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider md:text-left">
                     Bank Provider
                   </p>
-                  <div className="flex items-center gap-2">
-                    <Landmark className="h-4 w-4 text-slate-300" />
-                    <p className="text-sm font-semibold text-slate-700">
+                  <div className="flex items-center justify-center md:justify-start gap-2 min-w-0">
+                    <Landmark className="h-4 w-4 text-slate-300 shrink-0" />
+                    <p className="text-sm font-semibold text-slate-700 truncate">
                       {wallet.bankName || "Not set"}
                     </p>
                   </div>
                 </div>
-                <div className="space-y-1 ">
-                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                <div className="space-y-2">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider md:text-left">
                     Account Number
                   </p>
-                  <div className="flex items-center gap-2">
-                    <Hash className="h-4 w-4 text-slate-300" />
+                  <div className="flex items-center justify-center md:justify-start gap-2">
+                    <Hash className="h-4 w-4 text-slate-300 shrink-0" />
                     <p className="text-sm font-mono font-bold text-slate-700">
                       {wallet.bankAccountNumber || "—"}
                     </p>
@@ -441,12 +432,13 @@ function Wallet() {
       </div>
 
       {/* RECENT TRANSACTIONS SECTION */}
-
-      <DataTable
-        columns={columns}
-        data={payment?.transactions || []}
-        noDataMessage="No payments available."
-      />
+      <div className="w-full overflow-x-auto rounded-lg">
+        <DataTable
+          columns={columns}
+          data={payment?.transactions || []}
+          noDataMessage="No payments available."
+        />
+      </div>
     </div>
   );
 }

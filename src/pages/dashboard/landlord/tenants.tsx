@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Pagination } from "../shared/_components/pagination";
+import { Pagination } from "../../../components/custom/pagination";
 
 export default function Tenants() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -163,7 +163,7 @@ export default function Tenants() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col md:flex-row gap-3 items-center justify-between mb-4">
         <h2 className="text-2xl font-semibold">Tenant Management</h2>
 
         <div className="space-y-4">
