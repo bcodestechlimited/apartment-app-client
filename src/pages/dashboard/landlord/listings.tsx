@@ -6,7 +6,6 @@ import { cn, getActualTypeFromParam } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router";
-import AddPropertyModal from "./_components/add-property-modal";
 import { motion } from "motion/react";
 import { Loader } from "@/components/custom/loader";
 import { Plus } from "lucide-react";

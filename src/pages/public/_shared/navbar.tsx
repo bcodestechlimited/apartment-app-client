@@ -201,7 +201,7 @@ export default function Navbar() {
               </Link>
               <Button
                 asChild
-                className="rounded-full bg-white text-custom-primary hover:bg-slate-100 px-6 font-bold h-9 md:h-10"
+                className="rounded-full bg-white text-custom-primary hover:bg-slate-100 px-6 font-semibold h-9 md:h-10"
               >
                 <Link to="/login">Login</Link>
               </Button>
