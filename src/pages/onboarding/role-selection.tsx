@@ -1,13 +1,10 @@
 import tenantRoleImage from "@/assets/images/tenant-role.png";
 import landlordRoleImage from "@/assets/images/landlord-role.png";
-import { use, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { CustomAlert } from "@/components/custom/custom-alert";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { authService } from "@/api/auth.api";
-import { useAuthStore } from "@/store/useAuthStore";
 
 export default function RoleSelection() {
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +61,7 @@ export default function RoleSelection() {
               {
                 "border-custom-primary": selectedRole === role.value,
                 "border-transparent": selectedRole !== role.value,
-              }
+              },
             )}
           >
             <img

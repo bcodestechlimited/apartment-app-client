@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import newsletterBg from "@/assets/images/newsletter.png";
 import { Link } from "react-router";
 import { useAuthStore } from "@/store/useAuthStore";

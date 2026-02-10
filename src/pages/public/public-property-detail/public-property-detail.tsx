@@ -16,16 +16,15 @@ import {
   Calendar1,
   ChevronLeft,
   ExternalLink,
-  Heart,
   Home,
   LocateIcon,
-  LucideShare2,
+  Maximize2,
   Utensils,
   Wifi,
   Wind,
 } from "lucide-react";
 import { useState, type JSX } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useLocation } from "react-router";
 import ConfirmBooking from "./_modals/confirm-booking";
 import { toast } from "sonner";
 import OtherApartments from "./_components/other-apartments";
@@ -42,19 +41,15 @@ const getAmenityIcon = (amenity: string) => {
     "wi-fi": <Wifi size={20} color="#555" />,
     "private-bath": <Bath size={20} color="#555" />,
   };
-
-  // default icon if not found
   return icons[amenity.toLowerCase()] || <Home size={20} color="#555" />;
 };
 
 export default function PublicPropertyDetail() {
   const [useShareModal, setUseShareModal] = useState(false);
-
   const [showLightbox, setShowLightbox] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const { handleShare } = useShare();
-
   const openLightbox = (index: number) => {
     setActiveImageIndex(index);
     setShowLightbox(true);
@@ -63,9 +58,9 @@ export default function PublicPropertyDetail() {
   const [hasUserAgreed, setHasUserAgreed] = useState(false);
   const { propertyId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { user } = useAuthStore();
-
   const isLandlord = user && user?.roles?.includes("landlord") ? true : false;
 
   const { data, isLoading, isError } = useQuery({
@@ -85,80 +80,75 @@ export default function PublicPropertyDetail() {
   const handleBooking = () => {
     if (!user) {
       toast.error("Please sign in to book a property");
-
       localStorage.setItem("propertyId", propertyId || "");
-      navigate("/auth/sign-in", { state: { from: location.pathname } });
+      navigate("/login", { state: { from: location.pathname } });
       return;
     }
-
     openModal();
   };
 
   const onShareClick = async () => {
-    if (!propertyId) return;
+    if (!propertyId || !data?.property) return;
     setUseShareModal(true);
-
     const universalUrl = getUniversalPropertyUrl(propertyId);
-
     await handleShare({
-      title: property.title,
-      text: `Check out ${property.title} on our platform!`,
+      title: data.property.title,
+      text: `Check out ${data.property.title} on our platform!`,
       url: universalUrl,
     });
-
     setUseShareModal(false);
   };
 
   if (isLoading) return <Loader />;
 
-  if (isError)
+  if (isError || !data)
     return (
       <div className="py-10 text-center">
-        <p className="text-lg font-semibold">Failed to load property</p>
-        <p className="text-sm text-muted-foreground">
-          The property may have been removed or there was a network error.
-        </p>
-      </div>
-    );
-
-  if (!data)
-    return (
-      <div>
-        <p>Property not found</p>
-        <Link to="/">Go back to home</Link>
+        <p className="text-lg font-semibold">Property not found</p>
+        <Link to="/" className="text-custom-primary">
+          Go back to home
+        </Link>
       </div>
     );
 
   const property = (data?.property as IProperty) || {};
-
   const platformFee =
     ((systemSettings?.platformFeePercentage || 5) / 100) *
     (property?.price || 0);
   const grandTotal = (property?.totalFees || 0) + platformFee;
 
-  console.log(property);
-
   return (
-    <div className="max-w-custom py-4">
+    <div className="max-w-custom mx-auto px-4 py-4">
       <Button
         onClick={() => navigate(-1)}
         variant={"ghost"}
-        className="border my-4 flex gap-1 items-center jusstify-start cursor-pointer"
+        className="border my-4 flex gap-1 items-center justify-start cursor-pointer"
       >
         <ChevronLeft className="text-muted-foreground" />
         <span className="font-bold text-muted-foreground"> Back</span>
       </Button>
-      <div className="flex gap-2 h-[400px]">
-        <div className="w-1/2">
+
+      {/* Image Gallery - Responsive height and layout */}
+      <div className="flex flex-col md:flex-row gap-2 h-auto md:h-[400px]">
+        <div className="w-full md:w-1/2 relative h-62.5 sm:h-75 md:h-full">
           <img
-            src={property?.pictures[0]}
-            alt=""
-            className="h-full w-full object-cover rounded cursor-pointer"
+            src={property?.pictures?.[0]}
+            alt={property?.title}
+            className="h-full w-full object-cover rounded-xl cursor-pointer"
             onClick={() => openLightbox(0)}
           />
+
+          <button
+            onClick={() => openLightbox(0)}
+            className="absolute bottom-4 right-4 bg-white/90 hover:bg-white text-gray-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg flex items-center gap-2 shadow-lg transition-all hover:scale-105 cursor-pointer text-xs sm:text-sm md:text-base"
+          >
+            <Maximize2 size={16} />
+            <span className="hidden sm:inline">View All Photos</span>
+            <span className="sm:hidden">Photos</span>
+          </button>
         </div>
 
-        <div className="grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
+        <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-2 w-1/2 h-full">
           {property?.pictures
             .slice(1, 5)
             .map((picture: string, index: number) => (
@@ -173,8 +163,6 @@ export default function PublicPropertyDetail() {
         </div>
       </div>
 
-      {/* Carousel Overlay */}
-
       <ImageLightbox
         isOpen={showLightbox}
         onClose={() => setShowLightbox(false)}
@@ -187,12 +175,9 @@ export default function PublicPropertyDetail() {
           <Button>{property?.type.replace("-", " ")}</Button>
           <Button>Rent</Button>
         </div>
-        <div className="flex gap-2 w-1/4 justify-end">
-          {/* <span className="flex items-center gap-1">
-            <Heart /> Save
-          </span> */}
+        <div className="flex gap-2 w-full md:w-1/4 justify-end">
           <span
-            className={`flex items-center gap-1 cursor-pointer hover:text-primary transition-colors ${
+            className={`flex items-center gap-1 cursor-pointer transition-colors ${
               useShareModal
                 ? "opacity-60 pointer-events-none"
                 : "hover:text-primary"
@@ -213,29 +198,29 @@ export default function PublicPropertyDetail() {
         </div>
       </div>
 
-      <div className="grid gap-6 grid-cols-5">
-        <div className="col-span-3 flex flex-col gap-4">
+      {/* Grid - 1 col on mobile, 5 cols on desktop */}
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-5 ">
+        <div className="lg:col-span-3 flex flex-col gap-4 ">
           <div className="text-start">
-            <p className="text-xl font-medium flex items-center gap-5">
-              {property.title}{" "}
+            <div className="text-xl font-medium flex flex-wrap items-center gap-2 sm:gap-5">
+              {property.title}
               {property?.isAvailable ? (
-                <p className="font-medium text-sm line-clamp-2 bg-custom-primary text-white px-1  rounded-sm w-fit">
+                <p className="font-medium text-sm bg-custom-primary text-white px-1 rounded-sm w-fit">
                   Available
                 </p>
               ) : (
-                <p className="font-medium text-sm line-clamp-2 bg-red-600 text-white px-1 rounded-r w-fit">
+                <p className="font-medium text-sm bg-red-600 text-white px-1 rounded-r w-fit">
                   Unavailable
                 </p>
               )}
-            </p>
+            </div>
             <p className="text-lg text-muted-foreground">{property.address}</p>
-            <p className=" text-lg line-clamp-2 text-muted-foreground">
+            <p className="text-lg line-clamp-2 text-muted-foreground capitalize">
               {property?.state} state, {property?.lga} lga
             </p>
 
             <div className="space-x-2">
               <span className="font-medium">
-                {/* {property?.numberOfBedrooms} bed(s) |{" "} */}
                 {Number(property?.seatingCapacity) != 1
                   ? `${property?.seatingCapacity} seats`
                   : `${property?.numberOfBedrooms} bed(s) `}{" "}
@@ -260,7 +245,7 @@ export default function PublicPropertyDetail() {
               <div className="flex items-center gap-1">
                 <LocateIcon size={18} />
                 <p>Location:</p>
-                <p>{property?.address}</p>
+                <p className="line-clamp-1">{property?.address}</p>
               </div>
             </div>
           </div>
@@ -269,7 +254,7 @@ export default function PublicPropertyDetail() {
 
           <div className="text-start">
             <p className="font-semibold text-lg">Description</p>
-            <p>{property.description}</p>
+            <p className="whitespace-pre-line">{property.description}</p>
           </div>
 
           <Separator />
@@ -278,40 +263,20 @@ export default function PublicPropertyDetail() {
             <p className="font-semibold text-lg">Amenities</p>
             <div className="grid grid-cols-2 w-fit gap-x-8 gap-y-2">
               {property.amenities.map((amenity: string) => (
-                <div className="flex items-center gap-2">
+                <div key={amenity} className="flex items-center gap-2">
                   {getAmenityIcon(amenity.toLowerCase())}
-                  <p key={amenity} className="text-muted-foreground">
-                    {amenity}
-                  </p>
+                  <p className="text-muted-foreground capitalize">{amenity}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* ================= */}
-
-        <div className=" flex flex-col gap-4 shadow-xl rounded-2xl text-start p-4 col-span-2">
-          {/* <p>Price</p>
-          <p>{formatCurrency(property?.totalFees)}</p>
-
-          <Separator /> */}
-
+        {/* Sidebar Booking Card - col-span-2 on desktop */}
+        <div className="flex flex-col gap-4 shadow-xl rounded-2xl text-start p-4 lg:col-span-2 h-fit">
           <div className="flex items-center gap-2">
             <p>Booking Duration :</p>
-
             <Button>{property?.pricingModel}</Button>
-
-            {/* <Select>
-              <SelectTrigger className="w-full rounded-full">
-                <SelectValue placeholder="-select-" />
-              </SelectTrigger>
-              <SelectContent className="">
-                <SelectItem value="daily">Daily</SelectItem>
-                <SelectItem value="monthly">Monthly</SelectItem>
-                <SelectItem value="yearly">Yearly</SelectItem>
-              </SelectContent>
-            </Select> */}
           </div>
 
           <div className="flex flex-col gap-1">
@@ -322,7 +287,7 @@ export default function PublicPropertyDetail() {
             {property?.otherFees?.map((fee, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center text-sm   pb-1"
+                className="flex justify-between items-center text-sm pb-1"
               >
                 <span className="text-left capitalize">{fee.name}:</span>
                 <span className="text-left">{formatCurrency(fee.amount)}</span>
@@ -339,10 +304,10 @@ export default function PublicPropertyDetail() {
             <p>{formatCurrency(grandTotal)}</p>
           </div>
 
-          <div className="flex items-center gap-2 my-2 px-2 ">
+          <div className="flex items-start gap-2 my-2 px-2 ">
             <Checkbox
               id="terms"
-              className="w-4 h-4"
+              className="w-4 h-4 mt-1"
               checked={hasUserAgreed}
               onCheckedChange={() => {
                 setHasUserAgreed(!hasUserAgreed);
@@ -350,7 +315,10 @@ export default function PublicPropertyDetail() {
             />
             <p className="text-sm text-start">
               By continuing, i agree to the{" "}
-              <Link to="/terms" className="text-custom-primary hover:underline">
+              <Link
+                to="/terms"
+                className="text-custom-primary hover:underline font-medium"
+              >
                 Terms & Conditions
               </Link>
             </p>
@@ -359,11 +327,10 @@ export default function PublicPropertyDetail() {
             <Button
               onClick={() => handleBooking()}
               disabled={isLandlord || !hasUserAgreed || !property.isAvailable}
-              className="btn-primary w-full rounded-full"
+              className="btn-primary w-full rounded-full py-6 font-bold"
             >
               Book Now
             </Button>
-            {/* <Button className="w-full rounded-full">Book an Inspection</Button> */}
           </div>
         </div>
       </div>
@@ -371,21 +338,14 @@ export default function PublicPropertyDetail() {
       <div className="flex flex-col gap-4 py-6 ">
         <div className="text-start">
           <p className="text-lg font-medium">Location</p>
-          <p>Coming Soon</p>
+          <p className="text-muted-foreground">Coming Soon</p>
         </div>
 
         <Separator />
 
-        {/* <div className="text-start">
-          <p className="text-lg font-semibold">Reviews</p>
-          <p>Coming Soon</p>
-        </div> */}
-
-        {/* Reviews */}
         <div className="text-start">
           <PropertyRatings />
         </div>
-        {/* <Separator /> */}
 
         <div className="text-start flex flex-col gap-2 py-2">
           <p className="text-xl font-semibold">Other apartments you may like</p>

@@ -1,6 +1,6 @@
 import type { IUser } from "@/interfaces/user.interface";
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
 interface AuthCredentials {
   email: string;

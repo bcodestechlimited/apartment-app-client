@@ -9,12 +9,6 @@ import FAQs from "./_components/faqs";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const LandingPage = () => {
-  const query = useQuery({
-    queryKey: ["auth-user"],
-    queryFn: () => authService.getUser(),
-    retry: false,
-  });
-
   const { user } = useAuthStore();
 
   return (

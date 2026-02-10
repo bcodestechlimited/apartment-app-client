@@ -80,17 +80,7 @@ const AddFilterModal = ({
     lga: null,
   });
 
-  // render count
-  // const renderCount = useRef(0);
-  // renderCount.current += 1;
-
-  // useEffect(() => {
-  //   console.log("AddFilterModal rendered", renderCount.current, "times");
-  // });
-
   const handleApplyFilters = () => {
-    // const excludedKeys = ["availableFrom", "availableFromString"];
-
     const updatedFilters = Object.fromEntries(
       Object.entries(filters)
         .map(([key, value]) => {
@@ -112,7 +102,7 @@ const AddFilterModal = ({
 
           return [key, value];
         })
-        .filter(([_, value]) => value !== undefined)
+        .filter(([_, value]) => value !== undefined),
     );
 
     console.log({ updatedFilters });
@@ -188,7 +178,7 @@ const AddFilterModal = ({
           {/* Price Range */}
           <div className="flex flex-col gap-2">
             <Label className="text-start font-bold" htmlFor="priceRange">
-              Price Range
+              Basic Rent Price Range
             </Label>
             <div className="flex gap-4">
               <CurrencyInput

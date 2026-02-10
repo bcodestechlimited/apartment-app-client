@@ -150,8 +150,8 @@ export default function EditPropertyModal({
   }, [property, isOpen, reset]);
 
   const updateMutation = useMutation({
-    mutationFn: (formData: FormData) =>
-      propertyService.updateProperty(property._id, formData),
+    mutationFn: (payload: any) =>
+      propertyService.updateProperty(property._id, payload),
     onSuccess: () => {
       toast.success("Property updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-properties"] });
@@ -167,7 +167,6 @@ export default function EditPropertyModal({
   });
 
   const onSubmit = (data: IEditProperty) => {
-    // --- CALCULATION LOGIC START ---
     const basePrice = Number(data.price) || 0;
     const feesSum =
       data.otherFees?.reduce(
@@ -175,46 +174,26 @@ export default function EditPropertyModal({
         0,
       ) || 0;
     const totalFees = basePrice + feesSum;
-    // --- CALCULATION LOGIC END ---
 
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("address", data.address);
-    formData.append("state", data.state);
-    formData.append("lga", data.lga);
-    formData.append(
-      "availabilityDate",
-      data.availabilityDate
-        ? new Date(data.availabilityDate).toISOString()
-        : "",
-    );
-    formData.append(
-      "price",
-      data.price !== undefined ? String(data.price) : "",
-    );
-    formData.append("totalFees", String(totalFees));
-    formData.append("pricingModel", data.pricingModel.toLowerCase());
-    formData.append("amenities", JSON.stringify(selectedAmenities));
-    formData.append("facilities", JSON.stringify(selectedFacilities));
-    formData.append("numberOfBedRooms", String(selectedRooms));
-    formData.append("numberOfBathrooms", String(selectedBathrooms));
-    formData.append("type", data.type);
-    formData.append("isEnsuite", String(data.isEnsuite));
+    const isCoworking = data.type === "co-working-space";
 
-    if (data.otherFees && data.otherFees.length > 0) {
-      formData.append("otherFees", JSON.stringify(data.otherFees));
-    } else {
-      // Send empty array string if all fees removed to clear them on backend
-      formData.append("otherFees", JSON.stringify([]));
-    }
+    // Create JSON Payload
+    const payload = {
+      ...data,
+      price: String(data.price),
+      totalFees: String(totalFees),
+      pricingModel: data.pricingModel.toLowerCase(),
+      amenities: selectedAmenities,
+      facilities: selectedFacilities,
+      // Use the combined images directly
+      pictures: data.existingPictures,
+      numberOfBedrooms: isCoworking ? "1" : String(selectedRooms),
+      numberOfBathrooms: isCoworking ? "1" : String(selectedBathrooms),
+      isEnsuite: String(data.isEnsuite),
+      otherFees: data.otherFees || [],
+    };
 
-    for (let i = 0; i < data.newPictures?.length; i++) {
-      formData.append("newPictures", data.newPictures[i]);
-    }
-    formData.append("existingPictures", JSON.stringify(data.existingPictures));
-
-    updateMutation.mutateAsync(formData);
+    updateMutation.mutateAsync(payload);
   };
 
   if (!isOpen) return null;
@@ -697,13 +676,23 @@ export default function EditPropertyModal({
 
             {/* File Upload */}
             <div className="flex flex-col gap-2 mt-2">
-              <Label>Upload Images of your property</Label>
-              <FileUpdateInput
-                existingImages={property.pictures}
-                onChange={(existing, newFiles) => {
-                  setValue("existingPictures", existing);
-                  setValue("newPictures", newFiles);
-                }}
+              <FormField
+                control={control}
+                name="existingPictures"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label className="font-bold">Property Images</Label>
+                    <FormControl>
+                      <FileUpdateInput
+                        existingImages={field.value}
+                        onChange={(allUrls) => {
+                          field.onChange(allUrls);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
 

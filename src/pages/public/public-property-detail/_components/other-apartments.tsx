@@ -17,7 +17,7 @@ export default function OtherApartments({
   const isTenant = user?.roles?.includes("tenant");
   const isAdmin = user?.roles?.includes("admin");
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["properties"],
     queryFn: () =>
       propertyService.getProperties({
@@ -45,7 +45,7 @@ export default function OtherApartments({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {data?.properties
                 ?.filter(
-                  (property: IProperty) => property._id !== currentPropertyId
+                  (property: IProperty) => property._id !== currentPropertyId,
                 )
                 .slice(0, 3)
                 .map((property: IProperty) => (

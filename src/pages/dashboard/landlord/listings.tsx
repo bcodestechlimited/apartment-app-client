@@ -6,7 +6,6 @@ import { cn, getActualTypeFromParam } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router";
-import AddPropertyModal from "./_components/add-property-modal";
 import { motion } from "motion/react";
 import { Loader } from "@/components/custom/loader";
 import { Plus } from "lucide-react";
@@ -52,9 +51,9 @@ export default function Listings() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-4">
-        <div className="bg-custom-primary/10 w-fit rounded-full p-2">
-          <ul className="relative flex items-center font-semibold text-sm gap-2">
+      <div className="flex flex-col items-end gap-4 lg:flex-row items-center lg:items-center justify-between mb-4">
+        <div className="bg-custom-primary/10 w-fit rounded-lg md:rounded-full p-2 ">
+          <ul className="relative flex items-center font-semibold text-sm gap-2 w-85 md:w-full overflow-x-auto  md:px-4 md:pl-6 lg:px-0 lg:pl-0 whitespace-nowrap md:whitespace-normal">
             {categories?.map((category) => {
               const isActive = selected === category;
 
@@ -97,7 +96,7 @@ export default function Listings() {
             })}
           </ul>
         </div>
-        <Link to="add-property">
+        <Link to="add-property" className="md:text-right  flex justify-end">
           <Button
             // onClick={openModal}
             className="text-lg px-6 py-5 font-medium cursor-pointer bg-custom-primary hover:bg-custom-primary/90"
@@ -105,12 +104,6 @@ export default function Listings() {
             <Plus /> Add new property
           </Button>
         </Link>
-
-        {/* <AddPropertyModal
-          // propertyType="co-working space" // example value
-          isOpen={isModalOpen}
-          closeModal={closeModal}
-        /> */}
       </div>
       <div>
         <PropertiesGrid

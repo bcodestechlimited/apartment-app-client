@@ -28,7 +28,7 @@ import { CustomAlert } from "@/components/custom/custom-alert";
 const formSchema = z.object({
   employmentStatus: z.enum(
     ["employed", "self-employed", "unemployed", "student", "retired"],
-    { error: () => ({ message: "Select employment status" }) }
+    { error: () => ({ message: "Select employment status" }) },
   ),
   companyName: z.string().min(2, "Company name is required"),
   jobTitle: z.string().min(2, "Job title is required"),
@@ -89,11 +89,11 @@ export default function Employment() {
   };
 
   return (
-    <div className="max-w-2xl mr-auto space-y-6 py-4">
+    <div className="w-6/7  space-y-6 py-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          className=" md:grid-cols-2 gap-8 space-y-6"
         >
           {/* Employment Status */}
           <FormField
@@ -233,7 +233,7 @@ export default function Employment() {
           {error && <CustomAlert variant="destructive" message={error} />}
 
           {/* Submit Button */}
-          <div className="col-span-2 flex justify-end mt-4">
+          <div className="col-span-2 flex flex-col md:flex-row justify-end mt-4">
             <Button
               disabled={mutation.isPending || !form.formState.isDirty}
               type="submit"

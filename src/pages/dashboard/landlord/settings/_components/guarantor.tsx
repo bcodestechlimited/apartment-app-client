@@ -96,11 +96,11 @@ export default function Guarantor() {
   }
 
   return (
-    <div className="max-w-2xl mr-auto space-y-6 py-4">
+    <div className="w-6/7 space-y-6 py-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          className=" md:grid-cols-2 gap-4 space-y-6"
         >
           {/* First Name */}
           <FormField
@@ -253,7 +253,7 @@ export default function Guarantor() {
           {error && <CustomAlert variant="destructive" message={error} />}
 
           {/* Submit Button */}
-          <div className="col-span-2 flex justify-end mt-4">
+          <div className="col-span-2 flex flex-col md:flex-row justify-end mt-4">
             <Button type="submit" className="btn-primary rounded-full px-12">
               {mutation.isPending ? (
                 <span className="flex items-center gap-2">

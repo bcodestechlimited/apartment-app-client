@@ -1,3 +1,5 @@
+import type { FileValue } from "@/components/custom/file-input";
+
 export const amenities = [
   "Air Conditioner",
   "Kitchen",
@@ -50,13 +52,6 @@ export interface IProperty {
 }
 
 export interface IAddProperty {
-  // type:
-  //   | "serviced-apartment"
-  //   | "shared-apartment"
-  //   | "standard-rental"
-  //   | "short-lets"
-  //   | "co-working-space"
-  //   | "other";
   title: string;
   description: string;
   type: string;
@@ -73,17 +68,10 @@ export interface IAddProperty {
   pricingModel: string;
   amenities: string[];
   facilities: string[];
-  pictures: File[];
+  pictures: FileValue[];
   otherFees: { name: string; amount: string | number }[];
 }
 export interface IEditProperty {
-  // type:
-  //   | "serviced-apartment"
-  //   | "shared-apartment"
-  //   | "standard-rental"
-  //   | "short-lets"
-  //   | "co-working-space"
-  //   | "other";
   title: string;
   description: string;
   type: string;
@@ -95,12 +83,11 @@ export interface IEditProperty {
   lga: string;
   numberOfBedRooms: string;
   numberOfBathrooms: string;
-  isEnsuite?: boolean; // Added isEnsuite status
+  isEnsuite?: boolean;
   pricingModel: string;
   amenities: string[];
   facilities: string[];
-  otherFees?: { name: string; amount: string | number }[]; // Added other fees array
-  // pictures: File[];
+  otherFees?: { name: string; amount: string | number }[];
   existingPictures: string[];
   newPictures: File[];
 }

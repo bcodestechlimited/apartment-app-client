@@ -9,8 +9,6 @@ import { Link, useNavigate } from "react-router";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Footer() {
-  const navigate = useNavigate();
-
   let listApartmentUrl = "";
   const user = useAuthStore((state) => state.user);
   if (user && user.roles.includes("landlord")) {

@@ -27,7 +27,7 @@ import { propertyService } from "@/api/property.api";
 import type { IProperty } from "@/interfaces/property.interface";
 import { PublicPropertyCard } from "@/components/shared/propertyCard";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Pagination } from "@/pages/dashboard/shared/_components/pagination";
+import { Pagination } from "@/components/custom/pagination";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {

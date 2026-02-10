@@ -15,7 +15,7 @@ export default function Notification() {
   };
 
   return (
-    <div className="max-w-2xl mr-auto space-y-6 py-4">
+    <div className="w-6/7 space-y-6 py-4">
       <div className="space-y-6">
         {/* Booking Updates */}
         <div className="flex items-center justify-between border-b pb-4">
@@ -65,7 +65,7 @@ export default function Notification() {
         </div>
 
         {/* Submit Button */}
-        <div className="flex justify-end mt-6">
+        <div className="col-span-2 flex flex-col md:flex-row justify-end mt-4">
           <Button type="submit" className="btn-primary rounded-full px-12">
             Save Changes
           </Button>
