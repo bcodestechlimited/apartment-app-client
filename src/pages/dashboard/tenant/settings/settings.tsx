@@ -43,8 +43,8 @@ export default function SettingsLayout() {
       </aside>
 
       {/* Outlet Content */}
-      <div className="flex justify-center  w-full">
-        <div className=" w-full md:w-2/3 ">
+      <div className=" ">
+        <div className="  w-full  flex justify-center">
           <Outlet />
         </div>
       </div>

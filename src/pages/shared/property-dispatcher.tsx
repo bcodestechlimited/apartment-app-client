@@ -2,11 +2,9 @@
 import { Navigate, useParams, useLocation } from "react-router";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { AuthLoader } from "@/components/custom/loader";
-import { useAuthStore } from "@/store/useAuthStore";
 
 export const PropertyDispatcher = () => {
   const { id } = useParams(); // Get the property ID from the URL
-  const location = useLocation();
   const { data: user, isLoading } = useAuthUser();
   if (isLoading) {
     return <AuthLoader />;

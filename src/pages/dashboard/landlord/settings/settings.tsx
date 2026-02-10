@@ -16,7 +16,7 @@ export default function SettingsLayout() {
   return (
     <div className="space-y-4 p-2">
       {/* Top Navigation Bar */}
-      <aside className="relative grid grid-cols-3 md:flex justify-between border-b w-full">
+      <aside className="relative flex justify-between border-b w-85 md:w-full overflow-x-auto md:overflow-x-hidden">
         {settingsLinks.map((link) => {
           const isActive =
             location.pathname.endsWith(link.path) ||
@@ -27,7 +27,7 @@ export default function SettingsLayout() {
               key={link.path || "root"}
               to={link.path}
               end
-              className="relative px-4 py-3 text-sm font-medium text-muted-foreground hover:text-primary"
+              className="relative px-4 py-3 text-sm font-medium text-muted-foreground hover:text-primary whitespace-nowrap md:whitespace-normal"
             >
               {link.name}
               {isActive && (
@@ -43,8 +43,10 @@ export default function SettingsLayout() {
       </aside>
 
       {/* Outlet Content */}
-      <div className="flex-1">
-        <Outlet />
+      <div className=" ">
+        <div className="  w-full  flex justify-center">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

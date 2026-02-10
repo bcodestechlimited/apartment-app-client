@@ -30,7 +30,7 @@ import AnimatedText from "@/components/animations/animated-text";
 import { Search, Check, ChevronsUpDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 
 export default function Discover() {
   const [selectedState, setSelectedState] = useState<string>("");
@@ -41,8 +41,6 @@ export default function Discover() {
   // Combobox open states
   const [openState, setOpenState] = useState(false);
   const [openCity, setOpenCity] = useState(false);
-
-  const navigate = useNavigate();
 
   return (
     <div className="w-full py-8">
@@ -112,7 +110,7 @@ export default function Discover() {
                               <CommandItem
                                 key={state}
                                 value={state}
-                                onSelect={(currentValue) => {
+                                onSelect={() => {
                                   // We use 'state' here to ensure correct casing
                                   setSelectedState(state);
                                   setSelectedCity(""); // Reset city when state changes
@@ -166,7 +164,7 @@ export default function Discover() {
                                   <CommandItem
                                     key={city}
                                     value={city}
-                                    onSelect={(currentValue) => {
+                                    onSelect={() => {
                                       // We use 'city' here to ensure correct casing
                                       setSelectedCity(city);
                                       setOpenCity(false);
@@ -273,7 +271,7 @@ const tabs = [
 ];
 
 function CategoryTabs() {
-  const [selected, setSelected] = useState();
+  const [selected] = useState();
 
   return (
     <div className="absolute hidden md:block -top-5 left-0 right-0 mx-auto w-[80%]">

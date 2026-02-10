@@ -90,14 +90,12 @@ export default function Documents() {
     setError(null);
 
     try {
-      // Step 1: Upload to Cloudinary
       const cloudinaryResult = await uploadFileToCloudinary(values.document);
 
       if (!cloudinaryResult?.secure_url) {
         throw new Error("Failed to upload image. Please try again.");
       }
 
-      // Step 2: Submit URL and original filename to Backend
       await mutation.mutateAsync({
         document: cloudinaryResult.secure_url,
         name: values.document.name,
@@ -126,7 +124,7 @@ export default function Documents() {
   }
 
   return (
-    <div className="max-w-2xl mr-auto space-y-6 py-4">
+    <div className="w-6/7  space-y-6 py-4">
       {userDocuments.length > 0 && (
         <div className="flex flex-col gap-2 text-start">
           <h3 className="text-lg font-medium text-foreground">
@@ -246,7 +244,7 @@ export default function Documents() {
 
           {error && <CustomAlert variant="destructive" message={error} />}
 
-          <div className="flex justify-end mt-4">
+          <div className="col-span-2 flex flex-col md:flex-row justify-end mt-4">
             <Button
               type="submit"
               className="btn-primary rounded-full px-12"

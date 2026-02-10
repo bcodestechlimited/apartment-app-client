@@ -163,11 +163,11 @@ export default function PersonalInfo() {
   };
 
   return (
-    <div className="max-w-2xl  space-y-6 py-4 ">
+    <div className="w-full flex justify-center   space-y-6 py-4 ">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col md:grid md:grid-cols-2 gap-4 "
+          className="flex flex-col md:grid md:grid-cols-2 gap-8 w-6/7 "
         >
           {/* Profile Picture */}
           <FormField
@@ -498,7 +498,7 @@ export default function PersonalInfo() {
           {error && <CustomAlert variant="destructive" message={error} />}
 
           {/* Submit Button */}
-          <div className="col-span-2 flex justify-end mt-4">
+          <div className="col-span-2 flex flex-col md:flex-row justify-end mt-4">
             <Button
               disabled={
                 mutation.isPending || isProcessing || !form.formState.isDirty

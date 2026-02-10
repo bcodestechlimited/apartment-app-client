@@ -34,7 +34,7 @@ interface SignUpFormInputs {
 }
 
 export default function LandlordSignup() {
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
   const navigate = useNavigate();
   const { setAuthCredentials } = useAuthActions();
 
@@ -336,7 +336,7 @@ export default function LandlordSignup() {
                 {
                   "opacity-50 cursor-not-allowed":
                     !form.formState.isValid || mutation.isPending,
-                }
+                },
               )}
             >
               {mutation.isPending ? (
